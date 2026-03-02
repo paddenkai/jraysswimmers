@@ -818,7 +818,7 @@
             <option value="">None</option>
           </select>
         </div>
-        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background:var(--green); color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default;" id="refresh-btn">↻ REFRESH NOW</button>
+        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background:var(--green); color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default; pointer-events:none;" id="refresh-btn">↻ REFRESH NOW</button>
       </div>
     </div>
     <div style="margin-bottom:8px; font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; text-align:right; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
@@ -1769,8 +1769,8 @@ function updateNav() {
   document.getElementById('nav-login').style.display = loggedIn ? 'none' : '';
   document.getElementById('nav-logout').style.display = loggedIn ? '' : 'none';
   document.getElementById('nav-myteams').style.display = loggedIn ? '' : 'none';
-  // Hide Enter a Team tab when registration is closed
   document.getElementById('nav-enter').style.display = adminSettings.registrationOpen ? '' : 'none';
+  document.getElementById('nav-tournament').style.display = TOURNAMENT_ACTIVE ? '' : 'none';
 }
 
 // ═══════════════════════════════════════════════════════
