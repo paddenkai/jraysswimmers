@@ -571,29 +571,29 @@
       <div style="position:absolute; width:400px; height:400px; border-radius:50%; background: radial-gradient(circle, rgba(122,85,168,0.18) 0%, transparent 70%); bottom:-100px; left:-100px; animation: drift 11s ease-in-out infinite reverse;"></div>
       <div style="position:absolute; inset:0; background: repeating-linear-gradient(-55deg, transparent, transparent 80px, rgba(232,119,34,0.02) 80px, rgba(232,119,34,0.02) 81px); pointer-events:none;"></div>
 
-      <div style="position:relative; z-index:2; padding: 50px 20px 56px; max-width:900px; margin:0 auto;">
+      <div style="position:relative; z-index:2; padding: 50px 40px 56px; max-width:900px; margin:0 auto; box-sizing:border-box; width:100%;">
 
         <!-- Hero text -->
         <div style="text-align:center; margin-bottom:44px;">
-          <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:24px; max-width:100%;">
-            <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6;"></div>
-            <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.9; white-space:nowrap;">Arnold Palmer Invitational · 2026</div>
-            <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6;"></div>
+          <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:24px; max-width:100%; overflow:hidden;">
+            <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Arnold Palmer Invitational · 2026</div>
+            <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
           </div>
 
-          <h1 style="font-family:'Playfair Display',serif; font-size:clamp(2.4rem,7vw,5rem); font-weight:900; line-height:1.05; color:var(--white); margin-bottom:18px; letter-spacing:-1px;">
+          <h1 style="font-family:'Playfair Display',serif; font-size:clamp(2.2rem,7vw,5rem); font-weight:900; line-height:1.05; color:var(--white); margin-bottom:18px; letter-spacing:-1px; word-break:break-word;">
             Pick Your <em style="color:var(--gold); font-style:italic;">Champions.</em><br>Win the Pot.
           </h1>
 
-          <p style="font-size:0.95rem; opacity:0.7; max-width:460px; margin: 0 auto 28px; line-height:1.8; color:var(--cream); padding:0 8px;">
+          <p style="font-size:0.95rem; opacity:0.7; max-width:440px; margin: 0 auto 28px; line-height:1.8; color:var(--cream);">
             Build teams of 5 golfers from the current field. The team with the highest total team payout wins the pot.
           </p>
 
-          <div class="hero-btns" style="display:flex; gap:12px; justify-content:center; flex-direction:column; align-items:center; margin-bottom:16px; padding:0 16px;">
-            <button class="btn btn-gold" onclick="requireAuth(() => showPage('builder'))" style="padding:15px 36px; font-size:1rem; width:100%; max-width:320px;">Build Your Team →</button>
-            <button class="btn btn-outline" onclick="showPage('leaderboard')" style="padding:15px 28px; width:100%; max-width:320px;">View All Teams</button>
+          <div class="hero-btns" style="display:flex; gap:12px; justify-content:center; flex-direction:column; align-items:center; margin-bottom:16px;">
+            <button class="btn btn-gold" onclick="requireAuth(() => showPage('builder'))" style="padding:15px 36px; font-size:1rem; width:100%; max-width:300px;">Build Your Team →</button>
+            <button class="btn btn-outline" onclick="showPage('leaderboard')" style="padding:15px 28px; width:100%; max-width:300px;">View All Teams</button>
           </div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(232,119,34,0.6); letter-spacing:2px; text-transform:uppercase; line-height:1.8; padding:0 8px;">Bay Hill Club · March 5–8, 2026 · $10 per entry</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(232,119,34,0.6); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">Bay Hill Club · March 5–8, 2026 · $10 per entry</div>
         </div>
 
         <!-- Divider -->
