@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>J.Ray's Masters Pool</title>
+<title>J.Ray's Swimmers Pool</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
   :root {
-    --green: #1a4a2e;
-    --green-mid: #2d6e47;
-    --green-light: #3d8c5a;
-    --gold: #c9a84c;
-    --gold-light: #e8c96a;
-    --gold-pale: #f5e6b8;
-    --cream: #faf6ee;
-    --dark: #0d1f16;
+    --green: #3b1f6e;
+    --green-mid: #5a3a8a;
+    --green-light: #7a55a8;
+    --gold: #e87722;
+    --gold-light: #f09040;
+    --gold-pale: #fdf0e6;
+    --cream: #faf6ff;
+    --dark: #1a0d2e;
     --white: #ffffff;
-    --shadow: rgba(13,31,22,0.3);
+    --shadow: rgba(26,13,46,0.3);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -519,7 +519,7 @@
 <!-- HEADER -->
 <header>
   <div class="header-inner">
-    <div class="logo" onclick="showPage('home'); closeMobileNav();">J.Ray's Masters Pool<span>Practice · Cognizant Classic 2026</span></div>
+    <div class="logo" onclick="showPage('home'); closeMobileNav();">J.Ray's Swimmers<span>Arnold Palmer Invitational 2026</span></div>
     <button id="hamburger" onclick="toggleMobileNav()" aria-label="Menu" style="display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; align-items:center; justify-content:center;">
       <span class="ham-line"></span>
       <span class="ham-line"></span>
@@ -555,10 +555,10 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="page">
     <div class="hero" style="margin: -40px -24px 36px; padding: 60px 24px;">
-      <div class="hero-badge">⛳ 2026 J.Ray's Masters Pool</div>
-      <h1>Pick Your <em>Champions.</em><br>Win the Green.</h1>
-      <p>Build a team of 5 golfers from the Masters field. The team with the highest total prize earnings wins the pool. $25 per entry.</p>
-      <div style="font-family:'DM Mono',monospace; font-size:0.78rem; color:rgba(250,246,238,0.5); letter-spacing:2px; margin-bottom:28px; text-transform:uppercase;">Augusta National · April 9–12, 2026</div>
+      <div class="hero-badge">⛳ 2026 J.Ray's Swimmers Pool</div>
+      <h1>Pick Your <em>Champions.</em><br>Win the Pot.</h1>
+      <p>Build a team of 5 golfers from the Arnold Palmer Invitational field. The team with the highest total prize earnings wins the pool. $25 per entry.</p>
+      <div style="font-family:'DM Mono',monospace; font-size:0.78rem; color:rgba(250,246,238,0.5); letter-spacing:2px; margin-bottom:28px; text-transform:uppercase;">Bay Hill Club · March 5–8, 2026</div>
       <div class="hero-cta">
         <button class="btn btn-gold" onclick="requireAuth(() => showPage('builder'))">Build Your Team →</button>
         <button class="btn btn-outline" onclick="showPage('leaderboard')">View All Teams</button>
@@ -569,7 +569,7 @@
       <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; padding:20px; border-top: 3px solid var(--gold);">
         <div style="font-size:1.8rem; margin-bottom:8px;">🏌️</div>
         <div style="font-family:'Playfair Display',serif; font-weight:700; color:var(--green); margin-bottom:6px;">Pick 5 Golfers</div>
-        <div style="font-size:0.85rem; color:#666; line-height:1.6;">Choose any 5 players from the Masters field. Mix favorites and sleepers.</div>
+        <div style="font-size:0.85rem; color:#666; line-height:1.6;">Choose any 5 players from the Arnold Palmer Invitational field. Mix favorites and sleepers.</div>
       </div>
       <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; padding:20px; border-top: 3px solid var(--gold);">
         <div style="font-size:1.8rem; margin-bottom:8px;">💳</div>
@@ -579,7 +579,7 @@
       <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; padding:20px; border-top: 3px solid var(--gold);">
         <div style="font-size:1.8rem; margin-bottom:8px;">🏆</div>
         <div style="font-family:'Playfair Display',serif; font-weight:700; color:var(--green); margin-bottom:6px;">Most Earnings Wins</div>
-        <div style="font-size:0.85rem; color:#666; line-height:1.6;">Your team score is the total prize money earned by your 5 golfers at Augusta.</div>
+        <div style="font-size:0.85rem; color:#666; line-height:1.6;">Your team score is the total prize money earned by your 5 golfers at Bay Hill.</div>
       </div>
       <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; padding:20px; border-top: 3px solid var(--gold);">
         <div style="font-size:1.8rem; margin-bottom:8px;">📊</div>
@@ -650,7 +650,7 @@
     <div class="payment-box">
       <div class="payment-header">
         <h3 id="payment-team-name">Your Entry</h3>
-        <p>J.Ray's Masters Pool · $25 per team</p>
+        <p>J.Ray's Swimmers Pool · $25 per team</p>
       </div>
       <div class="payment-body">
         <div id="order-lines"></div>
@@ -731,7 +731,7 @@
   <div id="page-tournament" class="page">
     <div class="section-header">
       <div class="section-title">Tournament Leaderboard</div>
-      <div class="section-sub">Live Cognizant Classic scores</div>
+      <div class="section-sub">Live Arnold Palmer Invitational scores</div>
     </div>
     <div style="margin-bottom:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -834,7 +834,7 @@
   <div id="page-admin" class="page">
     <div class="section-header">
       <div class="section-title">⚙ Admin Panel</div>
-      <div class="section-sub">J.Ray's Masters Pool · Management</div>
+      <div class="section-sub">J.Ray's Swimmers Pool · Management</div>
     </div>
 
     <!-- Summary Stats -->
@@ -945,12 +945,12 @@
 
 <!-- MASTERS THEME AUDIO PLAYER -->
 <div id="music-player" style="position:fixed; bottom:20px; left:8px; z-index:999; display:flex; align-items:center; gap:8px;">
-  <button id="music-btn" onclick="toggleMusic()" title="Toggle Masters theme music"
+  <button id="music-btn" onclick="toggleMusic()" title="Toggle Arnold Palmer theme music"
     style="background:var(--green); border:1.5px solid var(--gold); color:var(--gold); width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.3); transition:all 0.2s; -webkit-tap-highlight-color:transparent;">
     🔇
   </button>
   <div id="music-label" style="background:var(--green); border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-    ♪ Masters Theme
+    ♪ Bay Hill Theme
   </div>
 </div>
 <div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
@@ -1072,7 +1072,7 @@
 const CONFIG = {
   STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/test_5kQ8wQcZB67v6Sg7YPe7m00',
   ORGANIZER_EMAIL: 'jray@example.com',
-  POOL_NAME: "J.Ray's Masters Pool",
+  POOL_NAME: "J.Ray's Swimmers Pool",
   ENTRY_FEE: 25,
   TEAM_SIZE: 5,
 };
@@ -1127,7 +1127,7 @@ function initAdminToggles() {
 // ═══════════════════════════════════════════════════════
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
-const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
+const TOURNAMENT_ACTIVE = false; // true = show live scores tab & leaderboard earnings
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
@@ -1230,129 +1230,76 @@ let fetchInterval = null;
 // Feb 26 – Mar 1, 2026 · Purse: $9,600,000
 // ═══════════════════════════════════════════════════════
 const GOLFERS = [
-  { id: 1,   name: "Zach Bauchou",                rank: 1,   earnings: 0 },
-  { id: 2,   name: "Daniel Berger",               rank: 2,   earnings: 0 },
-  { id: 3,   name: "Christiaan Bezuidenhout",     rank: 3,   earnings: 0 },
-  { id: 4,   name: "Chandler Blanchet",           rank: 4,   earnings: 0 },
-  { id: 5,   name: "Michael Brennan",             rank: 5,   earnings: 0 },
-  { id: 6,   name: "Blades Brown",                rank: 6,   earnings: 0 },
-  { id: 7,   name: "Dan Brown",                   rank: 7,   earnings: 0 },
-  { id: 8,   name: "Rafael Campos",               rank: 8,   earnings: 0 },
-  { id: 9,   name: "Frankie Capan III",           rank: 9,   earnings: 0 },
-  { id: 10,  name: "Ricky Castillo",              rank: 10,  earnings: 0 },
-  { id: 11,  name: "Davis Chatfield",             rank: 11,  earnings: 0 },
-  { id: 12,  name: "Luke Clanton",                rank: 12,  earnings: 0 },
-  { id: 13,  name: "Eric Cole",                   rank: 13,  earnings: 0 },
-  { id: 14,  name: "Joel Dahmen",                 rank: 14,  earnings: 0 },
-  { id: 15,  name: "Cam Davis",                   rank: 15,  earnings: 0 },
-  { id: 16,  name: "Zecheng Dou",                 rank: 16,  earnings: 0 },
-  { id: 17,  name: "Nick Dunlap",                 rank: 17,  earnings: 0 },
-  { id: 18,  name: "Adrien Dumont de Chassart",   rank: 18,  earnings: 0 },
-  { id: 19,  name: "Nico Echavarria",             rank: 19,  earnings: 0 },
-  { id: 20,  name: "Austin Eckroat",              rank: 20,  earnings: 0 },
-  { id: 21,  name: "A.J. Ewart",                  rank: 21,  earnings: 0 },
-  { id: 22,  name: "Patrick Fishburn",            rank: 22,  earnings: 0 },
-  { id: 23,  name: "Steven Fisk",                 rank: 23,  earnings: 0 },
-  { id: 24,  name: "David Ford",                  rank: 24,  earnings: 0 },
-  { id: 25,  name: "Brice Garnett",               rank: 25,  earnings: 0 },
-  { id: 26,  name: "Ryan Gerard",                 rank: 26,  earnings: 0 },
-  { id: 27,  name: "Doug Ghim",                   rank: 27,  earnings: 0 },
-  { id: 28,  name: "Lanto Griffin",               rank: 28,  earnings: 0 },
-  { id: 29,  name: "Emiliano Grillo",             rank: 29,  earnings: 0 },
-  { id: 30,  name: "Adam Hadwin",                 rank: 30,  earnings: 0 },
-  { id: 31,  name: "Justin Hicks",                rank: 31,  earnings: 0 },
-  { id: 32,  name: "Garrick Higgo",               rank: 32,  earnings: 0 },
-  { id: 33,  name: "Harry Higgs",                 rank: 33,  earnings: 0 },
-  { id: 34,  name: "Joe Highsmith",               rank: 34,  earnings: 0 },
-  { id: 35,  name: "Kensei Hirata",               rank: 35,  earnings: 0 },
-  { id: 36,  name: "Lee Hodges",                  rank: 36,  earnings: 0 },
-  { id: 37,  name: "Rico Hoey",                   rank: 37,  earnings: 0 },
-  { id: 38,  name: "Charley Hoffman",             rank: 38,  earnings: 0 },
-  { id: 39,  name: "Max Homa",                    rank: 39,  earnings: 0 },
-  { id: 40,  name: "Billy Horschel",              rank: 40,  earnings: 0 },
-  { id: 41,  name: "Beau Hossler",                rank: 41,  earnings: 0 },
-  { id: 42,  name: "Mark Hubbard",                rank: 42,  earnings: 0 },
-  { id: 43,  name: "Mackenzie Hughes",            rank: 43,  earnings: 0 },
-  { id: 44,  name: "Nicolai Højgaard",            rank: 44,  earnings: 0 },
-  { id: 45,  name: "Rasmus Højgaard",             rank: 45,  earnings: 0 },
-  { id: 46,  name: "Stephan Jaeger",              rank: 46,  earnings: 0 },
-  { id: 47,  name: "Takumi Kanaya",               rank: 47,  earnings: 0 },
-  { id: 48,  name: "Jeffrey Kang",                rank: 48,  earnings: 0 },
-  { id: 49,  name: "Johnny Keefer",               rank: 49,  earnings: 0 },
-  { id: 50,  name: "Chan Kim",                    rank: 50,  earnings: 0 },
-  { id: 51,  name: "S.H. Kim",                    rank: 51,  earnings: 0 },
-  { id: 52,  name: "Tom Kim",                     rank: 52,  earnings: 0 },
-  { id: 53,  name: "Chris Kirk",                  rank: 53,  earnings: 0 },
-  { id: 54,  name: "Patton Kizzire",              rank: 54,  earnings: 0 },
-  { id: 55,  name: "Brooks Koepka",               rank: 55,  earnings: 0 },
-  { id: 56,  name: "Matt Kuchar",                 rank: 56,  earnings: 0 },
-  { id: 57,  name: "Christo Lamprecht",           rank: 57,  earnings: 0 },
-  { id: 58,  name: "Hank Lebioda",                rank: 58,  earnings: 0 },
-  { id: 59,  name: "K.H. Lee",                    rank: 59,  earnings: 0 },
-  { id: 60,  name: "Haotong Li",                  rank: 60,  earnings: 0 },
-  { id: 61,  name: "David Lipsky",                rank: 61,  earnings: 0 },
-  { id: 62,  name: "Justin Lower",                rank: 62,  earnings: 0 },
-  { id: 63,  name: "Shane Lowry",                 rank: 63,  earnings: 0 },
-  { id: 64,  name: "Peter Malnati",               rank: 64,  earnings: 0 },
-  { id: 65,  name: "Max McGreevy",                rank: 65,  earnings: 0 },
-  { id: 66,  name: "Mac Meissner",                rank: 66,  earnings: 0 },
-  { id: 67,  name: "Keith Mitchell",              rank: 67,  earnings: 0 },
-  { id: 68,  name: "Taylor Moore",                rank: 68,  earnings: 0 },
-  { id: 69,  name: "William Mouw",                rank: 69,  earnings: 0 },
-  { id: 70,  name: "Keita Nakajima",              rank: 70,  earnings: 0 },
-  { id: 71,  name: "Rasmus Neergaard-Petersen",   rank: 71,  earnings: 0 },
-  { id: 72,  name: "Pontus Nyholm",               rank: 72,  earnings: 0 },
-  { id: 73,  name: "Thorbjørn Olesen",            rank: 73,  earnings: 0 },
-  { id: 74,  name: "John Parry",                  rank: 74,  earnings: 0 },
-  { id: 75,  name: "Matthieu Pavon",              rank: 75,  earnings: 0 },
-  { id: 76,  name: "Chandler Phillips",           rank: 76,  earnings: 0 },
-  { id: 77,  name: "Séamus Power",                rank: 77,  earnings: 0 },
-  { id: 78,  name: "Andrew Putnam",               rank: 78,  earnings: 0 },
-  { id: 79,  name: "Aaron Rai",                   rank: 79,  earnings: 0 },
-  { id: 80,  name: "Chad Ramey",                  rank: 80,  earnings: 0 },
-  { id: 81,  name: "Kristoffer Reitan",           rank: 81,  earnings: 0 },
-  { id: 82,  name: "Davis Riley",                 rank: 82,  earnings: 0 },
-  { id: 83,  name: "Erik van Rooyen",             rank: 83,  earnings: 0 },
-  { id: 84,  name: "Kevin Roy",                   rank: 84,  earnings: 0 },
-  { id: 85,  name: "Marcelo Rozo",                rank: 85,  earnings: 0 },
-  { id: 86,  name: "Sam Ryder",                   rank: 86,  earnings: 0 },
-  { id: 87,  name: "Adrien Saddier",              rank: 87,  earnings: 0 },
-  { id: 88,  name: "Isaiah Salinda",              rank: 88,  earnings: 0 },
-  { id: 89,  name: "Gordon Sargent",              rank: 89,  earnings: 0 },
-  { id: 90,  name: "Adam Schenk",                 rank: 90,  earnings: 0 },
-  { id: 91,  name: "Matti Schmid",                rank: 91,  earnings: 0 },
-  { id: 92,  name: "Neal Shipley",                rank: 92,  earnings: 0 },
-  { id: 93,  name: "Webb Simpson",                rank: 93,  earnings: 0 },
-  { id: 94,  name: "Alex Smalley",                rank: 94,  earnings: 0 },
-  { id: 95,  name: "Jordan Smith",                rank: 95,  earnings: 0 },
-  { id: 96,  name: "Austin Smotherman",           rank: 96,  earnings: 0 },
-  { id: 97,  name: "Brandt Snedeker",             rank: 97,  earnings: 0 },
-  { id: 98,  name: "Jimmy Stanger",               rank: 98,  earnings: 0 },
-  { id: 99,  name: "Kevin Streelman",             rank: 99,  earnings: 0 },
-  { id: 100, name: "Jackson Suber",               rank: 100, earnings: 0 },
-  { id: 101, name: "Adam Svensson",               rank: 101, earnings: 0 },
-  { id: 102, name: "Jesper Svensson",             rank: 102, earnings: 0 },
-  { id: 103, name: "Davis Thompson",              rank: 103, earnings: 0 },
-  { id: 104, name: "Michael Thorbjornsen",        rank: 104, earnings: 0 },
-  { id: 105, name: "Brendon Todd",                rank: 105, earnings: 0 },
-  { id: 106, name: "Alejandro Tosti",             rank: 106, earnings: 0 },
-  { id: 107, name: "John VanDerLaan",             rank: 107, earnings: 0 },
-  { id: 108, name: "Kris Ventura",                rank: 108, earnings: 0 },
-  { id: 109, name: "Karl Vilips",                 rank: 109, earnings: 0 },
-  { id: 110, name: "Camilo Villegas",             rank: 110, earnings: 0 },
-  { id: 111, name: "Sami Välimäki",               rank: 111, earnings: 0 },
-  { id: 112, name: "Danny Walker",                rank: 112, earnings: 0 },
-  { id: 113, name: "Matt Wallace",                rank: 113, earnings: 0 },
-  { id: 114, name: "Paul Waring",                 rank: 114, earnings: 0 },
-  { id: 115, name: "Vince Whaley",                rank: 115, earnings: 0 },
-  { id: 116, name: "Danny Willett",               rank: 116, earnings: 0 },
-  { id: 117, name: "Aaron Wise",                  rank: 117, earnings: 0 },
-  { id: 118, name: "Gary Woodland",               rank: 118, earnings: 0 },
-  { id: 119, name: "Dylan Wu",                    rank: 119, earnings: 0 },
-  { id: 120, name: "Sudarshan Yellamaraju",       rank: 120, earnings: 0 },
-  { id: 121, name: "Carson Young",                rank: 121, earnings: 0 },
-  { id: 122, name: "Kevin Yu",                    rank: 122, earnings: 0 },
-  { id: 123, name: "Will Zalatoris",              rank: 123, earnings: 0 },
+  { id: 1,   name: "Scottie Scheffler",          rank: 1,   earnings: 0 },
+  { id: 2,   name: "Rory McIlroy",               rank: 2,   earnings: 0 },
+  { id: 3,   name: "Tommy Fleetwood",            rank: 3,   earnings: 0 },
+  { id: 4,   name: "Xander Schauffele",          rank: 4,   earnings: 0 },
+  { id: 5,   name: "Matt Fitzpatrick",           rank: 5,   earnings: 0 },
+  { id: 6,   name: "Hideki Matsuyama",           rank: 6,   earnings: 0 },
+  { id: 7,   name: "Russell Henley",             rank: 7,   earnings: 0 },
+  { id: 8,   name: "Collin Morikawa",            rank: 8,   earnings: 0 },
+  { id: 9,   name: "Si Woo Kim",                 rank: 9,   earnings: 0 },
+  { id: 10,  name: "Cameron Young",              rank: 10,  earnings: 0 },
+  { id: 11,  name: "Robert MacIntyre",           rank: 11,  earnings: 0 },
+  { id: 12,  name: "Patrick Cantlay",            rank: 12,  earnings: 0 },
+  { id: 13,  name: "Ben Griffin",                rank: 13,  earnings: 0 },
+  { id: 14,  name: "Harris English",             rank: 14,  earnings: 0 },
+  { id: 15,  name: "Jake Knapp",                 rank: 15,  earnings: 0 },
+  { id: 16,  name: "Viktor Hovland",             rank: 16,  earnings: 0 },
+  { id: 17,  name: "Sam Burns",                  rank: 17,  earnings: 0 },
+  { id: 18,  name: "Ludvig Aberg",               rank: 18,  earnings: 0 },
+  { id: 19,  name: "Kurt Kitayama",              rank: 19,  earnings: 0 },
+  { id: 20,  name: "Chris Gotterup",             rank: 20,  earnings: 0 },
+  { id: 21,  name: "Rickie Fowler",              rank: 21,  earnings: 0 },
+  { id: 22,  name: "Maverick McNealy",           rank: 22,  earnings: 0 },
+  { id: 23,  name: "Justin Rose",                rank: 23,  earnings: 0 },
+  { id: 24,  name: "Adam Scott",                 rank: 24,  earnings: 0 },
+  { id: 25,  name: "Shane Lowry",                rank: 25,  earnings: 0 },
+  { id: 26,  name: "Justin Thomas",              rank: 26,  earnings: 0 },
+  { id: 27,  name: "Min Woo Lee",                rank: 27,  earnings: 0 },
+  { id: 28,  name: "Jason Day",                  rank: 28,  earnings: 0 },
+  { id: 29,  name: "Keegan Bradley",             rank: 29,  earnings: 0 },
+  { id: 30,  name: "Jordan Spieth",              rank: 30,  earnings: 0 },
+  { id: 31,  name: "Pierceson Coody",            rank: 31,  earnings: 0 },
+  { id: 32,  name: "Jacob Bridgeman",            rank: 32,  earnings: 0 },
+  { id: 33,  name: "J.J. Spaun",                 rank: 33,  earnings: 0 },
+  { id: 34,  name: "Akshay Bhatia",              rank: 34,  earnings: 0 },
+  { id: 35,  name: "Alex Noren",                 rank: 35,  earnings: 0 },
+  { id: 36,  name: "Nick Taylor",                rank: 36,  earnings: 0 },
+  { id: 37,  name: "Harry Hall",                 rank: 37,  earnings: 0 },
+  { id: 38,  name: "Ryan Gerard",                rank: 38,  earnings: 0 },
+  { id: 39,  name: "Nicolai Hojgaard",           rank: 39,  earnings: 0 },
+  { id: 40,  name: "Sepp Straka",                rank: 40,  earnings: 0 },
+  { id: 41,  name: "Corey Conners",              rank: 41,  earnings: 0 },
+  { id: 42,  name: "Michael Thorbjornsen",       rank: 42,  earnings: 0 },
+  { id: 43,  name: "Taylor Pendrith",            rank: 43,  earnings: 0 },
+  { id: 44,  name: "Sam Stevens",                rank: 44,  earnings: 0 },
+  { id: 45,  name: "Daniel Berger",              rank: 45,  earnings: 0 },
+  { id: 46,  name: "Sahith Theegala",            rank: 46,  earnings: 0 },
+  { id: 47,  name: "J.T. Poston",                rank: 47,  earnings: 0 },
+  { id: 48,  name: "Matt McCarty",               rank: 48,  earnings: 0 },
+  { id: 49,  name: "Ryan Fox",                   rank: 49,  earnings: 0 },
+  { id: 50,  name: "Sungjae Im",                 rank: 50,  earnings: 0 },
+  { id: 51,  name: "Denny McCarthy",             rank: 51,  earnings: 0 },
+  { id: 52,  name: "Haotong Li",                 rank: 52,  earnings: 0 },
+  { id: 53,  name: "Chris Kirk",                 rank: 53,  earnings: 0 },
+  { id: 54,  name: "Patrick Rodgers",            rank: 54,  earnings: 0 },
+  { id: 55,  name: "Tony Finau",                 rank: 55,  earnings: 0 },
+  { id: 56,  name: "Ryo Hisatsune",              rank: 56,  earnings: 0 },
+  { id: 57,  name: "Brian Harman",               rank: 57,  earnings: 0 },
+  { id: 58,  name: "Stephan Jaeger",             rank: 58,  earnings: 0 },
+  { id: 59,  name: "Michael Kim",                rank: 59,  earnings: 0 },
+  { id: 60,  name: "Aldrich Potgieter",          rank: 60,  earnings: 0 },
+  { id: 61,  name: "Bud Cauley",                 rank: 61,  earnings: 0 },
+  { id: 62,  name: "Andrew Novak",               rank: 62,  earnings: 0 },
+  { id: 63,  name: "Kevin Roy",                  rank: 63,  earnings: 0 },
+  { id: 64,  name: "Lucas Glover",               rank: 64,  earnings: 0 },
+  { id: 65,  name: "Tom Hoge",                   rank: 65,  earnings: 0 },
+  { id: 66,  name: "Billy Horschel",             rank: 66,  earnings: 0 },
+  { id: 67,  name: "Andrew Putnam",              rank: 67,  earnings: 0 },
+  { id: 68,  name: "Jhonattan Vegas",            rank: 68,  earnings: 0 },
+  { id: 69,  name: "Daniel Bennett",             rank: 69,  earnings: 0 },
+  { id: 70,  name: "Brian Campbell",             rank: 70,  earnings: 0 },
 ];
 
 // ═══════════════════════════════════════════════════════
@@ -1564,34 +1511,11 @@ function golferNameToId(name) {
 // ═══════════════════════════════════════════════════════
 // PRACTICE TEAMS — 20 teams of 5 using Cognizant field
 // ═══════════════════════════════════════════════════════
-const SEEDED_TEAMS = [
-  { name: "Palm Beach Predators",    golferNames: ["Ricky Castillo","Isaiah Salinda","Jimmy Stanger","John Parry","Mac Meissner"] },
-  { name: "The Snowbirds",           golferNames: ["Nick Dunlap","Matti Schmid","Danny Walker","Jackson Suber","Aaron Rai"] },
-  { name: "Bear Trap Survivors",     golferNames: ["Matthieu Pavon","Patrick Fishburn","Justin Hicks","Erik van Rooyen","Harry Higgs"] },
-  { name: "Florida Man",             golferNames: ["Jeffrey Kang","Keith Mitchell","Gary Woodland","Brandt Snedeker","Kevin Streelman"] },
-  { name: "Sunshine State Killers",  golferNames: ["Christo Lamprecht","Shane Lowry","Peter Malnati","Séamus Power","Rico Hoey"] },
-  { name: "The Palm Readers",        golferNames: ["Will Zalatoris","Rafael Campos","Daniel Berger","Austin Smotherman","S.H. Kim"] },
-  { name: "Bogey Free in Boca",      golferNames: ["Doug Ghim","Matt Wallace","Matt Kuchar","Kristoffer Reitan","Webb Simpson"] },
-  { name: "Snowbird Special",        golferNames: ["Tom Kim","Billy Horschel","Alex Smalley","Kensei Hirata","Rasmus Neergaard-Petersen"] },
-  { name: "The Sunscreen Squad",     golferNames: ["Max Homa","John VanDerLaan","Mark Hubbard","Chris Kirk","Justin Lower"] },
-  { name: "Coconut Creek Crushers",  golferNames: ["Chad Ramey","Steven Fisk","Haotong Li","Taylor Moore","David Ford"] },
-  { name: "Tee It Up in Tampa",      golferNames: ["Beau Hossler","Davis Thompson","Danny Willett","Jesper Svensson","Dan Brown"] },
-  { name: "The Gator Gang",          golferNames: ["David Lipsky","Sam Ryder","Thorbjørn Olesen","Nico Echavarria","Chan Kim"] },
-  { name: "Fairway to Miami",        golferNames: ["Kevin Yu","Mackenzie Hughes","Christiaan Bezuidenhout","Frankie Capan III","Brice Garnett"] },
-  { name: "Par Troppo",              golferNames: ["Takumi Kanaya","Charley Hoffman","Davis Chatfield","Adam Svensson","Zecheng Dou"] },
-  { name: "Garden State Crashers",   golferNames: ["William Mouw","K.H. Lee","Blades Brown","Joe Highsmith","Rasmus Højgaard"] },
-  { name: "The Rough Riders",        golferNames: ["Stephan Jaeger","Eric Cole","Johnny Keefer","Brendon Todd","Paul Waring"] },
-  { name: "Wedge Salad",             golferNames: ["Marcelo Rozo","Michael Thorbjornsen","Austin Eckroat","Gordon Sargent","Nicolai Højgaard"] },
-  { name: "Cloud Nine Iron",         golferNames: ["Kris Ventura","A.J. Ewart","Zach Bauchou","Dylan Wu","Karl Vilips"] },
-  { name: "The Pin Seekers",         golferNames: ["Hank Lebioda","Aaron Wise","Patton Kizzire","Sami Välimäki","Adam Schenk"] },
-  { name: "PGA National Gang",       golferNames: ["Kevin Roy","Neal Shipley","Ryan Gerard","Pontus Nyholm","Alejandro Tosti"] },
-];
-
 // ═══════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════
 // ── Cache version — bump this any time teams/field changes ──
-const DATA_VERSION = 'cognizant-2026-v5';
+const DATA_VERSION = 'valspar-2026-v1';
 let adminLoggedIn = JSON.parse(sessionStorage.getItem('admin_auth') || 'false');
 
 // ═══════════════════════════════════════════════════════
@@ -1647,21 +1571,6 @@ async function loadTeams() {
   const { data, error } = await sb.from('teams').select('*');
   if (error) { console.error('Error loading teams:', error); allTeams = []; return; }
   allTeams = data || [];
-  // If no teams in DB yet, seed with practice teams
-  if (allTeams.length === 0) {
-    const seeded = SEEDED_TEAMS.map((t, i) => ({
-      id: crypto.randomUUID(),
-      name: t.name,
-      golfers: t.golferNames.map(n => golferNameToId(n)).filter(Boolean),
-      owner: 'admin',
-      owner_name: t.name,
-      paid: true,
-      paid_at: new Date().toISOString(),
-      seeded: true,
-    }));
-    const { data: inserted } = await sb.from('teams').insert(seeded).select();
-    allTeams = inserted || seeded;
-  }
 }
 
 let selectedGolfers = [];
@@ -1984,7 +1893,7 @@ function renderPaymentSummary() {
   if (noteEl) {
     const teamNames = teams.map(t => t.name).join(', ');
     const userName = currentUser?.name || '';
-    noteEl.textContent = `Masters Pool – ${userName} – ${teamNames}`;
+    noteEl.textContent = `Swimmers Pool – ${userName} – ${teamNames}`;
   }
 }
 
@@ -2118,7 +2027,7 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = [4,4,5,4,3,4,3,4,4, 5,4,4,4,4,3,4,3,5];
+const HOLE_PARS = [4,3,4,5,4,5,3,4,4, 4,4,5,4,3,4,5,3,4];
 
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
@@ -2292,7 +2201,7 @@ function renderTournament() {
 
   if (!hasData) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#aaa; font-style:italic;">
-      ${TOURNAMENT_ACTIVE ? 'Fetching live scores from ESPN...' : 'Tournament begins April 9, 2026. Scores will appear here once play begins.'}
+      ${TOURNAMENT_ACTIVE ? 'Fetching live scores from ESPN...' : 'Tournament begins March 5, 2026. Scores will appear here once play begins.'}
     </td></tr>`;
     return;
   }
@@ -2691,7 +2600,7 @@ function exportCSV() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `jrays-masters-pool-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `jrays-swimmers-pool-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
   showToast('CSV exported!', 'success');
@@ -2715,7 +2624,7 @@ function startMusic() {
   musicPlaying = true;
   updateMusicBtn();
   const label = document.getElementById('music-label');
-  label.textContent = '♪ Masters Theme';
+  label.textContent = '♪ Bay Hill Theme';
   label.style.opacity = '1';
   setTimeout(() => { label.style.opacity = '0'; }, 3500);
 }
@@ -2740,7 +2649,7 @@ function updateMusicBtn() {
 window.addEventListener('load', () => {
   setTimeout(() => {
     const label = document.getElementById('music-label');
-    label.textContent = '♪ Click for Masters theme';
+    label.textContent = '♪ Click for Bay Hill theme';
     label.style.opacity = '1';
     setTimeout(() => { label.style.opacity = '0'; }, 4000);
   }, 1500);
