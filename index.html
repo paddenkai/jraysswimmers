@@ -715,6 +715,7 @@
         <option value="team">Sort by Team Name</option>
         <option value="owner">Sort by Owner</option>
       </select>
+      <button id="export-results-btn" onclick="exportResults()" style="display:none; background:var(--gold); color:var(--dark); border:none; border-radius:4px; padding:9px 16px; font-size:0.78rem; font-family:'DM Mono',monospace; font-weight:700; cursor:pointer; letter-spacing:1px; white-space:nowrap;">↓ Download Results</button>
     </div>
     <div class="tourn-table-wrap">
       <table class="leaderboard-table" id="leaderboard-table">
@@ -897,11 +898,20 @@
           </label>
         </div>
 
+        <!-- Show Results Toggle -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div>
+            <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">Show Results Export</div>
+            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Show download button on leaderboard (enable at end of tournament)</div>
+          </div>
+          <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
+            <input type="checkbox" id="toggle-results" onchange="saveAdminSettings()" style="opacity:0; width:0; height:0;">
+            <span id="toggle-results-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
+            <span id="toggle-results-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+          </label>
+        </div>
+
       </div>
-    </div>
-
-
-    <!-- Controls -->
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <input type="text" id="admin-search" placeholder="Search by name or email..." oninput="renderAdminTable()"
         style="padding:9px 14px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:var(--cream); flex:1; min-width:200px;" />
@@ -1090,6 +1100,7 @@ const CONFIG = {
 let adminSettings = {
   registrationOpen: true,
   showPicks: false,
+  showResults: false,
 };
 
 async function loadAdminSettings() {
@@ -1097,21 +1108,25 @@ async function loadAdminSettings() {
   if (data) {
     adminSettings.registrationOpen = data.registration_open;
     adminSettings.showPicks = data.show_picks;
+    adminSettings.showResults = data.show_results || false;
   }
 }
 
 async function saveAdminSettings() {
   adminSettings.registrationOpen = document.getElementById('toggle-registration').checked;
   adminSettings.showPicks = document.getElementById('toggle-picks').checked;
+  adminSettings.showResults = document.getElementById('toggle-results').checked;
   const { error } = await sb.from('admin_settings').upsert({
     id: 1,
     registration_open: adminSettings.registrationOpen,
     show_picks: adminSettings.showPicks,
+    show_results: adminSettings.showResults,
     updated_at: new Date().toISOString()
   });
   if (error) { showToast('Error saving settings.', 'error'); return; }
   updateToggleUI('toggle-registration', adminSettings.registrationOpen);
   updateToggleUI('toggle-picks', adminSettings.showPicks);
+  updateToggleUI('toggle-results', adminSettings.showResults);
   updateNav();
   renderLeaderboard();
   showToast('Settings saved!', 'success');
@@ -1129,6 +1144,7 @@ function updateToggleUI(id, isOn) {
 function initAdminToggles() {
   updateToggleUI('toggle-registration', adminSettings.registrationOpen);
   updateToggleUI('toggle-picks', adminSettings.showPicks);
+  updateToggleUI('toggle-results', adminSettings.showResults);
 }
 
 
@@ -2000,6 +2016,10 @@ function renderLeaderboard() {
   const tbody = document.getElementById('leaderboard-body');
   const empty = document.getElementById('leaderboard-empty');
 
+  // Show/hide export results button based on admin setting
+  const exportBtn = document.getElementById('export-results-btn');
+  if (exportBtn) exportBtn.style.display = adminSettings.showResults ? 'inline-block' : 'none';
+
   if (paidTeams.length === 0) {
     tbody.innerHTML = '';
     empty.style.display = 'block';
@@ -2645,6 +2665,33 @@ async function togglePaidStatus(teamId, paid) {
   showToast(`"${team.name}" marked ${paid ? 'paid ✓' : 'unpaid'}`, paid ? 'success' : '');
   renderAdminPanel();
   updateStats();
+}
+
+function exportResults() {
+  const paidTeams = allTeams.filter(t => t.paid).sort((a, b) => getTeamEarnings(b) - getTeamEarnings(a));
+  const headers = ['Rank', 'Team Name', 'Owner', 'Golfer 1', 'Golfer 2', 'Golfer 3', 'Golfer 4', 'Golfer 5', 'Total Earnings'];
+  let rank = 1;
+  const rows = paidTeams.map((team, i) => {
+    if (i > 0 && getTeamEarnings(paidTeams[i]) < getTeamEarnings(paidTeams[i-1])) rank = i + 1;
+    const golfers = team.golfers.map(id => GOLFERS.find(g => g.id === id)?.name || '');
+    const earnings = getTeamEarnings(team);
+    return [
+      rank,
+      `"${team.name}"`,
+      `"${team.owner_name || ''}"`,
+      ...golfers.map(n => `"${n}"`),
+      `$${earnings.toLocaleString()}`
+    ].join(',');
+  });
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `jrays-swimmers-results-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Results exported!', 'success');
 }
 
 function exportCSV() {
