@@ -557,7 +557,7 @@
     <div class="hero" style="margin: -40px -24px 36px; padding: 60px 24px;">
       <div class="hero-badge">⛳ 2026 J.Ray's Swimmers Pool</div>
       <h1>Pick Your <em>Champions.</em><br>Win the Pot.</h1>
-      <p>Build a team of 5 golfers from the Arnold Palmer Invitational field. The team with the highest total prize earnings wins the pool. $25 per entry.</p>
+      <p>Build a team of 5 golfers from the Arnold Palmer Invitational field. The team with the highest total prize earnings wins the pool. $10 per entry.</p>
       <div style="font-family:'DM Mono',monospace; font-size:0.78rem; color:rgba(250,246,238,0.5); letter-spacing:2px; margin-bottom:28px; text-transform:uppercase;">Bay Hill Club · March 5–8, 2026</div>
       <div class="hero-cta">
         <button class="btn btn-gold" onclick="requireAuth(() => showPage('builder'))">Build Your Team →</button>
@@ -593,7 +593,7 @@
   <div id="page-builder" class="page">
     <div class="section-header">
       <div class="section-title">Build Your Team</div>
-      <div class="section-sub">Select 5 golfers · $25 per entry</div>
+      <div class="section-sub">Select 5 golfers · $10 per entry</div>
     </div>
 
     <!-- Registration closed message -->
@@ -650,11 +650,11 @@
     <div class="payment-box">
       <div class="payment-header">
         <h3 id="payment-team-name">Your Entry</h3>
-        <p>J.Ray's Swimmers Pool · $25 per team</p>
+        <p>J.Ray's Swimmers Pool · $10 per team</p>
       </div>
       <div class="payment-body">
         <div id="order-lines"></div>
-        <div class="order-total"><span>Total</span><span id="order-total-val">$25.00</span></div>
+        <div class="order-total"><span>Total</span><span id="order-total-val">$10.00</span></div>
 
         <!-- Venmo instructions -->
         <div style="margin:24px 0 0; background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:8px; padding:20px;">
@@ -671,7 +671,10 @@
           </div>
 
           <div style="font-size:0.78rem; color:#666; text-align:center; margin:10px 0 4px;">Include this note with your payment:</div>
-          <div id="payment-note-display" style="font-family:'DM Mono',monospace; font-size:0.82rem; background:white; border:1.5px dashed #c8e0c8; border-radius:6px; padding:10px; text-align:center; color:var(--green); font-weight:600; margin-bottom:14px;"></div>
+          <div style="position:relative;">
+            <div id="payment-note-display" style="font-family:'DM Mono',monospace; font-size:0.82rem; background:white; border:1.5px dashed #c8e0c8; border-radius:6px; padding:10px 44px 10px 10px; text-align:center; color:var(--green); font-weight:600; margin-bottom:14px;"></div>
+            <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background:var(--green); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
+          </div>
 
           <!-- Open in Venmo button -->
           <button onclick="openVenmo()" style="width:100%; background:#008CFF; color:white; border:none; border-radius:8px; padding:14px; font-size:1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:10px;">
@@ -960,9 +963,9 @@
   </div>
 </div>
 <div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
-  <iframe id="yt-player" width="1" height="1" frameborder="0"
-    allow="autoplay; encrypted-media" allowfullscreen>
-  </iframe>
+  <audio id="bg-audio" loop>
+    <source src="./Arnold_Palmer_Tournament_Golf_-_BGM_1.mp3" type="audio/mpeg">
+  </audio>
 </div>
 
 <div class="modal-overlay" id="auth-modal">
@@ -1033,7 +1036,7 @@
     <h2 style="color:var(--green);">Team Submitted!</h2>
     <p style="color:#666; margin: 12px 0 6px; line-height:1.6;">Your team has been registered. Once I receive your payment, your entry will be marked as paid and appear on the leaderboard.</p>
     <div style="background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:6px; padding:12px 16px; margin:14px 0 20px; font-size:0.82rem; color:#555; line-height:1.6;">
-      📱 Send <strong style="color:var(--green);">$25</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
+      📱 Send <strong style="color:var(--green);">$10</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
     </div>
     <button class="btn btn-gold" onclick="closeModal('success-modal'); showPage('myteams');">View My Teams →</button>
     <div style="margin-top:10px;">
@@ -1079,7 +1082,7 @@ const CONFIG = {
   STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/test_5kQ8wQcZB67v6Sg7YPe7m00',
   ORGANIZER_EMAIL: 'jray@example.com',
   POOL_NAME: "J.Ray's Swimmers Pool",
-  ENTRY_FEE: 25,
+  ENTRY_FEE: 10,
   TEAM_SIZE: 5,
 };
 
@@ -1912,6 +1915,17 @@ function renderPaymentSummary() {
   }
 }
 
+function copyPaymentNote() {
+  const noteEl = document.getElementById('payment-note-display');
+  if (!noteEl) return;
+  navigator.clipboard.writeText(noteEl.textContent).then(() => {
+    const btn = document.getElementById('copy-note-btn');
+    btn.textContent = 'COPIED!';
+    btn.style.background = '#27ae60';
+    setTimeout(() => { btn.textContent = 'COPY'; btn.style.background = 'var(--green)'; }, 2000);
+  });
+}
+
 function copyVenmo() {
   navigator.clipboard.writeText('@JRaysPool').then(() => {
     showToast('Venmo handle copied!', 'success');
@@ -1940,7 +1954,7 @@ async function openVenmo() {
   // Now open Venmo
   const noteEl = document.getElementById('payment-note-display');
   const note = noteEl ? encodeURIComponent(noteEl.textContent) : '';
-  const amount = rows.length * 25;
+  const amount = rows.length * 10;
   const appUrl = `venmo://paycharge?txn=pay&recipients=JRaysPool&amount=${amount}&note=${note}`;
   const webUrl = `https://venmo.com/u/JRaysPool`;
   window.location.href = appUrl;
@@ -2669,8 +2683,9 @@ let musicPlaying = false;
 function startMusic() {
   if (musicStarted) return;
   musicStarted = true;
-  const iframe = document.getElementById('yt-player');
-  iframe.src = 'https://www.youtube.com/embed/G97AdMLbfr4?autoplay=1&mute=0&loop=1&playlist=G97AdMLbfr4&controls=0&enablejsapi=1';
+  const audio = document.getElementById('bg-audio');
+  audio.volume = 0.6;
+  audio.play();
   musicPlaying = true;
   updateMusicBtn();
   const label = document.getElementById('music-label');
@@ -2681,11 +2696,9 @@ function startMusic() {
 
 function toggleMusic() {
   if (!musicStarted) { startMusic(); return; }
+  const audio = document.getElementById('bg-audio');
   musicPlaying = !musicPlaying;
-  const iframe = document.getElementById('yt-player');
-  iframe.src = musicPlaying
-    ? 'https://www.youtube.com/embed/G97AdMLbfr4?autoplay=1&mute=0&loop=1&playlist=G97AdMLbfr4&controls=0&enablejsapi=1'
-    : '';
+  musicPlaying ? audio.play() : audio.pause();
   updateMusicBtn();
 }
 
