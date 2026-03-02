@@ -144,6 +144,7 @@
 
   /* ─── MAIN ─── */
   main { max-width: 1200px; margin: 0 auto; padding: 40px 24px; background: var(--cream); }
+  main:has(#page-home.active) { background: var(--dark); }
 
   .section-header {
     display: flex;
@@ -588,13 +589,13 @@
             <button class="btn btn-gold" onclick="requireAuth(() => showPage('builder'))" style="padding:15px 36px; font-size:1rem;">Build Your Team →</button>
             <button class="btn btn-outline" onclick="showPage('leaderboard')" style="padding:15px 28px;">View All Teams</button>
           </div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.68rem; color:rgba(232,119,34,0.6); letter-spacing:3px; text-transform:uppercase;">Bay Hill Club · March 5–8, 2026 · $10 per entry</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.8rem; color:rgba(232,119,34,0.6); letter-spacing:3px; text-transform:uppercase;">Bay Hill Club · March 5–8, 2026 · $10 per entry</div>
         </div>
 
         <!-- Divider -->
         <div style="display:flex; align-items:center; gap:16px; margin-bottom:44px;">
           <div style="flex:1; height:1px; background:rgba(232,119,34,0.2);"></div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:3px; color:rgba(232,119,34,0.5); text-transform:uppercase;">How It Works</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:4px; color:rgba(232,119,34,0.5); text-transform:uppercase;">How It Works</div>
           <div style="flex:1; height:1px; background:rgba(232,119,34,0.2);"></div>
         </div>
 
@@ -2598,7 +2599,7 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 // ═══════════════════════════════════════════════════════
 // ADMIN PANEL
 // ═══════════════════════════════════════════════════════
-const ADMIN_PASSWORD = 'AugustaCC72!!';
+const ADMIN_PASSWORD = 'Cecilia1334';
 function openAdminLogin() {
   if (adminLoggedIn) { showPage('admin'); renderAdminPanel(); return; }
   document.getElementById('admin-password-input').value = '';
