@@ -23,7 +23,6 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { overflow-x: hidden; }
   body {
     font-family: 'Libre Baskerville', Georgia, serif;
     background: var(--dark);
@@ -528,6 +527,7 @@
 </style>
 </head>
 <body>
+<div style="max-width:100vw; overflow-x:hidden; position:relative;">
 
 <!-- HEADER -->
 <header>
@@ -2847,5 +2847,6 @@ function closeMobileNav() {
 
 initApp();
 </script>
+</div>
 </body>
 </html>
