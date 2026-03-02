@@ -818,7 +818,7 @@
             <option value="">None</option>
           </select>
         </div>
-        <button onclick="fetchESPNScores()" style="background:var(--green); color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; cursor:pointer; letter-spacing:1px;">↻ REFRESH NOW</button>
+        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background:var(--green); color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default;" id="refresh-btn">↻ REFRESH NOW</button>
       </div>
     </div>
     <div style="margin-bottom:8px; font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; text-align:right; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
@@ -1595,6 +1595,8 @@ function updateFetchStatus(status) {
 }
 
 function startLiveFetching() {
+  const btn = document.getElementById('refresh-btn');
+  if (btn) { btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
   fetchESPNScores();
   fetchInterval = setInterval(fetchESPNScores, 60000); // every 60s
 }
