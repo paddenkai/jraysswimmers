@@ -28,6 +28,7 @@
     background: var(--dark);
     color: var(--dark);
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
   /* ─── HEADER ─── */
@@ -136,6 +137,9 @@
     justify-content: center;
     gap: 48px;
     flex-wrap: wrap;
+    position: sticky;
+    top: 57px;
+    z-index: 99;
   }
   .stat { text-align: center; }
   .stat-val { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--gold); }
@@ -559,7 +563,7 @@
   <div id="page-home" class="page">
 
     <!-- HERO + HOW IT WORKS as one unified block -->
-    <div style="margin: -40px -24px 36px; position:relative; overflow:hidden;">
+    <div style="margin: -40px -24px 36px; position:relative; overflow:hidden; width:calc(100% + 48px); box-sizing:border-box;">
 
       <!-- Background -->
       <div style="position:absolute; inset:0; background: linear-gradient(160deg, var(--dark) 0%, #2a1050 50%, var(--green) 100%);"></div>
