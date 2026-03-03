@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <circle cx="100" cy="100" r="100" fill="#1a4731"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+
+  <!-- Use text for clean letterforms -->
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700');
+    </style>
+  </defs>
+
+  <!-- JRS text centered -->
+  <text
+    x="100"
+    y="120"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="58"
+    font-weight="700"
+    fill="#ffffff"
+    text-anchor="middle"
+    letter-spacing="2"
+  >J.RS</text>
+
+  <!-- Thin underline accent -->
+  <line x1="52" y1="136" x2="148" y2="136" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+</svg>
