@@ -2747,8 +2747,6 @@ function renderProfile() {
   avatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
   document.getElementById('profile-name').textContent = currentUser.name;
   document.getElementById('profile-email').textContent = currentUser.email;
-  document.getElementById('settings-name').value = currentUser.name;
-  document.getElementById('settings-email').value = currentUser.email;
   const myTeams = allTeams.filter(t => t.owner === currentUser.email && t.paid);
   document.getElementById('profile-teams').textContent = myTeams.length;
   const sorted = allTeams.filter(t=>t.paid).sort((a,b)=>getTeamEarnings(b)-getTeamEarnings(a));
