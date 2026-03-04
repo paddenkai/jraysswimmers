@@ -2113,9 +2113,12 @@ async function addTeamToCart() {
     showNameError('Please enter a team name');
     return;
   }
+  // DEBUG - remove after testing
+  alert('DEBUG: teamName="' + teamName + '" tracker="' + (trackerInput?.value || 'null') + '" panel="' + (panelInput?.value || 'null') + '"');
   // Check for duplicate — fetch all team names fresh from Supabase
   const nameLower = teamName.toLowerCase().trim();
-  const { data: allExisting } = await sb.from('teams').select('name');
+  const { data: allExisting, error: fetchErr } = await sb.from('teams').select('name');
+  alert('DEBUG: found ' + (allExisting?.length || 0) + ' teams, error=' + (fetchErr?.message || 'none') + ', names=' + (allExisting||[]).map(t=>t.name).join('|'));
   const isDuplicate =
     (allExisting || []).some(t => t.name.toLowerCase().trim() === nameLower) ||
     cart.some(t => t.name.toLowerCase().trim() === nameLower);
