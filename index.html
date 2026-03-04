@@ -323,6 +323,7 @@
     }
     #mobile-team-tracker .tracker-dots { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
     #mobile-team-tracker .tracker-dot {
+      min-width: 10px;
       width: 12px; height: 12px; border-radius: 50%;
       background: rgba(255,255,255,0.25);
       transition: background 0.2s;
@@ -742,21 +743,22 @@
     </div>
     <!-- Mobile sticky team tracker -->
     <div id="mobile-team-tracker">
-      <div class="tracker-row1">
-        <div class="tracker-dots">
-          <div class="tracker-dot" id="dot-0"></div>
-          <div class="tracker-dot" id="dot-1"></div>
-          <div class="tracker-dot" id="dot-2"></div>
-          <div class="tracker-dot" id="dot-3"></div>
-          <div class="tracker-dot" id="dot-4"></div>
-        </div>
-        <div class="tracker-count" id="tracker-count">0/5 selected</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div class="tracker-count" id="tracker-count" style="font-size:0.72rem;">0/5 selected</div>
       </div>
       <input class="tracker-name-input" id="tracker-name-input" type="text" placeholder="Name your team..." maxlength="40" oninput="syncTrackerName(); clearNameError()" />
       <div id="tracker-name-error" style="display:none; color:#ff6b6b; font-size:0.72rem; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:4px; padding:5px 8px; background:rgba(255,100,100,0.15); border-left:3px solid #ff6b6b; border-radius:0 4px 4px 0;"></div>
-      <div style="display:flex; gap:8px; margin-top:0;">
+      <div style="display:flex; gap:8px; margin-top:6px;">
         <button class="tracker-add-btn" id="tracker-add-btn" onclick="addTeamToCart()">+ Add Team</button>
         <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit + Checkout →</button>
+      </div>
+      <!-- Selected golfer pills — shown below buttons -->
+      <div class="tracker-dots" style="margin-top:10px; min-height:28px;">
+        <div class="tracker-dot" id="dot-0"></div>
+        <div class="tracker-dot" id="dot-1"></div>
+        <div class="tracker-dot" id="dot-2"></div>
+        <div class="tracker-dot" id="dot-3"></div>
+        <div class="tracker-dot" id="dot-4"></div>
       </div>
       <div id="tracker-cart-count" style="display:none; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); text-align:left; margin-top:8px;"></div>
     </div>
@@ -2929,16 +2931,17 @@ function updateMobileTracker() {
     if (dot) {
       const golfer = selectedGolfers[i] ? GOLFERS.find(g => g.id === selectedGolfers[i]) : null;
       if (golfer) {
-        const parts = golfer.name.trim().split(' ');
-        const abbrev = parts.length > 1 ? parts[0][0] + '. ' + parts[parts.length - 1] : golfer.name;
+        // Show full name in pill
         dot.classList.add('filled');
         dot.style.width = 'auto';
-        dot.style.borderRadius = '4px';
-        dot.style.padding = '3px 7px';
-        dot.style.fontSize = '0.72rem';
+        dot.style.borderRadius = '20px';
+        dot.style.padding = '4px 10px';
+        dot.style.fontSize = '0.75rem';
         dot.style.fontFamily = "'DM Mono', monospace";
         dot.style.letterSpacing = '0';
-        dot.textContent = abbrev;
+        dot.style.whiteSpace = 'nowrap';
+        const parts = golfer.name.trim().split(' ');
+        dot.textContent = parts.length > 1 ? parts[0][0] + '. ' + parts[parts.length - 1] : golfer.name;
       } else {
         dot.classList.remove('filled');
         dot.style.width = '10px';
@@ -2946,6 +2949,7 @@ function updateMobileTracker() {
         dot.style.padding = '0';
         dot.style.fontSize = '';
         dot.style.fontFamily = '';
+        dot.style.whiteSpace = '';
         dot.textContent = '';
       }
     }
