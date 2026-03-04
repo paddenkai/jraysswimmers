@@ -379,6 +379,42 @@
     .team-builder-grid .team-panel { display: none !important; }
   }
   .team-panel-sub { font-size: 0.78rem; color: rgba(255,255,255,0.6); font-family: 'DM Mono', monospace; margin-bottom: 16px; }
+  /* Desktop panel pills */
+  .panel-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gold);
+    color: white;
+    border-radius: 20px;
+    padding: 5px 10px 5px 12px;
+    font-size: 0.78rem;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+  }
+  .pill-remove {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+  }
+  .pill-remove:hover { color: white; }
+  .panel-dot {
+    width: 100%;
+    height: 38px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px dashed rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+  .panel-pill {
+    width: 100%;
+    box-sizing: border-box;
+  }
   .team-slot {
     border: 1.5px dashed rgba(255,255,255,0.3);
     border-radius: 5px;
@@ -794,8 +830,8 @@
           <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team..." maxlength="40" style="margin-bottom:4px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(255,255,255,0.9); color:#2a1f5e; border-radius:6px; padding:10px 12px; font-size:0.95rem; width:100%; box-sizing:border-box;" oninput="updateMobileTracker(); clearNameError()" />
           <div id="panel-name-error" style="display:none; color:#ff6b6b; font-size:0.75rem; font-family:'DM Mono',monospace; margin-bottom:10px; padding:6px 10px; background:rgba(255,100,100,0.15); border-left:3px solid #ff6b6b; border-radius:0 4px 4px 0;"></div>
           <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-            <div id="team-slots"></div>
-            <div class="team-panel-sub" id="team-panel-sub" style="margin-top:8px;">0/5 selected</div>
+            <div id="team-slots" style="display:flex; flex-direction:column; gap:8px;"></div>
+            <div class="team-panel-sub" id="team-panel-sub" style="margin-top:10px; text-align:center;">0/5 selected</div>
           </div>
           <button class="btn btn-gold btn-full" id="add-to-cart-btn" onclick="addTeamToCart()" disabled style="margin-top:auto; padding-top:16px; font-size:1.05rem; padding:16px;">
             + Add Team to Cart
@@ -816,7 +852,7 @@
               <span id="cart-total-val" style="font-family:'Playfair Display',serif; font-weight:700; color:var(--gold-light); font-size:1.1rem;">$0.00</span>
             </div>
           </div>
-          <button class="btn btn-gold btn-full" id="checkout-btn" onclick="proceedToPayment()" disabled style="margin-top:auto; font-size:1.05rem; padding:16px; background:#e8a020; box-shadow:0 3px 10px rgba(0,0,0,0.3); opacity:0.4; margin-top:16px; color:white;">
+          <button class="btn btn-full" id="checkout-btn" onclick="proceedToPayment()" disabled style="margin-top:16px; font-size:1.05rem; padding:16px; background:#e87722; box-shadow:0 4px 14px rgba(201,168,76,0.5); opacity:0.4; color:var(--dark); border:none; cursor:pointer; border-radius:4px; font-family:'Libre Baskerville',serif; font-weight:700;">
             Submit Teams + Checkout →
           </button>
         </div>
@@ -2128,11 +2164,16 @@ function renderTeamSlots() {
   if (countEl) countEl.textContent = `${selectedGolfers.length}/5`;
   // Update mobile sticky tracker
   updateMobileTracker();
+  // Pills for filled, dots for empty
   container.innerHTML = Array.from({length: 5}, (_, i) => {
     const golfer = selectedGolfers[i] ? GOLFERS.find(g => g.id === selectedGolfers[i]) : null;
-    return `<div class="team-slot ${golfer ? 'filled' : ''}">
-      ${golfer ? `<span>${golfer.name}</span><button class="slot-remove" onclick="toggleGolfer(${golfer.id})">×</button>` : `<span>Pick golfer ${i+1}</span>`}
-    </div>`;
+    if (golfer) {
+      const parts = golfer.name.trim().split(' ');
+      const abbrev = parts.length > 1 ? parts[0][0] + '. ' + parts[parts.length - 1] : golfer.name;
+      return `<div class="panel-pill">${abbrev}<button class="pill-remove" onclick="toggleGolfer(${golfer.id})">×</button></div>`;
+    } else {
+      return `<div class="panel-dot"></div>`;
+    }
   }).join('');
   document.getElementById('add-to-cart-btn').disabled = selectedGolfers.length < 5;
 }
