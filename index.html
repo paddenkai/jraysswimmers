@@ -304,38 +304,62 @@
   }
   @media (max-width: 800px) {
     #mobile-team-tracker {
-      display: flex;
+      display: block;
       position: sticky;
       top: 60px;
       z-index: 100;
       background: var(--green);
       color: white;
-      padding: 10px 16px;
-      align-items: center;
-      justify-content: space-between;
+      padding: 14px 16px;
       border-radius: 8px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      margin-bottom: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
     }
-    #mobile-team-tracker .tracker-picks { display: flex; gap: 6px; align-items: center; }
+    #mobile-team-tracker .tracker-row1 {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+    }
+    #mobile-team-tracker .tracker-dots { display: flex; gap: 8px; align-items: center; }
     #mobile-team-tracker .tracker-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: rgba(255,255,255,0.3);
+      width: 12px; height: 12px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
       transition: background 0.2s;
     }
     #mobile-team-tracker .tracker-dot.filled { background: var(--gold); }
-    #mobile-team-tracker .tracker-name {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      opacity: 0.8; letter-spacing: 1px; white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis; max-width: 140px;
-    }
     #mobile-team-tracker .tracker-count {
-      font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem;
-      white-space: nowrap;
+      font-family: 'DM Mono', monospace; font-size: 0.78rem;
+      opacity: 0.8; letter-spacing: 1px;
     }
-    /* Golfer grid on top, team panel below on mobile */
+    #mobile-team-tracker .tracker-name-input {
+      width: 100%; box-sizing: border-box;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 6px; padding: 8px 12px;
+      color: white; font-family: 'Libre Baskerville', serif; font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    #mobile-team-tracker .tracker-name-input::placeholder { color: rgba(255,255,255,0.5); }
+    #mobile-team-tracker .tracker-name-input:focus { outline: none; border-color: var(--gold); }
+    #mobile-team-tracker .tracker-add-btn {
+      flex: 1; background: rgba(255,255,255,0.2); color: white; border: 1.5px solid rgba(255,255,255,0.4);
+      border-radius: 6px; padding: 11px 8px; font-family: 'Playfair Display', serif;
+      font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      opacity: 0.4; pointer-events: none;
+    }
+    #mobile-team-tracker .tracker-add-btn.ready {
+      opacity: 1; pointer-events: auto;
+    }
+    #mobile-team-tracker .tracker-checkout-btn {
+      flex: 1.5; background: var(--gold); color: white; border: none;
+      border-radius: 6px; padding: 11px 8px; font-family: 'Playfair Display', serif;
+      font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      opacity: 0.4; pointer-events: none;
+    }
+    #mobile-team-tracker .tracker-checkout-btn.ready {
+      opacity: 1; pointer-events: auto;
+    }
+    /* Golfer grid on top, team panel hidden on mobile (tracker handles it) */
     .team-builder-grid .golfer-col { grid-column: 1 !important; grid-row: 1 !important; }
-    .team-builder-grid .team-panel { grid-column: 1 !important; grid-row: 2 !important; }
+    .team-builder-grid .team-panel { display: none !important; }
   }
   .team-panel-sub { font-size: 0.78rem; color: #888; font-family: 'DM Mono', monospace; margin-bottom: 16px; }
   .team-slot {
@@ -573,7 +597,7 @@
     /* ─── TEAM BUILDER ─── */
     .team-builder-grid { grid-template-columns: 1fr; }
     .team-builder-grid .golfer-col { grid-column: 1 !important; grid-row: 1 !important; }
-    .team-builder-grid .team-panel { grid-column: 1 !important; grid-row: 2 !important; }
+    .team-builder-grid .team-panel { display: none !important; }
     .golfer-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
     .golfer-card { padding: 10px 12px !important; }
     .golfer-name { font-size: 0.82rem !important; }
@@ -746,17 +770,22 @@
 
     <!-- Mobile sticky team tracker -->
     <div id="mobile-team-tracker">
-      <div>
-        <div class="tracker-name" id="tracker-team-name">Name your team...</div>
-        <div class="tracker-picks" id="tracker-dots">
+      <div class="tracker-row1">
+        <div class="tracker-dots">
           <div class="tracker-dot" id="dot-0"></div>
           <div class="tracker-dot" id="dot-1"></div>
           <div class="tracker-dot" id="dot-2"></div>
           <div class="tracker-dot" id="dot-3"></div>
           <div class="tracker-dot" id="dot-4"></div>
         </div>
+        <div class="tracker-count" id="tracker-count">0/5 selected</div>
       </div>
-      <div class="tracker-count" id="tracker-count">0/5</div>
+      <input class="tracker-name-input" id="tracker-name-input" type="text" placeholder="Name your team..." maxlength="40" oninput="syncTrackerName()" />
+      <div style="display:flex; gap:8px; margin-top:0;">
+        <button class="tracker-add-btn" id="tracker-add-btn" onclick="addTeamToCart()">+ Add Team</button>
+        <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit & Checkout →</button>
+      </div>
+      <div id="tracker-cart-count" style="display:none; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); text-align:center; margin-top:6px;"></div>
     </div>
 
     <div id="builder-content">
@@ -2126,6 +2155,7 @@ function renderCart() {
   const itemsEl = document.getElementById('cart-items');
   const totalEl = document.getElementById('cart-total-val');
   updateMobileFAB();
+  updateMobileTracker();
   if (cart.length === 0) { section.style.display = 'none'; return; }
   section.style.display = 'block';
   itemsEl.innerHTML = cart.map((t, i) => `
@@ -2187,8 +2217,9 @@ async function proceedToPayment() {
 
 function resetBuilder() {
   selectedGolfers = [];
-  cart = [];
   document.getElementById('team-name-input').value = '';
+  const trackerInput = document.getElementById('tracker-name-input');
+  if (trackerInput) trackerInput.value = '';
   renderCart();
   renderBuilder();
   updateMobileTracker();
@@ -2846,16 +2877,36 @@ function renderProfile() {
 
 function updateMobileTracker() {
   const countEl = document.getElementById('tracker-count');
-  const nameEl = document.getElementById('tracker-team-name');
-  if (countEl) countEl.textContent = `${selectedGolfers.length}/5`;
-  if (nameEl) {
-    const teamName = document.getElementById('team-name-input')?.value?.trim();
-    nameEl.textContent = teamName || 'Name your team...';
-  }
+  if (countEl) countEl.textContent = `${selectedGolfers.length}/5 selected`;
   for (let i = 0; i < 5; i++) {
     const dot = document.getElementById(`dot-${i}`);
     if (dot) dot.classList.toggle('filled', i < selectedGolfers.length);
   }
+  // Enable/disable buttons based on state
+  const nameInput = document.getElementById('tracker-name-input');
+  const teamReady = selectedGolfers.length === 5 && nameInput && nameInput.value.trim().length > 0;
+  const addBtn = document.getElementById('tracker-add-btn');
+  const checkoutBtn = document.getElementById('tracker-checkout-btn');
+  if (addBtn) addBtn.classList.toggle('ready', teamReady);
+  if (checkoutBtn) checkoutBtn.classList.toggle('ready', cart.length > 0);
+  // Show cart count
+  const cartCount = document.getElementById('tracker-cart-count');
+  if (cartCount) {
+    if (cart.length > 0) {
+      cartCount.style.display = 'block';
+      cartCount.textContent = `${cart.length} team${cart.length > 1 ? 's' : ''} in cart · $${cart.length * 10}`;
+    } else {
+      cartCount.style.display = 'none';
+    }
+  }
+}
+
+function syncTrackerName() {
+  // Keep hidden team-name-input in sync with tracker input
+  const trackerInput = document.getElementById('tracker-name-input');
+  const panelInput = document.getElementById('team-name-input');
+  if (trackerInput && panelInput) panelInput.value = trackerInput.value;
+  updateMobileTracker();
 }
 
 function toggleEditProfile() {
