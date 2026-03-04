@@ -2889,12 +2889,24 @@ function updateMobileTracker() {
   const checkoutBtn = document.getElementById('tracker-checkout-btn');
   if (addBtn) addBtn.classList.toggle('ready', teamReady);
   if (checkoutBtn) checkoutBtn.classList.toggle('ready', cart.length > 0);
-  // Show cart count
+  // Show abbreviated cart teams
   const cartCount = document.getElementById('tracker-cart-count');
   if (cartCount) {
     if (cart.length > 0) {
       cartCount.style.display = 'block';
-      cartCount.textContent = `${cart.length} team${cart.length > 1 ? 's' : ''} in cart · $${cart.length * 10}`;
+      const teamLines = cart.map(t => {
+        const initials = t.golfers.map(id => {
+          const g = GOLFERS.find(g => g.id === id);
+          if (!g) return '';
+          const parts = g.name.trim().split(' ');
+          return parts.length > 1 ? parts[0][0] + '.' + parts[parts.length-1] : g.name;
+        }).join(', ');
+        return `<div style="border-top:1px solid rgba(255,255,255,0.15); padding-top:5px; margin-top:5px;">
+          <span style="color:var(--gold); font-weight:700;">${t.name}</span>
+          <span style="opacity:0.6; font-size:0.65rem;"> · ${initials}</span>
+        </div>`;
+      }).join('');
+      cartCount.innerHTML = teamLines;
     } else {
       cartCount.style.display = 'none';
     }
