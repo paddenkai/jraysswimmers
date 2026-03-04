@@ -2131,10 +2131,14 @@ function renderTeamSlots() {
 function addTeamToCart() {
   if (selectedGolfers.length < 5) { showToast('Please select 5 golfers.', 'error'); return; }
   if (!currentUser) { openAuthModal(); return; }
-  const teamName = document.getElementById('team-name-input').value.trim() || `${currentUser.name}'s Team ${cart.length + 1}`;
+  // Read from whichever input is visible (tracker on mobile, panel on desktop)
+  const trackerInput = document.getElementById('tracker-name-input');
+  const panelInput = document.getElementById('team-name-input');
+  const teamName = (trackerInput?.value.trim() || panelInput?.value.trim()) || `${currentUser.name}'s Team ${cart.length + 1}`;
   cart.push({ id: Date.now() + cart.length, name: teamName, golfers: [...selectedGolfers] });
   selectedGolfers = [];
-  document.getElementById('team-name-input').value = '';
+  if (panelInput) panelInput.value = '';
+  if (trackerInput) trackerInput.value = '';
   renderGolferGrid(GOLFERS);
   renderTeamSlots();
   renderCart();
