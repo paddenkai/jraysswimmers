@@ -2772,12 +2772,12 @@ async function saveSettings() {
   // Update profile name
   const { error } = await sb.from('profiles').update({ name }).eq('id', currentUser.id);
   if (error) { showToast('Error saving settings.', 'error'); return; }
-  // Cascade name update to all their teams
-  const { error: teamError } = await sb.from('teams').update({ owner_name: name }).eq('owner', currentUser.email);
-  if (teamError) console.error('Error updating team owner names:', teamError);
-  // Update local state
+  // Cascade name update to all their teams (try both email and id as owner may store either)
+  await sb.from('teams').update({ owner_name: name }).eq('owner', currentUser.email);
+  await sb.from('teams').update({ owner_name: name }).eq('owner', currentUser.id);
+  // Reload teams fresh from Supabase so leaderboard reflects the change
+  await loadTeams();
   currentUser.name = name;
-  allTeams.forEach(t => { if (t.owner === currentUser.email) t.owner_name = name; });
   renderProfile();
   renderLeaderboard();
   showToast('Name updated!', 'success');
