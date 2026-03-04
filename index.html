@@ -2113,14 +2113,11 @@ async function addTeamToCart() {
     showNameError('Please enter a team name');
     return;
   }
-  // Check for duplicate name — fresh load + direct query for maximum coverage
+  // Check for duplicate — fetch all team names fresh from Supabase
   const nameLower = teamName.toLowerCase().trim();
-  await loadTeams(); // refresh allTeams from Supabase
-  const { data: existingTeams } = await sb.from('teams').select('name').ilike('name', teamName.trim());
-  // Check both the fresh ilike query AND allTeams in case one fails
+  const { data: allExisting } = await sb.from('teams').select('name');
   const isDuplicate =
-    (existingTeams && existingTeams.length > 0) ||
-    allTeams.some(t => t.name.toLowerCase().trim() === nameLower) ||
+    (allExisting || []).some(t => t.name.toLowerCase().trim() === nameLower) ||
     cart.some(t => t.name.toLowerCase().trim() === nameLower);
   if (isDuplicate) {
     showNameError(`"${teamName}" is already taken — try a different name`);
