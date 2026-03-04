@@ -2797,13 +2797,15 @@ function updateStats() {
   const isRound2 = !window._isPostCut && activePlayers.length > 0;
   const hasLiveData = activePlayers.length > 0;
 
-  // Show cut line only during round 2
-  if (cutStatEl) cutStatEl.style.display = isRound2 ? '' : 'none';
+  // Show cut line stat — purely manual via admin toggle
+  const showCut = adminSettings.showCutLine;
+  if (cutStatEl) cutStatEl.style.display = showCut ? '' : 'none';
 
-  // Show projected winner in round 3+
-  if (leaderWrapEl) leaderWrapEl.style.display = (window._isPostCut && hasLiveData && adminSettings.showProjectedWinner) ? '' : 'none';
+  // Show projected winner — purely manual via admin toggle
+  const showWinner = adminSettings.showProjectedWinner;
+  if (leaderWrapEl) leaderWrapEl.style.display = showWinner ? '' : 'none';
 
-  if (isRound2) {
+  if (showCut) {
     const sorted = [...activePlayers].sort((a, b) => a.pos - b.pos);
     const player50 = sorted[49];
     const leader = sorted[0];
@@ -2820,7 +2822,7 @@ function updateStats() {
   }
 
   // Find the leading team by earnings
-  if (window._isPostCut && leaderEl) {
+  if (showWinner && leaderEl && hasLiveData) {
     const rankedTeams = [...paidTeams]
       .filter(t => !t.seeded)
       .sort((a, b) => getTeamEarnings(b) - getTeamEarnings(a));
