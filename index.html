@@ -2115,10 +2115,10 @@ async function proceedToPayment() {
   }
 
   allTeams = [...allTeams, ...(data || rows)];
-  const savedCart = [...cart];
+  // Save full cart for payment summary BEFORE clearing
+  window._savedCart = [...cart];
   cart = [];
-  pendingTeam = savedCart[0];
-  window._savedCart = savedCart; // keep full cart for payment summary
+  pendingTeam = window._savedCart[0];
   // Re-enable button before leaving page
   if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Submit Teams & Checkout →'; }
   renderCart();
@@ -2138,10 +2138,11 @@ function resetBuilder() {
 // PAYMENT
 // ═══════════════════════════════════════════════════════
 function renderPaymentSummary() {
-  const savedCart = window._savedCart || [];
-  const totalTeams = savedCart.length || cart.length || 1;
+  // Use _savedCart (set on checkout), fall back to cart, fall back to pendingTeam
+  const teams = (window._savedCart && window._savedCart.length) ? window._savedCart
+              : (cart.length ? cart : (pendingTeam ? [pendingTeam] : []));
+  const totalTeams = teams.length || 1;
   const totalAmt = totalTeams * CONFIG.ENTRY_FEE;
-  const teams = savedCart.length ? savedCart : (cart.length ? cart : [pendingTeam]);
   document.getElementById('payment-team-name').textContent = totalTeams === 1 ? (teams[0]?.name || 'Your Entry') : `${totalTeams} Teams`;
   document.getElementById('order-lines').innerHTML = teams.map(t => {
     const names = t.golfers.map(id => GOLFERS.find(g=>g.id===id)?.name).filter(Boolean).join(', ');
