@@ -2500,7 +2500,7 @@ function renderMyTeams() {
           <div class="team-card-name" id="team-name-display-${team.id}">${team.name}</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <button onclick="startRename(${team.id})" title="Rename team" style="background:none;border:1px solid rgba(255,255,255,0.3);border-radius:4px;cursor:pointer;color:var(--gold-light);font-size:0.7rem;font-family:'DM Mono',monospace;letter-spacing:1px;opacity:0.9;padding:4px 8px;">✎ RENAME</button>
+          <button onclick="startRename('${team.id}')" title="Rename team" style="background:none;border:1px solid rgba(255,255,255,0.3);border-radius:4px;cursor:pointer;color:var(--gold-light);font-size:0.7rem;font-family:'DM Mono',monospace;letter-spacing:1px;opacity:0.9;padding:4px 8px;">✎ RENAME</button>
           <div class="team-card-status ${team.paid ? 'status-paid' : 'status-unpaid'}">${team.paid ? 'PAID' : 'UNPAID'}</div>
         </div>
       </div>
@@ -2508,8 +2508,8 @@ function renderMyTeams() {
         <input type="text" id="rename-input-${team.id}" value="${team.name}" maxlength="40"
           style="width:100%;padding:7px 10px;border:1.5px solid #d4d0c8;border-radius:4px;font-family:'Libre Baskerville',serif;font-size:0.88rem;background:white;margin-bottom:8px;" />
         <div style="display:flex;gap:8px;">
-          <button onclick="saveRename(${team.id})" class="btn btn-green" style="padding:5px 14px;font-size:0.78rem;">Save</button>
-          <button onclick="cancelRename(${team.id})" style="background:none;border:none;cursor:pointer;font-size:0.78rem;color:#888;font-family:'Libre Baskerville',serif;">Cancel</button>
+          <button onclick="saveRename('${team.id}')" class="btn btn-green" style="padding:5px 14px;font-size:0.78rem;">Save</button>
+          <button onclick="cancelRename('${team.id}')" style="background:none;border:none;cursor:pointer;font-size:0.78rem;color:#888;font-family:'Libre Baskerville',serif;">Cancel</button>
         </div>
       </div>
       ${!team.paid ? '<div style="padding:8px 20px; background:#fff8f0; border-bottom:1px solid #f0e8d8; font-size:0.75rem; color:#e67e22; font-family:\'DM Mono\',monospace; letter-spacing:0.5px;">⏳ Awaiting payment confirmation</div>' : ''}
@@ -2518,7 +2518,7 @@ function renderMyTeams() {
       </div>
       <div class="team-card-footer">
         <div><div class="team-total-label">TEAM TOTAL</div><div class="team-total">$${total.toLocaleString()}</div></div>
-        ${adminSettings.allowEditing ? '<button onclick="openEditPicks(' + team.id + ')" style="background:none; border:1.5px solid var(--green); color:var(--green); padding:6px 14px; border-radius:4px; font-family:\'DM Mono\',monospace; font-size:0.72rem; letter-spacing:1px; cursor:pointer;">✎ EDIT PICKS</button>' : ''}
+        ${adminSettings.allowEditing ? `<button onclick="openEditPicks('${team.id}')" style="background:none; border:1.5px solid var(--green); color:var(--green); padding:6px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; cursor:pointer;">✎ EDIT PICKS</button>` : ''}
       </div>
     </div>`;
   }).join('');
