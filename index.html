@@ -1793,6 +1793,13 @@ let currentUser = null; // { id, email, name }
 let allTeams = [];
 let allTeamNames = []; // lowercase names for duplicate checking
 
+// Normalize team names — converts iOS curly apostrophes to straight ones
+function normalizeName(s) {
+  return (s || '').trim().toLowerCase()
+    .replace(/[‘’‚‛′‵]/g, "'")
+    .replace(/[“”„‟″‶]/g, '"');
+}
+
 // Load session on startup
 async function initApp() {
   // Check if this is a password reset redirect from Supabase
@@ -2097,10 +2104,7 @@ async function addTeamToCart() {
 
   if (!teamName) { showNameError('Please enter a team name'); return; }
 
-  // Normalize: strip curly quotes iOS autocorrect inserts
-  const normalizeName = s => s.trim().toLowerCase()
-    .replace(/[‘’‚‛′‵]/g, "'")
-    .replace(/[“”„‟″‶]/g, '"');
+  // Normalize using global function
   const nameLower = normalizeName(teamName);
   const normalizedAllNames = allTeamNames.map(n => normalizeName(n));
   if (
@@ -2111,7 +2115,8 @@ async function addTeamToCart() {
     return;
   }
 
-  cart.push({ id: Date.now() + cart.length, name: teamName, golfers: [...selectedGolfers] });
+  const cleanName = teamName.replace(/[‘’‚‛′‵]/g, "'").replace(/[“”„‟″‶]/g, '"');
+  cart.push({ id: Date.now() + cart.length, name: cleanName, golfers: [...selectedGolfers] });
   selectedGolfers = [];
   if (panelInput) panelInput.value = '';
   if (trackerInput) trackerInput.value = '';
