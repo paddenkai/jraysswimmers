@@ -300,16 +300,16 @@
   .team-panel h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--green); margin-bottom: 4px; }
   /* Sticky mini team tracker - mobile only */
   #mobile-team-tracker {
-    display: none;
+    display: none !important;
   }
   @media (max-width: 800px) {
     #mobile-team-tracker {
-      display: block;
+      display: none;
       position: fixed;
       top: 60px;
       left: 12px;
       right: 12px;
-      z-index: 500;
+      z-index: 98;
       background: var(--green);
       color: white;
       padding: 14px 16px;
@@ -1909,9 +1909,12 @@ function requireAuth(cb) {
 // NAVIGATION
 // ═══════════════════════════════════════════════════════
 async function showPage(name) {
-  // Show mobile tracker only on builder page
+  // Show mobile tracker only on builder page (mobile only)
   const tracker = document.getElementById('mobile-team-tracker');
-  if (tracker) tracker.style.display = (name === 'builder') ? 'block' : 'none';
+  if (tracker) {
+    const isMobile = window.innerWidth <= 800;
+    tracker.style.display = (name === 'builder' && isMobile) ? 'block' : 'none';
+  }
   if (typeof closeMobileNav === 'function') closeMobileNav();
   // Guard admin before activating the page
   if (name === 'admin' && !adminLoggedIn) { openAdminLogin(); return; }
