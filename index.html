@@ -241,13 +241,17 @@
     grid-template-columns: 1fr 320px;
     gap: 28px;
   }
-  /* Desktop: golfer grid left (order 2 in HTML but visually first), team panel right */
+  /* Desktop: team panel is 2nd column (right side) */
   @media (min-width: 801px) {
-    .team-builder-grid .team-panel { order: 2 !important; }
-    .team-builder-grid div[style*="order:2"] { order: 1 !important; }
+    .team-builder-grid .team-panel { grid-column: 2; grid-row: 1; }
+    .team-builder-grid .golfer-col { grid-column: 1; grid-row: 1; }
   }
-  /* Mobile: team panel on top (order 1), golfer grid below (order 2) */
-  @media (max-width: 800px) { .team-builder-grid { grid-template-columns: 1fr; } }
+  /* Mobile: single column, team panel naturally first since it's first in HTML */
+  @media (max-width: 800px) {
+    .team-builder-grid { grid-template-columns: 1fr; }
+    .team-builder-grid .team-panel { grid-column: 1; grid-row: 1; }
+    .team-builder-grid .golfer-col { grid-column: 1; grid-row: 2; }
+  }
 
   .golfer-search { margin-bottom: 16px; }
   .golfer-search input {
@@ -701,7 +705,7 @@
 
     <div id="builder-content">
     <div class="team-builder-grid">
-      <div class="team-panel" style="order:1;">
+      <div class="team-panel">
         <h3>Your Team</h3>
         <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" style="margin-bottom:12px;" />
         <div id="team-slots"></div>
@@ -726,7 +730,7 @@
           Build as many teams as you want
         </div>
       </div>
-      <div style="order:2;">
+      <div class="golfer-col">
         <div class="golfer-search">
           <input type="text" id="golfer-search" placeholder="Search golfer name..." oninput="filterGolfers()" />
         </div>
