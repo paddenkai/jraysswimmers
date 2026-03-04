@@ -2113,14 +2113,16 @@ async function addTeamToCart() {
     showNameError('Please enter a team name');
     return;
   }
-  // DEBUG - remove after testing
-  alert('DEBUG: teamName="' + teamName + '" tracker="' + (trackerInput?.value || 'null') + '" panel="' + (panelInput?.value || 'null') + '"');
   // Check for duplicate — fetch all team names fresh from Supabase
   const nameLower = teamName.toLowerCase().trim();
-  const { data: allExisting, error: fetchErr } = await sb.from('teams').select('name');
-  alert('DEBUG: found ' + (allExisting?.length || 0) + ' teams, error=' + (fetchErr?.message || 'none') + ', names=' + (allExisting||[]).map(t=>t.name).join('|'));
+  const { data: allExisting, error: nameCheckError } = await sb.from('teams').select('name');
+  // If fetch failed, block submission to be safe
+  if (nameCheckError || !allExisting) {
+    showNameError('Could not verify team name — please try again');
+    return;
+  }
   const isDuplicate =
-    (allExisting || []).some(t => t.name.toLowerCase().trim() === nameLower) ||
+    allExisting.some(t => t.name.toLowerCase().trim() === nameLower) ||
     cart.some(t => t.name.toLowerCase().trim() === nameLower);
   if (isDuplicate) {
     showNameError(`"${teamName}" is already taken — try a different name`);
@@ -2167,6 +2169,17 @@ function removeFromCart(i) {
 async function proceedToPayment() {
   if (cart.length === 0) { showToast('Add at least one team to your cart.', 'error'); return; }
   if (!currentUser) { openAuthModal(); return; }
+
+  // Check all cart team names for duplicates against existing DB teams
+  const { data: allExisting } = await sb.from('teams').select('name');
+  const existingNames = (allExisting || []).map(t => t.name.toLowerCase().trim());
+  for (const t of cart) {
+    const n = t.name.toLowerCase().trim();
+    if (existingNames.includes(n)) {
+      showToast(`"${t.name}" is already taken — go back and rename it`, 'error');
+      return;
+    }
+  }
 
   // Save teams immediately on checkout — don't wait for payment
   const rows = cart.filter(Boolean).map(t => ({
