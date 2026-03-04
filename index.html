@@ -448,29 +448,7 @@
   .highlight-row td { font-weight: 600; }
 
   /* ─── PAYMENT ─── */
-  /* Floating mobile checkout button */
-  #mobile-checkout-fab {
-    display: none;
-    position: fixed;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 999;
-    background: var(--gold);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 16px 32px;
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    white-space: nowrap;
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  #mobile-checkout-fab:active { transform: translateX(-50%) scale(0.97); opacity: 0.9; }
-  /* Show on all screen sizes */
+
 
   .payment-box {
     max-width: 500px;
@@ -783,7 +761,7 @@
       <input class="tracker-name-input" id="tracker-name-input" type="text" placeholder="Name your team..." maxlength="40" oninput="syncTrackerName()" />
       <div style="display:flex; gap:8px; margin-top:0;">
         <button class="tracker-add-btn" id="tracker-add-btn" onclick="addTeamToCart()">+ Add Team</button>
-        <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit & Checkout →</button>
+        <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit + Checkout →</button>
       </div>
       <div id="tracker-cart-count" style="display:none; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); text-align:left; margin-top:8px;"></div>
     </div>
@@ -808,7 +786,7 @@
             <span id="cart-total-val" style="font-family:'Playfair Display',serif; font-weight:700; color:var(--green); font-size:1.1rem;">$0.00</span>
           </div>
           <button class="btn btn-gold btn-full" id="checkout-btn" onclick="proceedToPayment()" style="margin-top:12px;">
-            Submit Teams & Checkout →
+            Submit Teams + Checkout →
           </button>
         </div>
         <div style="margin-top:10px; font-size:0.75rem; color:#aaa; text-align:center; font-family:'DM Mono',monospace;">
@@ -826,11 +804,6 @@
   </div><!-- end page-builder -->
 
   <!-- PAYMENT PAGE -->
-  <!-- Floating mobile checkout button -->
-  <button id="mobile-checkout-fab" onclick="proceedToPayment()" style="display:none;">
-    Submit Teams & Checkout →
-  </button>
-
   <div id="page-payment" class="page">
     <div class="section-header">
       <div class="section-title">Complete Your Entry</div>
@@ -1943,9 +1916,6 @@ function requireAuth(cb) {
 // NAVIGATION
 // ═══════════════════════════════════════════════════════
 async function showPage(name) {
-  // Hide mobile FAB when not on builder
-  const fab = document.getElementById('mobile-checkout-fab');
-  if (fab) fab.style.display = 'none';
   if (typeof closeMobileNav === 'function') closeMobileNav();
   // Guard admin before activating the page
   if (name === 'admin' && !adminLoggedIn) { openAdminLogin(); return; }
@@ -2146,20 +2116,10 @@ function addTeamToCart() {
   showToast(`"${teamName}" added to cart!`, 'success');
 }
 
-function updateMobileFAB() {
-  const fab = document.getElementById('mobile-checkout-fab');
-  if (!fab) return;
-  const onBuilder = document.getElementById('page-builder')?.classList.contains('active');
-  fab.style.display = (cart.length > 0 && onBuilder) ? 'block' : 'none';
-  // Use flex centering on all screen sizes
-  fab.textContent = cart.length === 1 ? 'Submit Teams & Checkout → $10' : `Submit Teams & Checkout → $${cart.length * 10}`;
-}
-
 function renderCart() {
   const section = document.getElementById('cart-section');
   const itemsEl = document.getElementById('cart-items');
   const totalEl = document.getElementById('cart-total-val');
-  updateMobileFAB();
   updateMobileTracker();
   if (cart.length === 0) { section.style.display = 'none'; return; }
   section.style.display = 'block';
@@ -2204,7 +2164,7 @@ async function proceedToPayment() {
   if (error) {
     showToast('Error saving team. Please try again.', 'error');
     console.error(error);
-    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Submit Teams & Checkout →'; }
+    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Submit Teams + Checkout →'; }
     return;
   }
 
@@ -2214,7 +2174,7 @@ async function proceedToPayment() {
   cart = [];
   pendingTeam = window._savedCart[0];
   // Re-enable button before leaving page
-  if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Submit Teams & Checkout →'; }
+  if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Submit Teams + Checkout →'; }
   renderCart();
 
   showPage('payment');
