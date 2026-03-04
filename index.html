@@ -305,14 +305,16 @@
   @media (max-width: 800px) {
     #mobile-team-tracker {
       display: block;
-      position: sticky;
+      position: fixed;
       top: 60px;
-      z-index: 100;
+      left: 12px;
+      right: 12px;
+      z-index: 500;
       background: var(--green);
       color: white;
       padding: 14px 16px;
       border-radius: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 0;
       box-shadow: 0 2px 12px rgba(0,0,0,0.2);
     }
     #mobile-team-tracker .tracker-row1 {
@@ -360,6 +362,7 @@
     /* Golfer grid on top, team panel hidden on mobile (tracker handles it) */
     .team-builder-grid .golfer-col { grid-column: 1 !important; grid-row: 1 !important; }
     .team-builder-grid .team-panel { display: none !important; }
+    #page-builder .section-header { margin-top: 230px; }
   }
   .team-panel-sub { font-size: 0.78rem; color: #888; font-family: 'DM Mono', monospace; margin-bottom: 16px; }
   .team-slot {
@@ -744,27 +747,6 @@
       <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--green); margin-bottom:10px;">Registration is Closed</div>
       <div style="color:#888; font-size:0.95rem;">Entry submissions are no longer being accepted.<br>Check the leaderboard to follow the action!</div>
       <button class="btn btn-gold" onclick="showPage('leaderboard')" style="margin-top:24px;">View Pool Standings →</button>
-    </div>
-
-    <!-- Mobile sticky team tracker -->
-    <div id="mobile-team-tracker">
-      <div class="tracker-row1">
-        <div class="tracker-dots">
-          <div class="tracker-dot" id="dot-0"></div>
-          <div class="tracker-dot" id="dot-1"></div>
-          <div class="tracker-dot" id="dot-2"></div>
-          <div class="tracker-dot" id="dot-3"></div>
-          <div class="tracker-dot" id="dot-4"></div>
-        </div>
-        <div class="tracker-count" id="tracker-count">0/5 selected</div>
-      </div>
-      <input class="tracker-name-input" id="tracker-name-input" type="text" placeholder="Name your team..." maxlength="40" oninput="syncTrackerName(); clearNameError()" />
-      <div id="tracker-name-error" style="display:none; color:#ff6b6b; font-size:0.72rem; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:4px; padding:5px 8px; background:rgba(255,100,100,0.15); border-left:3px solid #ff6b6b; border-radius:0 4px 4px 0;"></div>
-      <div style="display:flex; gap:8px; margin-top:0;">
-        <button class="tracker-add-btn" id="tracker-add-btn" onclick="addTeamToCart()">+ Add Team</button>
-        <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit + Checkout →</button>
-      </div>
-      <div id="tracker-cart-count" style="display:none; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); text-align:left; margin-top:8px;"></div>
     </div>
 
     <div id="builder-content">
@@ -1809,6 +1791,7 @@ sb.auth.onAuthStateChange((event, session) => {
 
 let currentUser = null; // { id, email, name }
 let allTeams = [];
+let allTeamNames = []; // lowercase names for duplicate checking
 
 // Load session on startup
 async function initApp() {
@@ -1846,6 +1829,7 @@ async function loadTeams() {
   const { data, error } = await sb.from('teams').select('*');
   if (error) { console.error('Error loading teams:', error); allTeams = []; return; }
   allTeams = data || [];
+  allTeamNames = allTeams.map(t => t.name.trim().toLowerCase());
 }
 
 let selectedGolfers = [];
@@ -1918,6 +1902,9 @@ function requireAuth(cb) {
 // NAVIGATION
 // ═══════════════════════════════════════════════════════
 async function showPage(name) {
+  // Show mobile tracker only on builder page
+  const tracker = document.getElementById('mobile-team-tracker');
+  if (tracker) tracker.style.display = (name === 'builder') ? 'block' : 'none';
   if (typeof closeMobileNav === 'function') closeMobileNav();
   // Guard admin before activating the page
   if (name === 'admin' && !adminLoggedIn) { openAdminLogin(); return; }
@@ -2110,17 +2097,16 @@ async function addTeamToCart() {
 
   if (!teamName) { showNameError('Please enter a team name'); return; }
 
-  // Check cart for duplicate
-  if (cart.some(t => t.name.trim().toLowerCase() === teamName.toLowerCase())) {
-    showNameError(`"${teamName}" is already in your cart`);
-    return;
-  }
-
-  // Check Supabase for duplicate — fetch ALL names and compare in JS
-  const { data, error } = await sb.from('teams').select('name');
-  if (error) { showNameError('Could not verify name, please try again'); return; }
-  const taken = (data || []).some(t => t.name.trim().toLowerCase() === teamName.toLowerCase());
-  if (taken) {
+  // Normalize: strip curly quotes iOS autocorrect inserts
+  const normalizeName = s => s.trim().toLowerCase()
+    .replace(/[‘’‚‛′‵]/g, "'")
+    .replace(/[“”„‟″‶]/g, '"');
+  const nameLower = normalizeName(teamName);
+  const normalizedAllNames = allTeamNames.map(n => normalizeName(n));
+  if (
+    normalizedAllNames.includes(nameLower) ||
+    cart.some(t => normalizeName(t.name) === nameLower)
+  ) {
     showNameError(`"${teamName}" is already taken — try a different name`);
     return;
   }
@@ -2201,6 +2187,7 @@ async function proceedToPayment() {
   }
 
   allTeams = [...allTeams, ...(data || rows)];
+  allTeamNames = allTeams.map(t => t.name.trim().toLowerCase());
   // Save full cart for payment summary BEFORE clearing
   window._savedCart = [...cart];
   cart = [];
@@ -3283,5 +3270,26 @@ function closeMobileNav() {
 initApp();
 </script>
 </div>
+
+  <!-- Mobile team tracker - fixed position, must be at body level for iOS tap support -->
+  <div id="mobile-team-tracker">
+    <div class="tracker-row1">
+      <div class="tracker-dots">
+        <div class="tracker-dot" id="dot-0"></div>
+        <div class="tracker-dot" id="dot-1"></div>
+        <div class="tracker-dot" id="dot-2"></div>
+        <div class="tracker-dot" id="dot-3"></div>
+        <div class="tracker-dot" id="dot-4"></div>
+      </div>
+      <div class="tracker-count" id="tracker-count">0/5 selected</div>
+    </div>
+    <input class="tracker-name-input" id="tracker-name-input" type="text" placeholder="Name your team..." maxlength="40" oninput="syncTrackerName(); clearNameError()" />
+    <div id="tracker-name-error" style="display:none; color:#ff6b6b; font-size:0.72rem; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:4px; padding:5px 8px; background:rgba(255,100,100,0.15); border-left:3px solid #ff6b6b; border-radius:0 4px 4px 0;"></div>
+    <div style="display:flex; gap:8px; margin-top:0;">
+      <button class="tracker-add-btn" id="tracker-add-btn" onclick="addTeamToCart()">+ Add Team</button>
+      <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit + Checkout →</button>
+    </div>
+    <div id="tracker-cart-count" style="display:none; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); text-align:left; margin-top:8px;"></div>
+  </div>
 </body>
 </html>
