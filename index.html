@@ -1520,7 +1520,7 @@ function parseESPNAPI(data) {
       if (isScheduled && teeTimeRaw) {
         const d = new Date(teeTimeRaw);
         if (!isNaN(d)) {
-          teeTimeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' ET';
+          teeTimeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }) + ' PST';
         } else {
           teeTimeDisplay = teeTimeRaw;
         }
@@ -1625,7 +1625,9 @@ function parseESPNAPI(data) {
 
 function normalizeName(name) {
   // Normalize for fuzzy matching: lowercase, remove accents, trim
+  // Also handle special chars that don't decompose via NFD (e.g. ø -> o)
   return name.toLowerCase()
+    .replace(/ø/g, 'o').replace(/Ø/g, 'o')
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, ' ').trim();
 }
@@ -2270,7 +2272,7 @@ function toggleScorecard(playerKey, clickedRow) {
     const thStyle  = `padding:4px 2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.68rem; color:#aaa; min-width:26px;`;
     const subStyle = `padding:2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.68rem; color:#bbb; min-width:26px;`;
     const golfer = GOLFERS.find(g => normalizeName(g.name) === playerKey);
-    const teeInfo = golfer?.teeTime ? `Tee time: ${golfer.teeTime} ET · R1` : 'Round 1';
+    const teeInfo = golfer?.teeTime ? `Tee time: ${golfer.teeTime} PST · R1` : 'Round 1';
     expandRow.querySelector('td').innerHTML = `
       <div style="padding:10px 12px 14px;">
         <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#aaa; margin-bottom:10px; letter-spacing:0.5px;">${teeInfo}</div>
@@ -2483,7 +2485,7 @@ function renderTournament() {
       return `<tr onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer;">
         <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#aaa;">–</td>
         <td><strong>${g.name}</strong></td>
-        <td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">${g.teeTime} ET</td>
+        <td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">${g.teeTime} PST</td>
         <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#bbb;">–</td>
       </tr>
       <tr class="scorecard-expand-row" id="expand-${safeKey}" style="display:none;">
@@ -2602,7 +2604,7 @@ function renderMyTeams() {
       ${!team.paid ? '<div style="padding:8px 20px; background:#fff8f0; border-bottom:1px solid #f0e8d8; font-size:0.75rem; color:#e67e22; font-family:\'DM Mono\',monospace; letter-spacing:0.5px;">⏳ Awaiting payment confirmation</div>' : ''}
       <div class="team-card-body">
         ${golfers.map(g => {
-          const earningsStr = g.earnings > 0 ? '$'+g.earnings.toLocaleString() : g.cutMissed ? 'CUT' : (g.teeTime ? g.teeTime+' ET' : '–');
+          const earningsStr = g.earnings > 0 ? '$'+g.earnings.toLocaleString() : g.cutMissed ? 'CUT' : (g.teeTime ? g.teeTime+' PST' : '–');
           const earningsColor = g.earnings > 0 ? 'var(--green-mid)' : g.cutMissed ? '#bbb' : '#aaa';
           return `<div class="golfer-list-item"><span>${g.name}</span><span class="golfer-list-earnings" style="color:${earningsColor};">${earningsStr}</span></div>`;
         }).join('')}
