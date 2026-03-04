@@ -1613,7 +1613,7 @@ const GOLFERS = [
   { id: 66,  name: "Billy Horschel",           rank: 66,  earnings: 0, teeTime: "5:00 AM" },
   { id: 67,  name: "Taylor Moore",             rank: 67,  earnings: 0, teeTime: "5:30 AM" },
   { id: 68,  name: "Jhonattan Vegas",          rank: 68,  earnings: 0, teeTime: "4:50 AM" },
-  { id: 69,  name: "Daniel Bennett (Amateur)", rank: 69,  earnings: 0, teeTime: "4:40 AM" },
+  { id: 69,  name: "Daniel Bennett",           rank: 69,  earnings: 0, teeTime: "4:40 AM" },
   { id: 70,  name: "Brian Campbell",           rank: 70,  earnings: 0, teeTime: "5:10 AM" },
   { id: 71,  name: "Max Greyserman",           rank: 71,  earnings: 0, teeTime: "5:20 AM" },
   { id: 72,  name: "Andrew Putnam",            rank: 72,  earnings: 0, teeTime: "5:30 AM" },
@@ -1816,7 +1816,7 @@ function normalizeName(name) {
 }
 
 function getLiveDataForGolfer(golferName) {
-  if (golferName.includes('(Amateur)')) return null; // amateur never earns prize money
+  // Note: amateurs CAN have live score data, just no earnings — handled at sync time
   const key = normalizeName(golferName);
   // Try exact match first
   if (liveScores[key]) return liveScores[key];
@@ -2139,7 +2139,7 @@ function renderGolferGrid(golfers) {
   });
   const grid = document.getElementById('golfer-grid');
   grid.innerHTML = sorted.map(g => {
-    const isAmateur = g.name.includes('(Amateur)');
+    const isAmateur = g.name === 'Daniel Bennett';
     const isDisabled = selectedGolfers.length >= 5 && !selectedGolfers.includes(g.id);
     const classes = [
       'golfer-card',
@@ -2147,7 +2147,7 @@ function renderGolferGrid(golfers) {
       isAmateur ? 'amateur' : (isDisabled ? 'disabled' : '')
     ].filter(Boolean).join(' ');
     const earningsDisplay = isAmateur
-      ? 'Amateur – $0'
+      ? 'Amateur – $0' // Bennett is an amateur, earns no prize money
       : (g.earnings > 0 ? '$' + g.earnings.toLocaleString() : g.cutMissed ? 'Cut' : '–');
     return `
     <div class="${classes}" onclick="${isAmateur ? '' : `toggleGolfer(${g.id})`}">
