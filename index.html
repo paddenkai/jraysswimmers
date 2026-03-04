@@ -2776,9 +2776,16 @@ async function saveSettings() {
   // Reload teams fresh from Supabase so leaderboard reflects the change
   await loadTeams();
   currentUser.name = name;
-  document.getElementById('edit-profile-panel').style.display = 'none';
-  document.getElementById('edit-profile-btn').textContent = '✎ EDIT';
-  renderProfile();
+  // Close panel first
+  const panel = document.getElementById('edit-profile-panel');
+  if (panel) panel.style.display = 'none';
+  const editBtn = document.getElementById('edit-profile-btn');
+  if (editBtn) editBtn.textContent = '✎ EDIT';
+  // Update profile display elements directly without full re-render
+  const avatarEl = document.getElementById('profile-avatar');
+  if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+  const nameEl = document.getElementById('profile-name');
+  if (nameEl) nameEl.textContent = name;
   renderLeaderboard();
   showToast('Name updated!', 'success');
 }
