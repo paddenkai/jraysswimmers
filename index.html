@@ -759,7 +759,7 @@
         <div class="tracker-count" id="tracker-count">0/5 selected</div>
       </div>
       <input class="tracker-name-input" id="tracker-name-input" type="text" placeholder="Name your team..." maxlength="40" oninput="syncTrackerName(); clearNameError()" />
-      <div id="tracker-name-error" style="display:none; color:#ff6b6b; font-size:0.72rem; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:4px;"></div>
+      <div id="tracker-name-error" style="display:none; color:#ff6b6b; font-size:0.72rem; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:4px; padding:5px 8px; background:rgba(255,100,100,0.15); border-left:3px solid #ff6b6b; border-radius:0 4px 4px 0;"></div>
       <div style="display:flex; gap:8px; margin-top:0;">
         <button class="tracker-add-btn" id="tracker-add-btn" onclick="addTeamToCart()">+ Add Team</button>
         <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit + Checkout →</button>
@@ -772,7 +772,7 @@
       <div class="team-panel">
         <h3>Your Team</h3>
         <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" style="margin-bottom:4px;" oninput="updateMobileTracker(); clearNameError()" />
-        <div id="panel-name-error" style="display:none; color:#e74c3c; font-size:0.75rem; font-family:'DM Mono',monospace; margin-bottom:10px;"></div>
+        <div id="panel-name-error" style="display:none; color:#e74c3c; font-size:0.75rem; font-family:'DM Mono',monospace; margin-bottom:10px; padding:6px 10px; background:#fff5f5; border-left:3px solid #e74c3c; border-radius:0 4px 4px 0;"></div>
         <div id="team-slots"></div>
         <div class="team-panel-sub" id="team-panel-sub" style="margin-top:8px;">0/5 selected</div>
         <button class="btn btn-green btn-full" id="add-to-cart-btn" onclick="addTeamToCart()" disabled style="margin-top:14px;">
@@ -2108,10 +2108,14 @@ async function addTeamToCart() {
   const panelInput = document.getElementById('team-name-input');
   // Sync tracker→panel in case user typed in tracker
   if (trackerInput?.value.trim() && panelInput) panelInput.value = trackerInput.value.trim();
-  const teamName = (trackerInput?.value.trim() || panelInput?.value.trim()) || `${currentUser.name}'s Team ${cart.length + 1}`;
+  const teamName = trackerInput?.value.trim() || panelInput?.value.trim() || '';
+  if (!teamName) {
+    showNameError('Please enter a team name');
+    return;
+  }
   // Check for duplicate name — query Supabase directly (case-insensitive)
   const nameLower = teamName.toLowerCase().trim();
-  const { data: existingTeams } = await sb.from('teams').select('name').ilike('name', teamName.trim());
+  const { data: existingTeams, error: dupError } = await sb.from('teams').select('name').ilike('name', teamName.trim());
   const isDuplicate = (existingTeams && existingTeams.length > 0) ||
                       cart.some(t => t.name.toLowerCase().trim() === nameLower);
   if (isDuplicate) {
