@@ -333,9 +333,9 @@
       font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem;
       white-space: nowrap;
     }
-    /* Hide full team panel on mobile, show golfer grid first */
-    .team-builder-grid .team-panel { display: none; }
-    .team-builder-grid .golfer-col { grid-row: 1 !important; }
+    /* Golfer grid on top, team panel below on mobile */
+    .team-builder-grid .golfer-col { grid-column: 1 !important; grid-row: 1 !important; }
+    .team-builder-grid .team-panel { grid-column: 1 !important; grid-row: 2 !important; }
   }
   .team-panel-sub { font-size: 0.78rem; color: #888; font-family: 'DM Mono', monospace; margin-bottom: 16px; }
   .team-slot {
