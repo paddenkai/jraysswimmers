@@ -379,7 +379,7 @@
   #mobile-checkout-fab {
     display: none;
     position: fixed;
-    bottom: 24px;
+    top: 80px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 999;
@@ -396,10 +396,8 @@
     white-space: nowrap;
     transition: opacity 0.2s, transform 0.2s;
   }
-  #mobile-checkout-fab:active { transform: translateX(-50%) scale(0.97); }
-  @media (max-width: 600px) {
-    #mobile-checkout-fab { display: block; }
-  }
+  #mobile-checkout-fab:active { transform: translateX(-50%) scale(0.97); opacity: 0.9; }
+  /* Show on all screen sizes */
 
   .payment-box {
     max-width: 500px;
@@ -2066,6 +2064,7 @@ function updateMobileFAB() {
   if (!fab) return;
   const onBuilder = document.getElementById('page-builder')?.classList.contains('active');
   fab.style.display = (cart.length > 0 && onBuilder) ? 'block' : 'none';
+  // Use flex centering on all screen sizes
   fab.textContent = cart.length === 1 ? 'Checkout → $10' : `Checkout → $${cart.length * 10}`;
 }
 
