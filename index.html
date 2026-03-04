@@ -2115,6 +2115,8 @@ async function addTeamToCart() {
   }
   // Check for duplicate against allTeams (freshly loaded when builder opened)
   const nameLower = teamName.toLowerCase().trim();
+  // Show allTeams count on screen so we can debug mobile
+  showToast(`Checking against ${allTeams.length} existing teams...`, 'info');
   const isDuplicate =
     allTeams.some(t => t.name.toLowerCase().trim() === nameLower) ||
     cart.some(t => t.name.toLowerCase().trim() === nameLower);
