@@ -989,6 +989,30 @@
           </label>
         </div>
 
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div>
+            <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">Show Projected Cut Line</div>
+            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Display projected cut on the live leaderboard (enable at start of Round 2)</div>
+          </div>
+          <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
+            <input type="checkbox" id="toggle-cutline" onchange="saveAdminSettings()" style="opacity:0; width:0; height:0;">
+            <span id="toggle-cutline-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
+            <span id="toggle-cutline-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+          </label>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div>
+            <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">Show Projected Winner</div>
+            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Display projected pool winner on the homepage stat bar (enable at start of Round 3)</div>
+          </div>
+          <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
+            <input type="checkbox" id="toggle-projected-winner" onchange="saveAdminSettings()" style="opacity:0; width:0; height:0;">
+            <span id="toggle-projected-winner-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
+            <span id="toggle-projected-winner-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+          </label>
+        </div>
+
       </div>
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <input type="text" id="admin-search" placeholder="Search by name or email..." oninput="renderAdminTable()"
@@ -1203,6 +1227,8 @@ let adminSettings = {
   showPicks: false,
   showResults: false,
   allowEditing: true,
+  showCutLine: false,
+  showProjectedWinner: false,
 };
 
 async function loadAdminSettings() {
@@ -1212,6 +1238,8 @@ async function loadAdminSettings() {
     adminSettings.showPicks = data.show_picks;
     adminSettings.showResults = data.show_results || false;
     adminSettings.allowEditing = data.allow_editing !== undefined ? data.allow_editing : true;
+    adminSettings.showCutLine = data.show_cut_line || false;
+    adminSettings.showProjectedWinner = data.show_projected_winner || false;
   }
 }
 
@@ -1220,18 +1248,24 @@ async function saveAdminSettings() {
   adminSettings.showPicks = document.getElementById('toggle-picks').checked;
   adminSettings.showResults = document.getElementById('toggle-results').checked;
   adminSettings.allowEditing = document.getElementById('toggle-editing').checked;
+  adminSettings.showCutLine = document.getElementById('toggle-cutline').checked;
+  adminSettings.showProjectedWinner = document.getElementById('toggle-projected-winner').checked;
   const { error } = await sb.from('admin_settings').upsert({
     id: 1,
     registration_open: adminSettings.registrationOpen,
     show_picks: adminSettings.showPicks,
     show_results: adminSettings.showResults,
     allow_editing: adminSettings.allowEditing,
+    show_cut_line: adminSettings.showCutLine,
+    show_projected_winner: adminSettings.showProjectedWinner,
     updated_at: new Date().toISOString()
   });
   if (error) { showToast('Error saving settings.', 'error'); return; }
   updateToggleUI('toggle-registration', adminSettings.registrationOpen);
   updateToggleUI('toggle-picks', adminSettings.showPicks);
   updateToggleUI('toggle-results', adminSettings.showResults);
+  updateToggleUI('toggle-cutline', adminSettings.showCutLine);
+  updateToggleUI('toggle-projected-winner', adminSettings.showProjectedWinner);
   updateToggleUI('toggle-editing', adminSettings.allowEditing);
   updateNav();
   renderLeaderboard();
@@ -1584,7 +1618,7 @@ function parseESPNAPI(data) {
     // Projected cut line — only used during round 2, not after cut is official
     // Arnold Palmer rule: top 50 + ties + anyone within 10 shots of lead
     let cutScore = null;
-    if (!isPostCut && maxRounds >= 2 && madecut.length >= 50) {
+    if (!isPostCut && maxRounds >= 2 && madecut.length >= 50 && adminSettings.showCutLine) {
       const top50Score = madecut[49].scoreNum;
       const leadScore = madecut[0].scoreNum;
       const within10Score = leadScore + 10;
@@ -1601,7 +1635,7 @@ function parseESPNAPI(data) {
       const pos = p.pos || 999;
       const tiedCount = p.tiedCount || 1;
       const missedCut = p.cut || (!isPostCut && cutScore !== null && p.scoreNum > cutScore);
-      const earnings = p.wd ? 0 : missedCut ? 0 : getPayoutForPosition(pos, tiedCount);
+      const earnings = (!window._playHasStarted) ? 0 : p.wd ? 0 : missedCut ? 0 : getPayoutForPosition(pos, tiedCount);
       const posDisplay = p.wd ? 'WD' : missedCut ? 'MC' : (p.posDisplay || '–');
 
       liveScores[key] = {
@@ -2531,10 +2565,10 @@ function renderTournament() {
     </tr>`;
   };
 
-  const cutLabel = window._isPostCut ? '— CUT —' : '— PROJECTED CUT —';
+  const cutLabel = window._isPostCut ? '— CUT —' : (adminSettings.showCutLine ? '— PROJECTED CUT —' : null);
 
   tbody.innerHTML = sorted.map(renderRow).join('') +
-    (cutPlayers.length ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>` : '') +
+    (cutPlayers.length && cutLabel ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>` : '') +
     cutPlayers.map(renderRow).join('');
 }
 
@@ -2767,7 +2801,7 @@ function updateStats() {
   if (cutStatEl) cutStatEl.style.display = isRound2 ? '' : 'none';
 
   // Show projected winner in round 3+
-  if (leaderWrapEl) leaderWrapEl.style.display = (window._isPostCut && hasLiveData) ? '' : 'none';
+  if (leaderWrapEl) leaderWrapEl.style.display = (window._isPostCut && hasLiveData && adminSettings.showProjectedWinner) ? '' : 'none';
 
   if (isRound2) {
     const sorted = [...activePlayers].sort((a, b) => a.pos - b.pos);
