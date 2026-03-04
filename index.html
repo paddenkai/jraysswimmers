@@ -241,6 +241,12 @@
     grid-template-columns: 1fr 320px;
     gap: 28px;
   }
+  /* Desktop: golfer grid left (order 2 in HTML but visually first), team panel right */
+  @media (min-width: 801px) {
+    .team-builder-grid .team-panel { order: 2 !important; }
+    .team-builder-grid div[style*="order:2"] { order: 1 !important; }
+  }
+  /* Mobile: team panel on top (order 1), golfer grid below (order 2) */
   @media (max-width: 800px) { .team-builder-grid { grid-template-columns: 1fr; } }
 
   .golfer-search { margin-bottom: 16px; }
@@ -695,13 +701,7 @@
 
     <div id="builder-content">
     <div class="team-builder-grid">
-      <div>
-        <div class="golfer-search">
-          <input type="text" id="golfer-search" placeholder="Search golfer name..." oninput="filterGolfers()" />
-        </div>
-        <div class="golfer-grid" id="golfer-grid"></div>
-      </div>
-      <div class="team-panel">
+      <div class="team-panel" style="order:1;">
         <h3>Your Team</h3>
         <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" style="margin-bottom:12px;" />
         <div id="team-slots"></div>
@@ -725,6 +725,12 @@
         <div style="margin-top:10px; font-size:0.75rem; color:#aaa; text-align:center; font-family:'DM Mono',monospace;">
           Build as many teams as you want
         </div>
+      </div>
+      <div style="order:2;">
+        <div class="golfer-search">
+          <input type="text" id="golfer-search" placeholder="Search golfer name..." oninput="filterGolfers()" />
+        </div>
+        <div class="golfer-grid" id="golfer-grid"></div>
       </div>
     </div>
     </div><!-- end builder-content -->
@@ -2132,7 +2138,6 @@ function renderPaymentSummary() {
     return `<div class="order-line"><span><strong>${t.name}</strong><br><span style="font-size:0.78rem;color:#aaa;">${names}</span></span><span>$${CONFIG.ENTRY_FEE}.00</span></div>`;
   }).join('');
   document.getElementById('order-total-val').textContent = `$${totalAmt}.00`;
-  document.getElementById('pay-btn').textContent = `Submit Teams →`;
   // Build payment note
   const noteEl = document.getElementById('payment-note-display');
   if (noteEl) {
@@ -2172,11 +2177,7 @@ function openVenmo() {
   setTimeout(() => { openModal('success-modal'); }, 500);
 }
 
-function submitPayment() {
-  // Teams already saved on checkout — just show success
-  pendingTeam = null;
-  openModal('success-modal');
-}
+
 
 
 // ═══════════════════════════════════════════════════════
