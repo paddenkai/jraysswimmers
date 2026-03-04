@@ -2098,17 +2098,18 @@ function renderTeamSlots() {
   document.getElementById('add-to-cart-btn').disabled = selectedGolfers.length < 5;
 }
 
-function addTeamToCart() {
+async function addTeamToCart() {
   if (selectedGolfers.length < 5) { showToast('Please select 5 golfers.', 'error'); return; }
   if (!currentUser) { openAuthModal(); return; }
   // Read from whichever input is visible (tracker on mobile, panel on desktop)
   const trackerInput = document.getElementById('tracker-name-input');
   const panelInput = document.getElementById('team-name-input');
   const teamName = (trackerInput?.value.trim() || panelInput?.value.trim()) || `${currentUser.name}'s Team ${cart.length + 1}`;
-  // Check for duplicate team name across all existing teams and current cart
-  const nameLower = teamName.toLowerCase();
-  const isDuplicate = allTeams.some(t => t.name.toLowerCase() === nameLower) ||
-                      cart.some(t => t.name.toLowerCase() === nameLower);
+  // Refresh teams from Supabase then check for duplicates
+  await loadTeams();
+  const nameLower = teamName.toLowerCase().trim();
+  const isDuplicate = allTeams.some(t => t.name.toLowerCase().trim() === nameLower) ||
+                      cart.some(t => t.name.toLowerCase().trim() === nameLower);
   if (isDuplicate) {
     showToast(`"${teamName}" is already taken — pick a different name!`, 'error');
     return;
