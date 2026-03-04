@@ -558,7 +558,7 @@
 <!-- STATS BAR -->
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><div class="stat-val" id="stat-entries">0</div><div class="stat-label">Teams Entered</div></div>
-  <div class="stat" id="stat-cut-wrap"><div class="stat-val" id="stat-countdown">–</div><div class="stat-label">Current Cut Line</div></div>
+  <div class="stat" id="stat-cut-wrap" style="display:none;"><div class="stat-val" id="stat-countdown">–</div><div class="stat-label">Current Cut Line</div></div>
   <div class="stat" id="stat-leader-wrap" style="display:none;">
     <div class="stat-val" id="stat-leader">–</div>
     <div class="stat-label">Projected Winner</div>
@@ -1618,7 +1618,7 @@ function parseESPNAPI(data) {
     // Projected cut line — only used during round 2, not after cut is official
     // Arnold Palmer rule: top 50 + ties + anyone within 10 shots of lead
     let cutScore = null;
-    if (!isPostCut && maxRounds >= 2 && madecut.length >= 50 && adminSettings.showCutLine) {
+    if (!isPostCut && maxRounds >= 2 && madecut.length >= 50) {
       const top50Score = madecut[49].scoreNum;
       const leadScore = madecut[0].scoreNum;
       const within10Score = leadScore + 10;
@@ -2565,10 +2565,10 @@ function renderTournament() {
     </tr>`;
   };
 
-  const cutLabel = window._isPostCut ? '— CUT —' : (adminSettings.showCutLine ? '— PROJECTED CUT —' : null);
+  const cutLabel = window._isPostCut ? '— CUT —' : '— PROJECTED CUT —';
 
   tbody.innerHTML = sorted.map(renderRow).join('') +
-    (cutPlayers.length && cutLabel ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>` : '') +
+    (cutPlayers.length ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>` : '') +
     cutPlayers.map(renderRow).join('');
 }
 
