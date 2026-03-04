@@ -1138,13 +1138,18 @@
 <div class="modal-overlay" id="edit-picks-modal">
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="closeModal('edit-picks-modal')">✕</button>
-    <h2 style="color:var(--green); margin-bottom:4px;">Edit Picks</h2>
+    <h2 style="color:var(--green); margin-bottom:4px;">Edit Team</h2>
     <p style="color:#888; font-size:0.82rem; margin-bottom:16px;" id="edit-picks-team-label">Select 5 golfers for your team</p>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:1px; color:#888; margin-bottom:6px;">TEAM NAME</label>
+      <input type="text" id="edit-picks-name" maxlength="40"
+        style="width:100%; padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:var(--cream); box-sizing:border-box;" />
+    </div>
     <div style="position:relative; margin-bottom:12px;">
       <input type="text" id="edit-picks-search" placeholder="Search golfer..." oninput="renderEditPicksGrid()"
         style="width:100%; padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:var(--cream); box-sizing:border-box;" />
     </div>
-    <div id="edit-picks-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; max-height:340px; overflow-y:auto; margin-bottom:16px;"></div>
+    <div id="edit-picks-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; max-height:300px; overflow-y:auto; margin-bottom:16px;"></div>
     <div style="display:flex; gap:8px; justify-content:flex-end;">
       <button onclick="closeModal('edit-picks-modal')" style="background:none; border:1.5px solid #d4d0c8; border-radius:4px; padding:10px 18px; cursor:pointer; font-family:'Libre Baskerville',serif; font-size:0.88rem; color:#888;">Cancel</button>
       <button onclick="saveEditPicks()" class="btn btn-gold" id="save-edit-picks-btn" disabled style="opacity:0.5;">Save Changes</button>
@@ -1255,7 +1260,7 @@ function initAdminToggles() {
 // ═══════════════════════════════════════════════════════
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
-const TOURNAMENT_ACTIVE = false; // true = show live scores tab & leaderboard earnings
+const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
@@ -1363,76 +1368,76 @@ let fetchInterval = null;
 // Feb 26 – Mar 1, 2026 · Purse: $9,600,000
 // ═══════════════════════════════════════════════════════
 const GOLFERS = [
-  { id: 1,   name: "Scottie Scheffler",          rank: 1,   earnings: 0 },
-  { id: 2,   name: "Rory McIlroy",               rank: 2,   earnings: 0 },
-  { id: 3,   name: "Tommy Fleetwood",            rank: 3,   earnings: 0 },
-  { id: 4,   name: "Xander Schauffele",          rank: 4,   earnings: 0 },
-  { id: 5,   name: "Matt Fitzpatrick",           rank: 5,   earnings: 0 },
-  { id: 6,   name: "Hideki Matsuyama",           rank: 6,   earnings: 0 },
-  { id: 7,   name: "Russell Henley",             rank: 7,   earnings: 0 },
-  { id: 8,   name: "Collin Morikawa",            rank: 8,   earnings: 0 },
-  { id: 9,   name: "Si Woo Kim",                 rank: 9,   earnings: 0 },
-  { id: 10,  name: "Cameron Young",              rank: 10,  earnings: 0 },
-  { id: 11,  name: "Robert MacIntyre",           rank: 11,  earnings: 0 },
-  { id: 12,  name: "Patrick Cantlay",            rank: 12,  earnings: 0 },
-  { id: 13,  name: "Ben Griffin",                rank: 13,  earnings: 0 },
-  { id: 14,  name: "Harris English",             rank: 14,  earnings: 0 },
-  { id: 15,  name: "Jake Knapp",                 rank: 15,  earnings: 0 },
-  { id: 16,  name: "Viktor Hovland",             rank: 16,  earnings: 0 },
-  { id: 17,  name: "Sam Burns",                  rank: 17,  earnings: 0 },
-  { id: 18,  name: "Ludvig Aberg",               rank: 18,  earnings: 0 },
-  { id: 19,  name: "Kurt Kitayama",              rank: 19,  earnings: 0 },
-  { id: 20,  name: "Chris Gotterup",             rank: 20,  earnings: 0 },
-  { id: 21,  name: "Rickie Fowler",              rank: 21,  earnings: 0 },
-  { id: 22,  name: "Maverick McNealy",           rank: 22,  earnings: 0 },
-  { id: 23,  name: "Justin Rose",                rank: 23,  earnings: 0 },
-  { id: 24,  name: "Adam Scott",                 rank: 24,  earnings: 0 },
-  { id: 25,  name: "Shane Lowry",                rank: 25,  earnings: 0 },
-  { id: 26,  name: "Justin Thomas",              rank: 26,  earnings: 0 },
-  { id: 27,  name: "Min Woo Lee",                rank: 27,  earnings: 0 },
-  { id: 28,  name: "Jason Day",                  rank: 28,  earnings: 0 },
-  { id: 29,  name: "Keegan Bradley",             rank: 29,  earnings: 0 },
-  { id: 30,  name: "Jordan Spieth",              rank: 30,  earnings: 0 },
-  { id: 31,  name: "Pierceson Coody",            rank: 31,  earnings: 0 },
-  { id: 32,  name: "Jacob Bridgeman",            rank: 32,  earnings: 0 },
-  { id: 33,  name: "J.J. Spaun",                 rank: 33,  earnings: 0 },
-  { id: 34,  name: "Akshay Bhatia",              rank: 34,  earnings: 0 },
-  { id: 35,  name: "Alex Noren",                 rank: 35,  earnings: 0 },
-  { id: 36,  name: "Nick Taylor",                rank: 36,  earnings: 0 },
-  { id: 37,  name: "Harry Hall",                 rank: 37,  earnings: 0 },
-  { id: 38,  name: "Ryan Gerard",                rank: 38,  earnings: 0 },
-  { id: 39,  name: "Nicolai Hojgaard",           rank: 39,  earnings: 0 },
-  { id: 40,  name: "Sepp Straka",                rank: 40,  earnings: 0 },
-  { id: 41,  name: "Corey Conners",              rank: 41,  earnings: 0 },
-  { id: 42,  name: "Michael Thorbjornsen",       rank: 42,  earnings: 0 },
-  { id: 43,  name: "Taylor Pendrith",            rank: 43,  earnings: 0 },
-  { id: 44,  name: "Sam Stevens",                rank: 44,  earnings: 0 },
-  { id: 45,  name: "Daniel Berger",              rank: 45,  earnings: 0 },
-  { id: 46,  name: "Sahith Theegala",            rank: 46,  earnings: 0 },
-  { id: 47,  name: "J.T. Poston",                rank: 47,  earnings: 0 },
-  { id: 48,  name: "Matt McCarty",               rank: 48,  earnings: 0 },
-  { id: 49,  name: "Ryan Fox",                   rank: 49,  earnings: 0 },
-  { id: 50,  name: "Sungjae Im",                 rank: 50,  earnings: 0 },
-  { id: 51,  name: "Denny McCarthy",             rank: 51,  earnings: 0 },
-  { id: 52,  name: "Max Greyserman",           rank: 52,  earnings: 0 },
-  { id: 53,  name: "Austin Smotherman",        rank: 53,  earnings: 0 },
-  { id: 54,  name: "Keith Mitchell",           rank: 54,  earnings: 0 },
-  { id: 55,  name: "Taylor Moore",             rank: 55,  earnings: 0 },
-  { id: 56,  name: "Ryo Hisatsune",            rank: 56,  earnings: 0 },
-  { id: 57,  name: "Brian Harman",             rank: 57,  earnings: 0 },
-  { id: 58,  name: "Joel Dahmen",              rank: 58,  earnings: 0 },
-  { id: 59,  name: "Nico Echavarria",          rank: 59,  earnings: 0 },
-  { id: 60,  name: "Aldrich Potgieter",        rank: 60,  earnings: 0 },
-  { id: 61,  name: "Bud Cauley",               rank: 61,  earnings: 0 },
-  { id: 62,  name: "Andrew Novak",             rank: 62,  earnings: 0 },
-  { id: 63,  name: "Michael Kim",              rank: 63,  earnings: 0 },
-  { id: 64,  name: "Lucas Glover",             rank: 64,  earnings: 0 },
-  { id: 65,  name: "Tom Hoge",                 rank: 65,  earnings: 0 },
-  { id: 66,  name: "Billy Horschel",           rank: 66,  earnings: 0 },
-  { id: 67,  name: "Andrew Putnam",            rank: 67,  earnings: 0 },
-  { id: 68,  name: "Jhonattan Vegas",          rank: 68,  earnings: 0 },
-  { id: 69,  name: "Daniel Bennett",           rank: 69,  earnings: 0 },
-  { id: 70,  name: "Brian Campbell",           rank: 70,  earnings: 0 },
+  { id: 1,   name: "Scottie Scheffler",          rank: 1,   earnings: 0, teeTime: "7:20 AM" },
+  { id: 2,   name: "Rory McIlroy",               rank: 2,   earnings: 0, teeTime: "10:30 AM" },
+  { id: 3,   name: "Tommy Fleetwood",            rank: 3,   earnings: 0, teeTime: "9:50 AM" },
+  { id: 4,   name: "Xander Schauffele",          rank: 4,   earnings: 0, teeTime: "7:05 AM" },
+  { id: 5,   name: "Matt Fitzpatrick",           rank: 5,   earnings: 0, teeTime: "9:05 AM" },
+  { id: 6,   name: "Hideki Matsuyama",           rank: 6,   earnings: 0, teeTime: "10:20 AM" },
+  { id: 7,   name: "Russell Henley",             rank: 7,   earnings: 0, teeTime: "7:20 AM" },
+  { id: 8,   name: "Collin Morikawa",            rank: 8,   earnings: 0, teeTime: "6:55 AM" },
+  { id: 9,   name: "Si Woo Kim",                 rank: 9,   earnings: 0, teeTime: "8:00 AM" },
+  { id: 10,  name: "Cameron Young",              rank: 10,  earnings: 0, teeTime: "6:15 AM" },
+  { id: 11,  name: "Robert MacIntyre",           rank: 11,  earnings: 0, teeTime: "6:35 AM" },
+  { id: 12,  name: "Patrick Cantlay",            rank: 12,  earnings: 0, teeTime: "6:25 AM" },
+  { id: 13,  name: "Ben Griffin",                rank: 13,  earnings: 0, teeTime: "9:50 AM" },
+  { id: 14,  name: "Harris English",             rank: 14,  earnings: 0, teeTime: "6:25 AM" },
+  { id: 15,  name: "Jake Knapp",                 rank: 15,  earnings: 0, teeTime: "9:05 AM" },
+  { id: 16,  name: "Viktor Hovland",             rank: 16,  earnings: 0, teeTime: "10:30 AM" },
+  { id: 17,  name: "Sam Burns",                  rank: 17,  earnings: 0, teeTime: "9:15 AM" },
+  { id: 18,  name: "Ludvig Aberg",               rank: 18,  earnings: 0, teeTime: "10:00 AM" },
+  { id: 19,  name: "Kurt Kitayama",              rank: 19,  earnings: 0, teeTime: "8:45 AM" },
+  { id: 20,  name: "Chris Gotterup",             rank: 20,  earnings: 0, teeTime: "10:10 AM" },
+  { id: 21,  name: "Rickie Fowler",              rank: 21,  earnings: 0, teeTime: "10:40 AM" },
+  { id: 22,  name: "Maverick McNealy",           rank: 22,  earnings: 0, teeTime: "9:35 AM" },
+  { id: 23,  name: "Justin Rose",                rank: 23,  earnings: 0, teeTime: "6:55 AM" },
+  { id: 24,  name: "Adam Scott",                 rank: 24,  earnings: 0, teeTime: "7:30 AM" },
+  { id: 25,  name: "Shane Lowry",                rank: 25,  earnings: 0, teeTime: "7:05 AM" },
+  { id: 26,  name: "Justin Thomas",              rank: 26,  earnings: 0, teeTime: "10:20 AM" },
+  { id: 27,  name: "Min Woo Lee",                rank: 27,  earnings: 0, teeTime: "5:50 AM" },
+  { id: 28,  name: "Jason Day",                  rank: 28,  earnings: 0, teeTime: "8:20 AM" },
+  { id: 29,  name: "Keegan Bradley",             rank: 29,  earnings: 0, teeTime: "9:35 AM" },
+  { id: 30,  name: "Jordan Spieth",              rank: 30,  earnings: 0, teeTime: "8:55 AM" },
+  { id: 31,  name: "Pierceson Coody",            rank: 31,  earnings: 0, teeTime: "8:45 AM" },
+  { id: 32,  name: "Jacob Bridgeman",            rank: 32,  earnings: 0, teeTime: "10:10 AM" },
+  { id: 33,  name: "J.J. Spaun",                 rank: 33,  earnings: 0, teeTime: "9:25 AM" },
+  { id: 34,  name: "Akshay Bhatia",              rank: 34,  earnings: 0, teeTime: "6:45 AM" },
+  { id: 35,  name: "Alex Noren",                 rank: 35,  earnings: 0, teeTime: "5:40 AM" },
+  { id: 36,  name: "Nick Taylor",                rank: 36,  earnings: 0, teeTime: "9:25 AM" },
+  { id: 37,  name: "Harry Hall",                 rank: 37,  earnings: 0, teeTime: "6:05 AM" },
+  { id: 38,  name: "Ryan Gerard",                rank: 38,  earnings: 0, teeTime: "8:20 AM" },
+  { id: 39,  name: "Nicolai Hojgaard",           rank: 39,  earnings: 0, teeTime: "7:50 AM" },
+  { id: 40,  name: "Sepp Straka",                rank: 40,  earnings: 0, teeTime: "6:15 AM" },
+  { id: 41,  name: "Corey Conners",              rank: 41,  earnings: 0, teeTime: "6:05 AM" },
+  { id: 42,  name: "Michael Thorbjornsen",       rank: 42,  earnings: 0, teeTime: "5:50 AM" },
+  { id: 43,  name: "Taylor Pendrith",            rank: 43,  earnings: 0, teeTime: "8:35 AM" },
+  { id: 44,  name: "Sam Stevens",                rank: 44,  earnings: 0, teeTime: "8:55 AM" },
+  { id: 45,  name: "Daniel Berger",              rank: 45,  earnings: 0, teeTime: "5:40 AM" },
+  { id: 46,  name: "Sahith Theegala",            rank: 46,  earnings: 0, teeTime: "10:50 AM" },
+  { id: 47,  name: "J.T. Poston",                rank: 47,  earnings: 0, teeTime: "7:40 AM" },
+  { id: 48,  name: "Matt McCarty",               rank: 48,  earnings: 0, teeTime: "5:20 AM" },
+  { id: 49,  name: "Ryan Fox",                   rank: 49,  earnings: 0, teeTime: "5:00 AM" },
+  { id: 50,  name: "Sungjae Im",                 rank: 50,  earnings: 0, teeTime: "9:15 AM" },
+  { id: 51,  name: "Denny McCarthy",             rank: 51,  earnings: 0, teeTime: "8:35 AM" },
+  { id: 52,  name: "Max Greyserman",           rank: 52,  earnings: 0, teeTime: "5:20 AM" },
+  { id: 53,  name: "Austin Smotherman",        rank: 53,  earnings: 0, teeTime: "7:50 AM" },
+  { id: 54,  name: "Keith Mitchell",           rank: 54,  earnings: 0, teeTime: "7:40 AM" },
+  { id: 55,  name: "Taylor Moore",             rank: 55,  earnings: 0, teeTime: "5:30 AM" },
+  { id: 56,  name: "Ryo Hisatsune",            rank: 56,  earnings: 0, teeTime: "8:10 AM" },
+  { id: 57,  name: "Brian Harman",             rank: 57,  earnings: 0, teeTime: "6:45 AM" },
+  { id: 58,  name: "Joel Dahmen",              rank: 58,  earnings: 0, teeTime: "4:40 AM" },
+  { id: 59,  name: "Nico Echavarria",          rank: 59,  earnings: 0, teeTime: "10:00 AM" },
+  { id: 60,  name: "Aldrich Potgieter",        rank: 60,  earnings: 0, teeTime: "7:30 AM" },
+  { id: 61,  name: "Bud Cauley",               rank: 61,  earnings: 0, teeTime: "8:00 AM" },
+  { id: 62,  name: "Andrew Novak",             rank: 62,  earnings: 0, teeTime: "6:35 AM" },
+  { id: 63,  name: "Michael Kim",              rank: 63,  earnings: 0, teeTime: "10:40 AM" },
+  { id: 64,  name: "Lucas Glover",             rank: 64,  earnings: 0, teeTime: "8:10 AM" },
+  { id: 65,  name: "Tom Hoge",                 rank: 65,  earnings: 0, teeTime: "4:50 AM" },
+  { id: 66,  name: "Billy Horschel",           rank: 66,  earnings: 0, teeTime: "5:00 AM" },
+  { id: 67,  name: "Andrew Putnam",            rank: 67,  earnings: 0, teeTime: "5:30 AM" },
+  { id: 68,  name: "Jhonattan Vegas",          rank: 68,  earnings: 0, teeTime: "4:50 AM" },
+  { id: 69,  name: "Daniel Bennett",           rank: 69,  earnings: 0, teeTime: "4:40 AM" },
+  { id: 70,  name: "Brian Campbell",           rank: 70,  earnings: 0, teeTime: "5:10 AM" },
 ];
 
 // ═══════════════════════════════════════════════════════
@@ -1506,8 +1511,23 @@ function parseESPNAPI(data) {
       // Detect cut: ESPN status OR player only has 2 rounds while others have 3+
       const espnCut = comp.status?.type?.name === 'STATUS_CUT' ||
                       comp.status?.type?.description?.toLowerCase().includes('cut');
+
+      // Tee time — available before play starts
+      const statusName = comp.status?.type?.name || '';
+      const isScheduled = statusName === 'STATUS_SCHEDULED' || holes.length === 0;
+      const teeTimeRaw = comp.teeTime || comp.status?.type?.shortDetail || null;
+      let teeTimeDisplay = null;
+      if (isScheduled && teeTimeRaw) {
+        const d = new Date(teeTimeRaw);
+        if (!isNaN(d)) {
+          teeTimeDisplay = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' ET';
+        } else {
+          teeTimeDisplay = teeTimeRaw;
+        }
+      }
+
       // We'll finalize cut detection after we know maxRounds below
-      players.push({ name, scoreStr, scoreNum, cut: espnCut, thru, today, roundsPlayed: linescores.filter(r => (r.linescores || []).length > 0).length, roundsData });
+      players.push({ name, scoreStr, scoreNum, cut: espnCut, thru, today, teeTimeDisplay, roundsPlayed: linescores.filter(r => (r.linescores || []).length > 0).length, roundsData });
     });
 
     // Sort non-cut players — will be re-sorted after cut finalization below
@@ -1573,6 +1593,7 @@ function parseESPNAPI(data) {
     }
 
     window._isPostCut = isPostCut;
+    window._playHasStarted = maxRounds > 0; // false = field entered but no holes played yet
 
     // Build liveScores
     [...madecut, ...missedCutPlayers].forEach(p => {
@@ -1586,6 +1607,7 @@ function parseESPNAPI(data) {
       liveScores[key] = {
         pos, posDisplay,
         score: p.scoreStr, today: p.today, thru: p.thru,
+        teeTime: p.teeTimeDisplay || null,
         cut: missedCut, wd: p.wd || false, earnings, name: p.name,
         roundsData: p.roundsData || []
       };
@@ -2133,7 +2155,7 @@ function renderLeaderboard() {
   }
   empty.style.display = 'none';
 
-  const hasLiveData = Object.keys(liveScores).length > 0;
+  const hasLiveData = Object.keys(liveScores).length > 0 && (window._playHasStarted || false);
   const q = (document.getElementById('leaderboard-search')?.value || '').toLowerCase();
   const sortBy = document.getElementById('leaderboard-sort')?.value || 'rank';
 
@@ -2217,7 +2239,7 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = [4,3,4,5,4,5,3,4,4, 4,4,5,4,3,4,5,3,4];
+const HOLE_PARS = [4,4,4,5,4,3,5,3,4, 4,4,5,3,4,5,4,3,4]; // Bay Hill Club par 72
 
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
@@ -2236,9 +2258,54 @@ function toggleScorecard(playerKey, clickedRow) {
   // Get current (latest) round only
   const rounds = d.roundsData || [];
   const currentRound = rounds[rounds.length - 1];
-  if (!currentRound || currentRound.holes.length === 0) {
-    expandRow.querySelector('td').innerHTML = `<div style="padding:12px 16px; font-size:0.82rem; color:#aaa; font-family:'DM Mono',monospace;">No hole data available yet.</div>`;
+  const hasHoleData = currentRound && currentRound.holes.length > 0;
+
+  // If no round data yet, show blank scorecard using Bay Hill pars
+  if (!hasHoleData) {
+    const blankHoles = Array.from({length: 18}, (_, i) => ({ hole: i+1, score: null, par: HOLE_PARS[i] }));
+    const front = blankHoles.slice(0, 9);
+    const back  = blankHoles.slice(9, 18);
+    const frontPars = front.map(h => h.par);
+    const backPars  = back.map(h => h.par);
+    const thStyle  = `padding:4px 2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.68rem; color:#aaa; min-width:26px;`;
+    const subStyle = `padding:2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.68rem; color:#bbb; min-width:26px;`;
+    const golfer = GOLFERS.find(g => normalizeName(g.name) === playerKey);
+    const teeInfo = golfer?.teeTime ? `Tee time: ${golfer.teeTime} ET · R1` : 'Round 1';
+    expandRow.querySelector('td').innerHTML = `
+      <div style="padding:10px 12px 14px;">
+        <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#aaa; margin-bottom:10px; letter-spacing:0.5px;">${teeInfo}</div>
+        <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+          <table style="border-collapse:collapse; width:100%;">
+            <thead>
+              <tr>
+                <td style="${thStyle}"></td>
+                ${front.map(h => `<td style="${thStyle}">${h.hole}</td>`).join('')}
+                <td style="${thStyle} font-weight:700; color:#888;">OUT</td>
+                ${back.map(h => `<td style="${thStyle}">${h.hole}</td>`).join('')}
+                <td style="${thStyle} font-weight:700; color:#888;">IN</td>
+              </tr>
+              <tr>
+                <td style="${subStyle}">PAR</td>
+                ${frontPars.map(p => `<td style="${subStyle}">${p}</td>`).join('')}
+                <td style="${subStyle} font-weight:600;">${frontPars.reduce((a,b)=>a+b,0)}</td>
+                ${backPars.map(p => `<td style="${subStyle}">${p}</td>`).join('')}
+                <td style="${subStyle} font-weight:600;">${backPars.reduce((a,b)=>a+b,0)}</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:5px 6px; font-family:'DM Mono',monospace; font-size:0.68rem; color:#888;">SCORE</td>
+                ${Array.from({length:9}, () => `<td style="padding:5px 2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.8rem; min-width:26px; color:#ddd;">·</td>`).join('')}
+                <td style="padding:5px 6px; text-align:center; font-family:'DM Mono',monospace; font-size:0.8rem; font-weight:700; color:var(--dark); background:#ece8df;">–</td>
+                ${Array.from({length:9}, () => `<td style="padding:5px 2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.8rem; min-width:26px; color:#ddd;">·</td>`).join('')}
+                <td style="padding:5px 6px; text-align:center; font-family:'DM Mono',monospace; font-size:0.8rem; font-weight:700; color:var(--dark); background:#ece8df;">–</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>`;
     expandRow.style.display = '';
+    clickedRow.classList.add('scorecard-open');
     return;
   }
 
@@ -2388,11 +2455,41 @@ function updateTeamHighlightSelector() {
 function renderTournament() {
   const tbody = document.getElementById('tournament-body');
   const hasData = Object.keys(liveScores).length > 0;
+  const playStarted = window._playHasStarted || false;
 
   if (!hasData) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#aaa; font-style:italic;">
-      ${TOURNAMENT_ACTIVE ? 'Fetching live scores from ESPN...' : 'Tournament begins March 5, 2026. Scores will appear here once play begins.'}
+      ${TOURNAMENT_ACTIVE ? 'Fetching field from ESPN...' : 'Tournament begins March 5, 2026. Scores will appear here once play begins.'}
     </td></tr>`;
+    return;
+  }
+
+  if (!playStarted) {
+    // Sort GOLFERS by tee time and display
+    const sortedGolfers = [...GOLFERS].filter(g => g.teeTime).sort((a, b) => {
+      // Parse "H:MM AM/PM" for sorting
+      const toMins = t => {
+        const [time, ampm] = t.split(' ');
+        let [h, m] = time.split(':').map(Number);
+        if (ampm === 'PM' && h !== 12) h += 12;
+        if (ampm === 'AM' && h === 12) h = 0;
+        return h * 60 + m;
+      };
+      return toMins(a.teeTime) - toMins(b.teeTime);
+    });
+    tbody.innerHTML = sortedGolfers.map(g => {
+      const key = normalizeName(g.name);
+      const safeKey = key.replace(/'/g, "\\'");
+      return `<tr onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer;">
+        <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#aaa;">–</td>
+        <td><strong>${g.name}</strong></td>
+        <td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">${g.teeTime} ET</td>
+        <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#bbb;">–</td>
+      </tr>
+      <tr class="scorecard-expand-row" id="expand-${safeKey}" style="display:none;">
+        <td colspan="6" style="padding:0; background:#f8f5ee; border-bottom:2px solid #e0dbd0;"></td>
+      </tr>`;
+    }).join('');
     return;
   }
 
@@ -2424,9 +2521,7 @@ function renderTournament() {
     return `<tr class="${rowClass}" onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer;">
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.posDisplay || '–'}</td>
       <td><strong>${d.name || key}</strong></td>
-      <td><span class="${scoreClass}" style="font-family:'DM Mono',monospace; font-weight:700;">${d.score}</span></td>
-      <td style="font-family:'DM Mono',monospace; color:#888; font-size:0.85rem;">${d.today}</td>
-      <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.thru}</td>
+      ${d.teeTime && d.thru === '–' ? `<td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">TEE: ${d.teeTime}</td>` : `<td><span class="${scoreClass}" style="font-family:'DM Mono',monospace; font-weight:700;">${d.score}</span></td><td style="font-family:'DM Mono',monospace; color:#888; font-size:0.85rem;">${d.today}</td><td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.thru}</td>`}
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--green-mid); font-weight:600;">${d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '–'}</td>
     </tr>
     <tr class="scorecard-expand-row" id="expand-${safeKey}" style="display:none;">
@@ -2474,7 +2569,7 @@ function renderMyTeams() {
     }
     i = j;
   }
-  const hasLiveData = Object.keys(liveScores).length > 0;
+  const hasLiveData = Object.keys(liveScores).length > 0 && (window._playHasStarted || false);
 
   const sortedMyTeams = [...myTeams].sort((a, b) => {
     const posA = positionMap.get(a.id)?.pos ?? 9999;
@@ -2500,25 +2595,20 @@ function renderMyTeams() {
           <div class="team-card-name" id="team-name-display-${team.id}">${team.name}</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <button onclick="startRename('${team.id}')" title="Rename team" style="background:none;border:1px solid rgba(255,255,255,0.3);border-radius:4px;cursor:pointer;color:var(--gold-light);font-size:0.7rem;font-family:'DM Mono',monospace;letter-spacing:1px;opacity:0.9;padding:4px 8px;">✎ RENAME</button>
+          ${adminSettings.allowEditing ? `<button onclick="openEditPicks('${team.id}')" title="Edit team" style="background:none;border:1px solid rgba(255,255,255,0.3);border-radius:4px;cursor:pointer;color:var(--gold-light);font-size:0.7rem;font-family:'DM Mono',monospace;letter-spacing:1px;opacity:0.9;padding:4px 8px;">✎ EDIT TEAM</button>` : ''}
           <div class="team-card-status ${team.paid ? 'status-paid' : 'status-unpaid'}">${team.paid ? 'PAID' : 'UNPAID'}</div>
-        </div>
-      </div>
-      <div id="rename-form-${team.id}" style="display:none; padding:10px 18px; background:#f5f2ea; border-bottom:1px solid #e0dbd0;">
-        <input type="text" id="rename-input-${team.id}" value="${team.name}" maxlength="40"
-          style="width:100%;padding:7px 10px;border:1.5px solid #d4d0c8;border-radius:4px;font-family:'Libre Baskerville',serif;font-size:0.88rem;background:white;margin-bottom:8px;" />
-        <div style="display:flex;gap:8px;">
-          <button onclick="saveRename('${team.id}')" class="btn btn-green" style="padding:5px 14px;font-size:0.78rem;">Save</button>
-          <button onclick="cancelRename('${team.id}')" style="background:none;border:none;cursor:pointer;font-size:0.78rem;color:#888;font-family:'Libre Baskerville',serif;">Cancel</button>
         </div>
       </div>
       ${!team.paid ? '<div style="padding:8px 20px; background:#fff8f0; border-bottom:1px solid #f0e8d8; font-size:0.75rem; color:#e67e22; font-family:\'DM Mono\',monospace; letter-spacing:0.5px;">⏳ Awaiting payment confirmation</div>' : ''}
       <div class="team-card-body">
-        ${golfers.map(g => `<div class="golfer-list-item"><span>${g.name}</span><span class="golfer-list-earnings">${g.earnings > 0 ? '$'+g.earnings.toLocaleString() : '–'}</span></div>`).join('')}
+        ${golfers.map(g => {
+          const earningsStr = g.earnings > 0 ? '$'+g.earnings.toLocaleString() : g.cutMissed ? 'CUT' : (g.teeTime ? g.teeTime+' ET' : '–');
+          const earningsColor = g.earnings > 0 ? 'var(--green-mid)' : g.cutMissed ? '#bbb' : '#aaa';
+          return `<div class="golfer-list-item"><span>${g.name}</span><span class="golfer-list-earnings" style="color:${earningsColor};">${earningsStr}</span></div>`;
+        }).join('')}
       </div>
       <div class="team-card-footer">
         <div><div class="team-total-label">TEAM TOTAL</div><div class="team-total">$${total.toLocaleString()}</div></div>
-        ${adminSettings.allowEditing ? `<button onclick="openEditPicks('${team.id}')" style="background:none; border:1.5px solid var(--green); color:var(--green); padding:6px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; cursor:pointer;">✎ EDIT PICKS</button>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -2563,6 +2653,7 @@ function openEditPicks(teamId) {
   editingTeamId = teamId;
   editPicksSelected = [...team.golfers];
   document.getElementById('edit-picks-team-label').textContent = `Editing: ${team.name}`;
+  document.getElementById('edit-picks-name').value = team.name;
   document.getElementById('edit-picks-search').value = '';
   renderEditPicksGrid();
   openModal('edit-picks-modal');
@@ -2603,12 +2694,15 @@ function toggleEditPick(golferIdStr) {
 
 async function saveEditPicks() {
   if (editPicksSelected.length !== 5) return;
-  const { error } = await sb.from('teams').update({ golfers: editPicksSelected }).eq('id', editingTeamId);
-  if (error) { showToast('Error saving picks.', 'error'); return; }
+  const newName = document.getElementById('edit-picks-name').value.trim();
+  if (!newName) { showToast('Please enter a team name.', 'error'); return; }
+  const updates = { golfers: editPicksSelected, name: newName };
+  const { error } = await sb.from('teams').update(updates).eq('id', editingTeamId);
+  if (error) { showToast('Error saving changes.', 'error'); return; }
   const team = allTeams.find(t => t.id === editingTeamId);
-  if (team) team.golfers = [...editPicksSelected];
+  if (team) { team.golfers = [...editPicksSelected]; team.name = newName; }
   closeModal('edit-picks-modal');
-  showToast('Picks updated!', 'success');
+  showToast('Team updated!', 'success');
   renderMyTeams();
 }
 
