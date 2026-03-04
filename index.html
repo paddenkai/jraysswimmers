@@ -2105,10 +2105,10 @@ async function addTeamToCart() {
   const trackerInput = document.getElementById('tracker-name-input');
   const panelInput = document.getElementById('team-name-input');
   const teamName = (trackerInput?.value.trim() || panelInput?.value.trim()) || `${currentUser.name}'s Team ${cart.length + 1}`;
-  // Refresh teams from Supabase then check for duplicates
-  await loadTeams();
+  // Check for duplicate name — query Supabase directly (case-insensitive)
   const nameLower = teamName.toLowerCase().trim();
-  const isDuplicate = allTeams.some(t => t.name.toLowerCase().trim() === nameLower) ||
+  const { data: existingTeams } = await sb.from('teams').select('name').ilike('name', teamName.trim());
+  const isDuplicate = (existingTeams && existingTeams.length > 0) ||
                       cart.some(t => t.name.toLowerCase().trim() === nameLower);
   if (isDuplicate) {
     showToast(`"${teamName}" is already taken — pick a different name!`, 'error');
