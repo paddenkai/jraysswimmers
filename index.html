@@ -323,12 +323,25 @@
     }
     #mobile-team-tracker .tracker-dots { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
     #mobile-team-tracker .tracker-dot {
-      min-width: 10px;
       width: 12px; height: 12px; border-radius: 50%;
       background: rgba(255,255,255,0.25);
       transition: background 0.2s;
+      flex-shrink: 0;
     }
-    #mobile-team-tracker .tracker-dot.filled { background: var(--gold); }
+    #mobile-team-tracker .tracker-dot.filled {
+      background: var(--gold);
+      width: auto;
+      height: auto;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-family: 'DM Mono', monospace;
+      color: white;
+      white-space: nowrap;
+      line-height: 1.4;
+      display: inline-flex;
+      align-items: center;
+    }
     #mobile-team-tracker .tracker-count {
       font-family: 'DM Mono', monospace; font-size: 0.78rem;
       opacity: 0.8; letter-spacing: 1px;
@@ -2933,23 +2946,10 @@ function updateMobileTracker() {
       if (golfer) {
         // Show full name in pill
         dot.classList.add('filled');
-        dot.style.width = 'auto';
-        dot.style.borderRadius = '20px';
-        dot.style.padding = '4px 10px';
-        dot.style.fontSize = '0.75rem';
-        dot.style.fontFamily = "'DM Mono', monospace";
-        dot.style.letterSpacing = '0';
-        dot.style.whiteSpace = 'nowrap';
         const parts = golfer.name.trim().split(' ');
         dot.textContent = parts.length > 1 ? parts[0][0] + '. ' + parts[parts.length - 1] : golfer.name;
       } else {
         dot.classList.remove('filled');
-        dot.style.width = '10px';
-        dot.style.borderRadius = '50%';
-        dot.style.padding = '0';
-        dot.style.fontSize = '';
-        dot.style.fontFamily = '';
-        dot.style.whiteSpace = '';
         dot.textContent = '';
       }
     }
