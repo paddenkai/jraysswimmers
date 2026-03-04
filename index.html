@@ -1584,7 +1584,7 @@ function parseESPNAPI(data) {
     // Projected cut line — only used during round 2, not after cut is official
     // Arnold Palmer rule: top 50 + ties + anyone within 10 shots of lead
     let cutScore = null;
-    if (!isPostCut && madecut.length >= 50) {
+    if (!isPostCut && maxRounds >= 2 && madecut.length >= 50) {
       const top50Score = madecut[49].scoreNum;
       const leadScore = madecut[0].scoreNum;
       const within10Score = leadScore + 10;
