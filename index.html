@@ -785,7 +785,7 @@
         <button class="tracker-add-btn" id="tracker-add-btn" onclick="addTeamToCart()">+ Add Team</button>
         <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit & Checkout →</button>
       </div>
-      <div id="tracker-cart-count" style="display:none; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); text-align:center; margin-top:6px;"></div>
+      <div id="tracker-cart-count" style="display:none; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); text-align:left; margin-top:8px;"></div>
     </div>
 
     <div id="builder-content">
@@ -2142,6 +2142,7 @@ function addTeamToCart() {
   renderGolferGrid(GOLFERS);
   renderTeamSlots();
   renderCart();
+  updateMobileTracker(); // explicitly refresh tracker after cart updated
   showToast(`"${teamName}" added to cart!`, 'success');
 }
 
