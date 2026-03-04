@@ -298,6 +298,25 @@
     overflow-y: auto;
   }
   .team-panel h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--green); margin-bottom: 4px; }
+  .team-panel-toggle { display: none; }
+  .team-panel-desktop-title { display: block; }
+  @media (max-width: 800px) {
+    .team-panel-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; user-select: none; margin-bottom: 0;
+    }
+    .team-panel-toggle h3 { margin-bottom: 0; }
+    .team-panel-desktop-title { display: none !important; }
+    .team-panel-body { overflow: hidden; transition: max-height 0.3s ease; max-height: 0; }
+    .team-panel-body.open { max-height: 1000px; }
+    .team-panel { padding: 14px 20px; }
+    .toggle-arrow { font-size: 0.8rem; color: #888; transition: transform 0.3s; }
+    .toggle-arrow.open { transform: rotate(180deg); }
+  }
+  /* Desktop: body always visible */
+  @media (min-width: 801px) {
+    .team-panel-body { max-height: none !important; overflow: visible !important; }
+  }
   .team-panel-sub { font-size: 0.78rem; color: #888; font-family: 'DM Mono', monospace; margin-bottom: 16px; }
   .team-slot {
     border: 1.5px dashed #ccc;
@@ -708,28 +727,37 @@
     <div id="builder-content">
     <div class="team-builder-grid">
       <div class="team-panel">
-        <h3>Your Team</h3>
-        <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" style="margin-bottom:12px;" />
-        <div id="team-slots"></div>
-        <div class="team-panel-sub" id="team-panel-sub" style="margin-top:8px;">0/5 selected</div>
-        <button class="btn btn-green btn-full" id="add-to-cart-btn" onclick="addTeamToCart()" disabled style="margin-top:14px;">
-          + Add Team to Cart
-        </button>
-
-        <!-- CART -->
-        <div id="cart-section" style="display:none; margin-top:20px; border-top:1px solid #e0dbd0; padding-top:16px;">
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; color:#888; margin-bottom:10px;">CART</div>
-          <div id="cart-items"></div>
-          <div id="cart-total-row" style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:1px solid #e0dbd0;">
-            <span style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#888;">TOTAL</span>
-            <span id="cart-total-val" style="font-family:'Playfair Display',serif; font-weight:700; color:var(--green); font-size:1.1rem;">$0.00</span>
-          </div>
-          <button class="btn btn-gold btn-full" id="checkout-btn" onclick="proceedToPayment()" style="margin-top:12px;">
-            Submit Teams & Checkout →
-          </button>
+        <!-- Mobile collapsible header -->
+        <div class="team-panel-toggle" onclick="toggleTeamPanel()">
+          <h3>Your Team — <span id="team-panel-count" style="font-size:0.9rem; color:#888;">0/5</span></h3>
+          <span class="toggle-arrow" id="toggle-arrow">▼</span>
         </div>
-        <div style="margin-top:10px; font-size:0.75rem; color:#aaa; text-align:center; font-family:'DM Mono',monospace;">
-          Build as many teams as you want
+        <!-- Desktop always shows h3, mobile shows it inside toggle -->
+        <h3 class="team-panel-desktop-title" style="">Your Team</h3>
+        <!-- Collapsible body -->
+        <div class="team-panel-body" id="team-panel-body">
+          <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" style="margin-bottom:12px; margin-top:12px;" />
+          <div id="team-slots"></div>
+          <div class="team-panel-sub" id="team-panel-sub" style="margin-top:8px;">0/5 selected</div>
+          <button class="btn btn-green btn-full" id="add-to-cart-btn" onclick="addTeamToCart()" disabled style="margin-top:14px;">
+            + Add Team to Cart
+          </button>
+
+          <!-- CART -->
+          <div id="cart-section" style="display:none; margin-top:20px; border-top:1px solid #e0dbd0; padding-top:16px;">
+            <div style="font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; color:#888; margin-bottom:10px;">CART</div>
+            <div id="cart-items"></div>
+            <div id="cart-total-row" style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:1px solid #e0dbd0;">
+              <span style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#888;">TOTAL</span>
+              <span id="cart-total-val" style="font-family:'Playfair Display',serif; font-weight:700; color:var(--green); font-size:1.1rem;">$0.00</span>
+            </div>
+            <button class="btn btn-gold btn-full" id="checkout-btn" onclick="proceedToPayment()" style="margin-top:12px;">
+              Submit Teams & Checkout →
+            </button>
+          </div>
+          <div style="margin-top:10px; font-size:0.75rem; color:#aaa; text-align:center; font-family:'DM Mono',monospace;">
+            Build as many teams as you want
+          </div>
         </div>
       </div>
       <div class="golfer-col">
@@ -2031,6 +2059,11 @@ function renderTeamSlots() {
   const container = document.getElementById('team-slots');
   const sub = document.getElementById('team-panel-sub');
   sub.textContent = `${selectedGolfers.length}/5 selected`;
+  // Update mobile header count
+  const countEl = document.getElementById('team-panel-count');
+  if (countEl) countEl.textContent = `${selectedGolfers.length}/5`;
+  // Auto-expand panel when golfer is picked
+  if (selectedGolfers.length > 0) toggleTeamPanel(true);
   container.innerHTML = Array.from({length: 5}, (_, i) => {
     const golfer = selectedGolfers[i] ? GOLFERS.find(g => g.id === selectedGolfers[i]) : null;
     return `<div class="team-slot ${golfer ? 'filled' : ''}">
@@ -2782,6 +2815,20 @@ function renderProfile() {
   const sorted = allTeams.filter(t=>t.paid).sort((a,b)=>getTeamEarnings(b)-getTeamEarnings(a));
   const best = sorted.findIndex(t => t.owner === currentUser.email);
   document.getElementById('profile-best-rank').textContent = best >= 0 ? '#'+(best+1) : '–';
+}
+
+function toggleTeamPanel(forceOpen) {
+  const body = document.getElementById('team-panel-body');
+  const arrow = document.getElementById('toggle-arrow');
+  if (!body) return;
+  const isOpen = body.classList.contains('open');
+  if (forceOpen === true || (!isOpen && forceOpen !== false)) {
+    body.classList.add('open');
+    if (arrow) { arrow.classList.add('open'); }
+  } else {
+    body.classList.remove('open');
+    if (arrow) { arrow.classList.remove('open'); }
+  }
 }
 
 function toggleEditProfile() {
