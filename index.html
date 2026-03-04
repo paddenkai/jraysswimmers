@@ -703,9 +703,9 @@
       </div>
       <div class="team-panel">
         <h3>Your Team</h3>
-        <div class="team-panel-sub" id="team-panel-sub">0/5 selected</div>
-        <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" />
+        <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" style="margin-bottom:12px;" />
         <div id="team-slots"></div>
+        <div class="team-panel-sub" id="team-panel-sub" style="margin-top:8px;">0/5 selected</div>
         <button class="btn btn-green btn-full" id="add-to-cart-btn" onclick="addTeamToCart()" disabled style="margin-top:14px;">
           + Add Team to Cart
         </button>
@@ -719,7 +719,7 @@
             <span id="cart-total-val" style="font-family:'Playfair Display',serif; font-weight:700; color:var(--green); font-size:1.1rem;">$0.00</span>
           </div>
           <button class="btn btn-gold btn-full" id="checkout-btn" onclick="proceedToPayment()" style="margin-top:12px;">
-            Checkout →
+            Submit Teams & Checkout →
           </button>
         </div>
         <div style="margin-top:10px; font-size:0.75rem; color:#aaa; text-align:center; font-family:'DM Mono',monospace;">
@@ -733,7 +733,7 @@
   <!-- PAYMENT PAGE -->
   <!-- Floating mobile checkout button -->
   <button id="mobile-checkout-fab" onclick="proceedToPayment()" style="display:none;">
-    Checkout →
+    Submit Teams & Checkout →
   </button>
 
   <div id="page-payment" class="page">
@@ -750,42 +750,24 @@
         <div id="order-lines"></div>
         <div class="order-total"><span>Total</span><span id="order-total-val">$10.00</span></div>
 
-        <!-- Venmo instructions -->
+        <!-- Venmo payment -->
         <div style="margin:24px 0 0; background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:8px; padding:20px;">
-          <div style="font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--green); margin-bottom:14px; text-align:center;">How to Pay</div>
+          <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:6px; text-align:center;">✅ Team Saved!</div>
+          <div style="font-size:0.82rem; color:#666; text-align:center; margin-bottom:16px;">Now send payment via Venmo to lock in your spot.</div>
 
-          <!-- Venmo -->
-          <div style="display:flex; align-items:center; gap:12px; padding:12px; background:white; border-radius:6px; margin-bottom:10px; border:1px solid #e0dbd0;">
-            <div style="width:36px; height:36px; background:#008CFF; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; color:white; font-size:0.9rem; flex-shrink:0;">V</div>
-            <div style="flex:1;">
-              <div style="font-weight:700; font-size:0.9rem; color:var(--dark);">Venmo</div>
-              <div style="font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--green); font-weight:600;">@JRaysPool</div>
-            </div>
-            <button onclick="copyVenmo()" style="background:var(--green);color:white;border:none;border-radius:4px;padding:6px 12px;font-size:0.72rem;font-family:'DM Mono',monospace;cursor:pointer;letter-spacing:1px;">COPY</button>
-          </div>
-
-          <div style="font-size:0.78rem; color:#666; text-align:center; margin:10px 0 4px;">Include this note with your payment:</div>
-          <div style="position:relative;">
-            <div id="payment-note-display" style="font-family:'DM Mono',monospace; font-size:0.82rem; background:white; border:1.5px dashed #c8e0c8; border-radius:6px; padding:10px 44px 10px 10px; text-align:center; color:var(--green); font-weight:600; margin-bottom:14px;"></div>
+          <div style="position:relative; margin-bottom:14px;">
+            <div id="payment-note-display" style="font-family:'DM Mono',monospace; font-size:0.82rem; background:white; border:1.5px dashed #c8e0c8; border-radius:6px; padding:10px 44px 10px 10px; text-align:center; color:var(--green); font-weight:600;"></div>
             <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background:var(--green); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
           </div>
 
-          <!-- Open in Venmo button -->
-          <button onclick="openVenmo()" style="width:100%; background:#008CFF; color:white; border:none; border-radius:8px; padding:14px; font-size:1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:10px;">
-            <span style="font-size:1.2rem; font-weight:900;">V</span> Open in Venmo App →
+          <button onclick="openVenmo()" style="width:100%; background:#008CFF; color:white; border:none; border-radius:8px; padding:16px; font-size:1.05rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px;">
+            <span style="font-size:1.3rem; font-weight:900;">V</span> Pay @JRaysPool on Venmo →
           </button>
 
-          <div style="font-size:0.75rem; color:#888; text-align:center; line-height:1.5;">Once I receive your payment, your team will be marked as paid and will appear on the leaderboard.</div>
+          <div style="font-size:0.75rem; color:#aaa; text-align:center; line-height:1.5;">Your team is live once payment is confirmed by J.Ray.</div>
         </div>
 
-        <button class="btn btn-green btn-full" id="pay-btn" onclick="submitPayment()" style="margin-top:20px; opacity:0.85;">
-          I've Already Sent Payment →
-        </button>
-        <div style="text-align:center; margin-top:6px; font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace;">Tap this if you've already sent your Venmo or are paying cash</div>
-        <div style="text-align:center; margin-top:12px; font-size:0.78rem; color:#e67e22; font-family:'DM Mono',monospace; letter-spacing:0.5px;">
-          ⚠ Your team is saved but won't appear as paid until payment is received
-        </div>
-        <div style="text-align:center; margin-top:14px;">
+        <div style="text-align:center; margin-top:20px;">
           <button style="background:none;border:none;color:#888;cursor:pointer;font-size:0.82rem;font-family:'Libre Baskerville',serif;" onclick="showPage('builder')">← Back to team builder</button>
         </div>
       </div>
@@ -2065,7 +2047,7 @@ function updateMobileFAB() {
   const onBuilder = document.getElementById('page-builder')?.classList.contains('active');
   fab.style.display = (cart.length > 0 && onBuilder) ? 'block' : 'none';
   // Use flex centering on all screen sizes
-  fab.textContent = cart.length === 1 ? 'Checkout → $10' : `Checkout → $${cart.length * 10}`;
+  fab.textContent = cart.length === 1 ? 'Submit Teams & Checkout → $10' : `Submit Teams & Checkout → $${cart.length * 10}`;
 }
 
 function renderCart() {
@@ -2116,7 +2098,7 @@ async function proceedToPayment() {
   if (error) {
     showToast('Error saving team. Please try again.', 'error');
     console.error(error);
-    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Checkout →'; }
+    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Submit Teams & Checkout →'; }
     return;
   }
 
