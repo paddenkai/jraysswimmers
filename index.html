@@ -776,7 +776,6 @@
             <span style="font-size:1.3rem; font-weight:900;">V</span> Pay @JRaysPool on Venmo →
           </button>
 
-          <div style="font-size:0.75rem; color:#aaa; text-align:center; line-height:1.5;">Your team is live once payment is confirmed by J.Ray.</div>
           <div style="margin-top:12px; font-size:0.78rem; color:#e67e22; font-family:'DM Mono',monospace; letter-spacing:0.5px; text-align:center;">⚠ Your team won't be activated until payment is received</div>
         </div>
 
@@ -2119,6 +2118,9 @@ async function proceedToPayment() {
   const savedCart = [...cart];
   cart = [];
   pendingTeam = savedCart[0];
+  window._savedCart = savedCart; // keep full cart for payment summary
+  // Re-enable button before leaving page
+  if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Submit Teams & Checkout →'; }
   renderCart();
 
   showPage('payment');
@@ -2136,9 +2138,10 @@ function resetBuilder() {
 // PAYMENT
 // ═══════════════════════════════════════════════════════
 function renderPaymentSummary() {
-  const totalTeams = cart.length || 1;
+  const savedCart = window._savedCart || [];
+  const totalTeams = savedCart.length || cart.length || 1;
   const totalAmt = totalTeams * CONFIG.ENTRY_FEE;
-  const teams = cart.length ? cart : [pendingTeam];
+  const teams = savedCart.length ? savedCart : (cart.length ? cart : [pendingTeam]);
   document.getElementById('payment-team-name').textContent = totalTeams === 1 ? (teams[0]?.name || 'Your Entry') : `${totalTeams} Teams`;
   document.getElementById('order-lines').innerHTML = teams.map(t => {
     const names = t.golfers.map(id => GOLFERS.find(g=>g.id===id)?.name).filter(Boolean).join(', ');
