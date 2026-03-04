@@ -246,11 +246,11 @@
     .team-builder-grid .team-panel { grid-column: 2; grid-row: 1; }
     .team-builder-grid .golfer-col { grid-column: 1; grid-row: 1; }
   }
-  /* Mobile: single column, team panel naturally first since it's first in HTML */
+  /* Mobile: golfer grid on top, team panel below */
   @media (max-width: 800px) {
     .team-builder-grid { grid-template-columns: 1fr; }
-    .team-builder-grid .team-panel { grid-column: 1; grid-row: 1; }
-    .team-builder-grid .golfer-col { grid-column: 1; grid-row: 2; }
+    .team-builder-grid .golfer-col { grid-column: 1; grid-row: 1; }
+    .team-builder-grid .team-panel { grid-column: 1; grid-row: 2; }
   }
 
   .golfer-search { margin-bottom: 16px; }
