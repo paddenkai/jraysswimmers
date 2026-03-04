@@ -360,7 +360,6 @@
     /* Golfer grid on top, team panel hidden on mobile (tracker handles it) */
     .team-builder-grid .golfer-col { grid-column: 1 !important; grid-row: 1 !important; }
     .team-builder-grid .team-panel { display: none !important; }
-    #page-builder .section-header { margin-top: 230px; }
   }
   .team-panel-sub { font-size: 0.78rem; color: #888; font-family: 'DM Mono', monospace; margin-bottom: 16px; }
   .team-slot {
@@ -734,19 +733,6 @@
 
   <!-- TEAM BUILDER -->
   <div id="page-builder" class="page">
-    <div class="section-header">
-      <div class="section-title">Build Your Team</div>
-      <div class="section-sub">Select 5 golfers · $10 per entry</div>
-    </div>
-
-    <!-- Registration closed message -->
-    <div id="registration-closed-msg" style="display:none; text-align:center; padding:60px 20px;">
-      <div style="font-size:2.5rem; margin-bottom:16px;">🔒</div>
-      <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--green); margin-bottom:10px;">Registration is Closed</div>
-      <div style="color:#888; font-size:0.95rem;">Entry submissions are no longer being accepted.<br>Check the leaderboard to follow the action!</div>
-      <button class="btn btn-gold" onclick="showPage('leaderboard')" style="margin-top:24px;">View Pool Standings →</button>
-    </div>
-
     <!-- Mobile sticky team tracker -->
     <div id="mobile-team-tracker">
       <div class="tracker-row1">
@@ -766,6 +752,18 @@
         <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit + Checkout →</button>
       </div>
       <div id="tracker-cart-count" style="display:none; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.7); text-align:left; margin-top:8px;"></div>
+    </div>
+    <div class="section-header">
+      <div class="section-title">Build Your Team</div>
+      <div class="section-sub">Select 5 golfers · $10 per entry</div>
+    </div>
+
+    <!-- Registration closed message -->
+    <div id="registration-closed-msg" style="display:none; text-align:center; padding:60px 20px;">
+      <div style="font-size:2.5rem; margin-bottom:16px;">🔒</div>
+      <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--green); margin-bottom:10px;">Registration is Closed</div>
+      <div style="color:#888; font-size:0.95rem;">Entry submissions are no longer being accepted.<br>Check the leaderboard to follow the action!</div>
+      <button class="btn btn-gold" onclick="showPage('leaderboard')" style="margin-top:24px;">View Pool Standings →</button>
     </div>
 
     <div id="builder-content">
