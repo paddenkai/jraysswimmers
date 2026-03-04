@@ -820,8 +820,8 @@
   <!-- PAYMENT PAGE -->
   <div id="page-payment" class="page">
     <div class="section-header">
-      <div class="section-title">Complete Your Entry</div>
-      <div class="section-sub">✅ Your team is saved! Send payment to mark it as paid</div>
+      <div class="section-title">Time to Pay</div>
+      <div class="section-sub">Your team(s) have been submitted — send payment to activate your spot on the leaderboard</div>
     </div>
     <div class="payment-box">
       <div class="payment-header">
@@ -834,8 +834,8 @@
 
         <!-- Venmo payment -->
         <div style="margin:24px 0 0; background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:8px; padding:20px;">
-          <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:6px; text-align:center;">✅ Team Saved!</div>
-          <div style="font-size:0.82rem; color:#666; text-align:center; margin-bottom:16px;">Now send payment via Venmo to lock in your spot.</div>
+          <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:6px; text-align:center;">Teams Submitted!</div>
+          <div style="font-size:0.82rem; color:#666; text-align:center; margin-bottom:16px;">Send payment via Venmo to activate your spot on the leaderboard.</div>
 
           <div style="position:relative; margin-bottom:14px;">
             <div id="payment-note-display" style="font-family:'DM Mono',monospace; font-size:0.82rem; background:white; border:1.5px dashed #c8e0c8; border-radius:6px; padding:10px 44px 10px 10px; text-align:center; color:var(--green); font-weight:600;"></div>
@@ -2143,6 +2143,25 @@ async function addTeamToCart() {
     return;
   }
 
+  // Check for duplicate golfer lineup (this user only — cart + previously submitted)
+  const selectedSorted = [...selectedGolfers].sort().join(',');
+  const myExistingTeams = allTeams.filter(t => t.owner === currentUser.email);
+  const duplicateExisting = myExistingTeams.find(t => [...t.golfers].sort().join(',') === selectedSorted);
+  const duplicateInCart = cart.find(t => [...t.golfers].sort().join(',') === selectedSorted);
+  if (duplicateExisting || duplicateInCart) {
+    const dupName = duplicateExisting ? duplicateExisting.name : duplicateInCart.name;
+    // Show custom modal instead of browser confirm
+    const modal = document.getElementById('duplicate-lineup-modal');
+    const msg = document.getElementById('duplicate-lineup-msg');
+    msg.textContent = `You already entered this exact lineup as "${dupName}". Do you want to add it again under a different name?`;
+    modal.style.display = 'flex';
+    // Pause execution until user responds via modal buttons
+    await new Promise(resolve => {
+      window._duplicateLineupResolve = resolve;
+    });
+    if (!window._duplicateLineupResult) return;
+  }
+
   const cleanName = teamName.replace(/[‘’‚‛′‵]/g, "'").replace(/[“”„‟″‶]/g, '"');
   cart.push({ id: Date.now() + cart.length, name: cleanName, golfers: [...selectedGolfers] });
   selectedGolfers = [];
@@ -2964,6 +2983,18 @@ function clearNameError() {
   if (panelInput) panelInput.style.borderColor = '';
 }
 
+function duplicateLineupCancel() {
+  document.getElementById('duplicate-lineup-modal').style.display = 'none';
+  window._duplicateLineupResult = false;
+  if (window._duplicateLineupResolve) window._duplicateLineupResolve();
+}
+
+function duplicateLineupConfirm() {
+  document.getElementById('duplicate-lineup-modal').style.display = 'none';
+  window._duplicateLineupResult = true;
+  if (window._duplicateLineupResolve) window._duplicateLineupResolve();
+}
+
 function syncTrackerName() {
   // Keep hidden team-name-input in sync with tracker input
   const trackerInput = document.getElementById('tracker-name-input');
@@ -3313,5 +3344,21 @@ initApp();
 </script>
 </div>
 
+  <!-- Duplicate lineup confirm modal -->
+  <div id="duplicate-lineup-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:var(--green); border-radius:12px; padding:32px 28px; max-width:400px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.4); text-align:center;">
+      <div style="font-size:2rem; margin-bottom:12px;">⚠️</div>
+      <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--gold-light); margin-bottom:12px;">Duplicate Lineup</div>
+      <div id="duplicate-lineup-msg" style="font-size:0.92rem; color:rgba(255,255,255,0.85); line-height:1.6; margin-bottom:28px; font-family:'DM Mono',monospace;"></div>
+      <div style="display:flex; gap:12px;">
+        <button onclick="duplicateLineupCancel()" style="flex:1; padding:13px; border-radius:6px; border:1.5px solid rgba(255,255,255,0.4); background:transparent; color:white; font-family:'Playfair Display',serif; font-size:0.95rem; cursor:pointer;">
+          Change My Picks
+        </button>
+        <button onclick="duplicateLineupConfirm()" style="flex:1; padding:13px; border-radius:6px; border:none; background:#f26419; color:white; font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; cursor:pointer;">
+          Add Anyway
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
