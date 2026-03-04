@@ -375,6 +375,32 @@
   .highlight-row td { font-weight: 600; }
 
   /* ─── PAYMENT ─── */
+  /* Floating mobile checkout button */
+  #mobile-checkout-fab {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 32px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    white-space: nowrap;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  #mobile-checkout-fab:active { transform: translateX(-50%) scale(0.97); }
+  @media (max-width: 600px) {
+    #mobile-checkout-fab { display: block; }
+  }
+
   .payment-box {
     max-width: 500px;
     margin: 0 auto;
@@ -707,10 +733,15 @@
   </div><!-- end page-builder -->
 
   <!-- PAYMENT PAGE -->
+  <!-- Floating mobile checkout button -->
+  <button id="mobile-checkout-fab" onclick="proceedToPayment()" style="display:none;">
+    Checkout →
+  </button>
+
   <div id="page-payment" class="page">
     <div class="section-header">
       <div class="section-title">Complete Your Entry</div>
-      <div class="section-sub">Review your teams and send payment to lock in your spot</div>
+      <div class="section-sub">✅ Your team is saved! Send payment to mark it as paid</div>
     </div>
     <div class="payment-box">
       <div class="payment-header">
@@ -750,11 +781,11 @@
         </div>
 
         <button class="btn btn-green btn-full" id="pay-btn" onclick="submitPayment()" style="margin-top:20px; opacity:0.85;">
-          Submit Without Venmo →
+          I've Already Sent Payment →
         </button>
-        <div style="text-align:center; margin-top:6px; font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace;">Use this only if you're paying another way</div>
+        <div style="text-align:center; margin-top:6px; font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace;">Tap this if you've already sent your Venmo or are paying cash</div>
         <div style="text-align:center; margin-top:12px; font-size:0.78rem; color:#e67e22; font-family:'DM Mono',monospace; letter-spacing:0.5px;">
-          ⚠ Your team won't be activated until payment is received
+          ⚠ Your team is saved but won't appear as paid until payment is received
         </div>
         <div style="text-align:center; margin-top:14px;">
           <button style="background:none;border:none;color:#888;cursor:pointer;font-size:0.82rem;font-family:'Libre Baskerville',serif;" onclick="showPage('builder')">← Back to team builder</button>
@@ -1837,6 +1868,9 @@ function requireAuth(cb) {
 // NAVIGATION
 // ═══════════════════════════════════════════════════════
 async function showPage(name) {
+  // Hide mobile FAB when not on builder
+  const fab = document.getElementById('mobile-checkout-fab');
+  if (fab) fab.style.display = 'none';
   if (typeof closeMobileNav === 'function') closeMobileNav();
   // Guard admin before activating the page
   if (name === 'admin' && !adminLoggedIn) { openAdminLogin(); return; }
@@ -2027,10 +2061,19 @@ function addTeamToCart() {
   showToast(`"${teamName}" added to cart!`, 'success');
 }
 
+function updateMobileFAB() {
+  const fab = document.getElementById('mobile-checkout-fab');
+  if (!fab) return;
+  const onBuilder = document.getElementById('page-builder')?.classList.contains('active');
+  fab.style.display = (cart.length > 0 && onBuilder) ? 'block' : 'none';
+  fab.textContent = cart.length === 1 ? 'Checkout → $10' : `Checkout → $${cart.length * 10}`;
+}
+
 function renderCart() {
   const section = document.getElementById('cart-section');
   const itemsEl = document.getElementById('cart-items');
   const totalEl = document.getElementById('cart-total-val');
+  updateMobileFAB();
   if (cart.length === 0) { section.style.display = 'none'; return; }
   section.style.display = 'block';
   itemsEl.innerHTML = cart.map((t, i) => `
@@ -2052,11 +2095,38 @@ function removeFromCart(i) {
   renderCart();
 }
 
-function proceedToPayment() {
+async function proceedToPayment() {
   if (cart.length === 0) { showToast('Add at least one team to your cart.', 'error'); return; }
   if (!currentUser) { openAuthModal(); return; }
-  // Store all cart teams as pendingTeam (multi)
-  pendingTeam = cart[0]; // for payment summary display
+
+  // Save teams immediately on checkout — don't wait for payment
+  const rows = cart.filter(Boolean).map(t => ({
+    id: crypto.randomUUID(),
+    name: t.name,
+    golfers: t.golfers,
+    owner: currentUser.email,
+    owner_name: currentUser.name,
+    paid: false,
+    submitted_at: new Date().toISOString(),
+  }));
+
+  const checkoutBtn = document.getElementById('checkout-btn');
+  if (checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.textContent = 'Saving...'; }
+
+  const { data, error } = await sb.from('teams').insert(rows).select();
+  if (error) {
+    showToast('Error saving team. Please try again.', 'error');
+    console.error(error);
+    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Checkout →'; }
+    return;
+  }
+
+  allTeams = [...allTeams, ...(data || rows)];
+  const savedCart = [...cart];
+  cart = [];
+  pendingTeam = savedCart[0];
+  renderCart();
+
   showPage('payment');
 }
 
@@ -2108,54 +2178,21 @@ function copyVenmo() {
   });
 }
 
-async function openVenmo() {
-  if (!currentUser) { openAuthModal(); return; }
-  // Submit teams first before redirecting
-  const teamsToSave = cart.length > 0 ? cart : [pendingTeam];
-  const rows = teamsToSave.filter(Boolean).map(t => ({
-    id: crypto.randomUUID(),
-    name: t.name,
-    golfers: t.golfers,
-    owner: currentUser.email,
-    owner_name: currentUser.name,
-    paid: false,
-    submitted_at: new Date().toISOString(),
-  }));
-  const { data, error } = await sb.from('teams').insert(rows).select();
-  if (error) { showToast('Error saving team. Please try again.', 'error'); console.error(error); return; }
-  allTeams = [...allTeams, ...(data || rows)];
-  cart = [];
-  pendingTeam = null;
-
-  // Now open Venmo
+function openVenmo() {
+  // Teams already saved on checkout — just open Venmo
   const noteEl = document.getElementById('payment-note-display');
   const note = noteEl ? encodeURIComponent(noteEl.textContent) : '';
-  const amount = rows.length * 10;
+  const teamCount = allTeams.filter(t => t.owner === currentUser.email && !t.paid).length;
+  const amount = teamCount * 10;
   const appUrl = `venmo://paycharge?txn=pay&recipients=JRaysPool&amount=${amount}&note=${note}`;
   const webUrl = `https://venmo.com/u/JRaysPool`;
   window.location.href = appUrl;
   setTimeout(() => { window.open(webUrl, '_blank'); }, 1500);
-
-  // Show success after a short delay
   setTimeout(() => { openModal('success-modal'); }, 500);
 }
 
-async function submitPayment() {
-  if (!currentUser) { openAuthModal(); return; }
-  const teamsToSave = cart.length > 0 ? cart : [pendingTeam];
-  const rows = teamsToSave.filter(Boolean).map(t => ({
-    id: crypto.randomUUID(),
-    name: t.name,
-    golfers: t.golfers,
-    owner: currentUser.email,
-    owner_name: currentUser.name,
-    paid: false,
-    submitted_at: new Date().toISOString(),
-  }));
-  const { data, error } = await sb.from('teams').insert(rows).select();
-  if (error) { showToast('Error saving team. Please try again.', 'error'); console.error(error); return; }
-  allTeams = [...allTeams, ...(data || rows)];
-  cart = [];
+function submitPayment() {
+  // Teams already saved on checkout — just show success
   pendingTeam = null;
   openModal('success-modal');
 }
