@@ -758,7 +758,8 @@
         </div>
         <div class="tracker-count" id="tracker-count">0/5 selected</div>
       </div>
-      <input class="tracker-name-input" id="tracker-name-input" type="text" placeholder="Name your team..." maxlength="40" oninput="syncTrackerName()" />
+      <input class="tracker-name-input" id="tracker-name-input" type="text" placeholder="Name your team..." maxlength="40" oninput="syncTrackerName(); clearNameError()" />
+      <div id="tracker-name-error" style="display:none; color:#ff6b6b; font-size:0.72rem; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:4px;"></div>
       <div style="display:flex; gap:8px; margin-top:0;">
         <button class="tracker-add-btn" id="tracker-add-btn" onclick="addTeamToCart()">+ Add Team</button>
         <button class="tracker-checkout-btn" id="tracker-checkout-btn" onclick="proceedToPayment()">Submit + Checkout →</button>
@@ -770,7 +771,8 @@
     <div class="team-builder-grid">
       <div class="team-panel">
         <h3>Your Team</h3>
-        <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" style="margin-bottom:12px;" oninput="updateMobileTracker()" />
+        <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team (e.g. Birdie Boys)" maxlength="40" style="margin-bottom:4px;" oninput="updateMobileTracker(); clearNameError()" />
+        <div id="panel-name-error" style="display:none; color:#e74c3c; font-size:0.75rem; font-family:'DM Mono',monospace; margin-bottom:10px;"></div>
         <div id="team-slots"></div>
         <div class="team-panel-sub" id="team-panel-sub" style="margin-top:8px;">0/5 selected</div>
         <button class="btn btn-green btn-full" id="add-to-cart-btn" onclick="addTeamToCart()" disabled style="margin-top:14px;">
@@ -2101,9 +2103,11 @@ function renderTeamSlots() {
 async function addTeamToCart() {
   if (selectedGolfers.length < 5) { showToast('Please select 5 golfers.', 'error'); return; }
   if (!currentUser) { openAuthModal(); return; }
-  // Read from whichever input is visible (tracker on mobile, panel on desktop)
+  // Read from whichever input has a value (tracker on mobile, panel on desktop)
   const trackerInput = document.getElementById('tracker-name-input');
   const panelInput = document.getElementById('team-name-input');
+  // Sync tracker→panel in case user typed in tracker
+  if (trackerInput?.value.trim() && panelInput) panelInput.value = trackerInput.value.trim();
   const teamName = (trackerInput?.value.trim() || panelInput?.value.trim()) || `${currentUser.name}'s Team ${cart.length + 1}`;
   // Check for duplicate name — query Supabase directly (case-insensitive)
   const nameLower = teamName.toLowerCase().trim();
@@ -2111,13 +2115,14 @@ async function addTeamToCart() {
   const isDuplicate = (existingTeams && existingTeams.length > 0) ||
                       cart.some(t => t.name.toLowerCase().trim() === nameLower);
   if (isDuplicate) {
-    showToast(`"${teamName}" is already taken — pick a different name!`, 'error');
+    showNameError(`"${teamName}" is already taken — try a different name`);
     return;
   }
   cart.push({ id: Date.now() + cart.length, name: teamName, golfers: [...selectedGolfers] });
   selectedGolfers = [];
   if (panelInput) panelInput.value = '';
   if (trackerInput) trackerInput.value = '';
+  clearNameError();
   renderGolferGrid(GOLFERS);
   renderTeamSlots();
   renderCart();
@@ -2868,16 +2873,19 @@ function updateMobileTracker() {
   if (cartCount) {
     if (cart.length > 0) {
       cartCount.style.display = 'block';
-      const teamLines = cart.map(t => {
+      const teamLines = cart.map((t, i) => {
         const initials = t.golfers.map(id => {
           const g = GOLFERS.find(g => g.id === id);
           if (!g) return '';
           const parts = g.name.trim().split(' ');
           return parts.length > 1 ? parts[0][0] + '.' + parts[parts.length-1] : g.name;
         }).join(', ');
-        return `<div style="border-top:1px solid rgba(255,255,255,0.15); padding-top:5px; margin-top:5px;">
-          <span style="color:var(--gold); font-weight:700;">${t.name}</span>
-          <span style="opacity:0.6; font-size:0.65rem;"> · ${initials}</span>
+        return `<div style="border-top:1px solid rgba(255,255,255,0.15); padding-top:5px; margin-top:5px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <div style="min-width:0;">
+            <span style="color:var(--gold); font-weight:700;">${t.name}</span>
+            <span style="opacity:0.6; font-size:0.65rem;"> · ${initials}</span>
+          </div>
+          <button onclick="removeFromCart(${i})" style="background:none; border:none; color:rgba(255,255,255,0.5); font-size:1.1rem; cursor:pointer; padding:0 2px; flex-shrink:0; line-height:1;">×</button>
         </div>`;
       }).join('');
       cartCount.innerHTML = teamLines;
@@ -2885,6 +2893,28 @@ function updateMobileTracker() {
       cartCount.style.display = 'none';
     }
   }
+}
+
+function showNameError(msg) {
+  const trackerErr = document.getElementById('tracker-name-error');
+  const panelErr = document.getElementById('panel-name-error');
+  const trackerInput = document.getElementById('tracker-name-input');
+  const panelInput = document.getElementById('team-name-input');
+  if (trackerErr) { trackerErr.textContent = msg; trackerErr.style.display = 'block'; }
+  if (panelErr) { panelErr.textContent = msg; panelErr.style.display = 'block'; }
+  if (trackerInput) trackerInput.style.borderColor = '#ff6b6b';
+  if (panelInput) panelInput.style.borderColor = '#e74c3c';
+}
+
+function clearNameError() {
+  const trackerErr = document.getElementById('tracker-name-error');
+  const panelErr = document.getElementById('panel-name-error');
+  const trackerInput = document.getElementById('tracker-name-input');
+  const panelInput = document.getElementById('team-name-input');
+  if (trackerErr) { trackerErr.style.display = 'none'; trackerErr.textContent = ''; }
+  if (panelErr) { panelErr.style.display = 'none'; panelErr.textContent = ''; }
+  if (trackerInput) trackerInput.style.borderColor = '';
+  if (panelInput) panelInput.style.borderColor = '';
 }
 
 function syncTrackerName() {
