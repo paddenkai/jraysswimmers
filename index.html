@@ -321,7 +321,7 @@
     #mobile-team-tracker .tracker-row1 {
       display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
     }
-    #mobile-team-tracker .tracker-dots { display: flex; gap: 8px; align-items: center; }
+    #mobile-team-tracker .tracker-dots { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
     #mobile-team-tracker .tracker-dot {
       width: 12px; height: 12px; border-radius: 50%;
       background: rgba(255,255,255,0.25);
@@ -2923,9 +2923,32 @@ function renderProfile() {
 function updateMobileTracker() {
   const countEl = document.getElementById('tracker-count');
   if (countEl) countEl.textContent = `${selectedGolfers.length}/5 selected`;
+  // Update dots AND show golfer names in tracker
   for (let i = 0; i < 5; i++) {
     const dot = document.getElementById(`dot-${i}`);
-    if (dot) dot.classList.toggle('filled', i < selectedGolfers.length);
+    if (dot) {
+      const golfer = selectedGolfers[i] ? GOLFERS.find(g => g.id === selectedGolfers[i]) : null;
+      if (golfer) {
+        const parts = golfer.name.trim().split(' ');
+        const abbrev = parts.length > 1 ? parts[0][0] + '. ' + parts[parts.length - 1] : golfer.name;
+        dot.classList.add('filled');
+        dot.style.width = 'auto';
+        dot.style.borderRadius = '4px';
+        dot.style.padding = '3px 7px';
+        dot.style.fontSize = '0.72rem';
+        dot.style.fontFamily = "'DM Mono', monospace";
+        dot.style.letterSpacing = '0';
+        dot.textContent = abbrev;
+      } else {
+        dot.classList.remove('filled');
+        dot.style.width = '10px';
+        dot.style.borderRadius = '50%';
+        dot.style.padding = '0';
+        dot.style.fontSize = '';
+        dot.style.fontFamily = '';
+        dot.textContent = '';
+      }
+    }
   }
   // Enable/disable buttons based on state
   const nameInput = document.getElementById('tracker-name-input');
