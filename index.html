@@ -1934,7 +1934,7 @@ async function showPage(name) {
   if (name === 'admin') renderAdminPanel();
   if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); }
   if (name === 'tournament') renderTournament();
-  if (name === 'builder') renderBuilder();
+  if (name === 'builder') { await loadTeams(); renderBuilder(); }
   if (name === 'profile') renderProfile();
   if (name === 'payment') { renderPaymentSummary(); }
   updateStats();
@@ -2113,16 +2113,10 @@ async function addTeamToCart() {
     showNameError('Please enter a team name');
     return;
   }
-  // Check for duplicate — fetch all team names fresh from Supabase
+  // Check for duplicate against allTeams (freshly loaded when builder opened)
   const nameLower = teamName.toLowerCase().trim();
-  const { data: allExisting, error: nameCheckError } = await sb.from('teams').select('name');
-  // If fetch failed, block submission to be safe
-  if (nameCheckError || !allExisting) {
-    showNameError('Could not verify team name — please try again');
-    return;
-  }
   const isDuplicate =
-    allExisting.some(t => t.name.toLowerCase().trim() === nameLower) ||
+    allTeams.some(t => t.name.toLowerCase().trim() === nameLower) ||
     cart.some(t => t.name.toLowerCase().trim() === nameLower);
   if (isDuplicate) {
     showNameError(`"${teamName}" is already taken — try a different name`);
