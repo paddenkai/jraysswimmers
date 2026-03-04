@@ -2103,25 +2103,28 @@ function renderTeamSlots() {
 async function addTeamToCart() {
   if (selectedGolfers.length < 5) { showToast('Please select 5 golfers.', 'error'); return; }
   if (!currentUser) { openAuthModal(); return; }
-  // Read from whichever input has a value (tracker on mobile, panel on desktop)
+
   const trackerInput = document.getElementById('tracker-name-input');
   const panelInput = document.getElementById('team-name-input');
-  // Sync tracker→panel in case user typed in tracker
-  if (trackerInput?.value.trim() && panelInput) panelInput.value = trackerInput.value.trim();
-  const teamName = trackerInput?.value.trim() || panelInput?.value.trim() || '';
-  if (!teamName) {
-    showNameError('Please enter a team name');
+  const teamName = (trackerInput?.value || panelInput?.value || '').trim();
+
+  if (!teamName) { showNameError('Please enter a team name'); return; }
+
+  // Check cart for duplicate
+  if (cart.some(t => t.name.trim().toLowerCase() === teamName.toLowerCase())) {
+    showNameError(`"${teamName}" is already in your cart`);
     return;
   }
-  // Check for duplicate against allTeams (freshly loaded when builder opened)
-  const nameLower = teamName.toLowerCase().trim();
-  const isDuplicate =
-    allTeams.some(t => t.name.toLowerCase().trim() === nameLower) ||
-    cart.some(t => t.name.toLowerCase().trim() === nameLower);
-  if (isDuplicate) {
+
+  // Check Supabase for duplicate — fetch ALL names and compare in JS
+  const { data, error } = await sb.from('teams').select('name');
+  if (error) { showNameError('Could not verify name, please try again'); return; }
+  const taken = (data || []).some(t => t.name.trim().toLowerCase() === teamName.toLowerCase());
+  if (taken) {
     showNameError(`"${teamName}" is already taken — try a different name`);
     return;
   }
+
   cart.push({ id: Date.now() + cart.length, name: teamName, golfers: [...selectedGolfers] });
   selectedGolfers = [];
   if (panelInput) panelInput.value = '';
@@ -2130,7 +2133,7 @@ async function addTeamToCart() {
   renderGolferGrid(GOLFERS);
   renderTeamSlots();
   renderCart();
-  updateMobileTracker(); // explicitly refresh tracker after cart updated
+  updateMobileTracker();
   showToast(`"${teamName}" added to cart!`, 'success');
 }
 
