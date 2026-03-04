@@ -2778,11 +2778,11 @@ async function saveSettings() {
   // Reload teams fresh from Supabase so leaderboard reflects the change
   await loadTeams();
   currentUser.name = name;
+  document.getElementById('edit-profile-panel').style.display = 'none';
+  document.getElementById('edit-profile-btn').textContent = '✎ EDIT';
   renderProfile();
   renderLeaderboard();
   showToast('Name updated!', 'success');
-  document.getElementById('edit-profile-panel').style.display = 'none';
-  document.getElementById('edit-profile-btn').textContent = '✎ EDIT';
 }
 
 // ═══════════════════════════════════════════════════════
