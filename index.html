@@ -461,7 +461,7 @@
   .rank-2 { background: #c0c0c0; color: var(--dark); }
   .rank-3 { background: #cd7f32; color: var(--white); }
   .rank-other { background: #eee; color: #666; }
-  .team-golfers-mini { font-size: 0.75rem; color: #888; font-family: 'DM Mono', monospace; margin-top: 2px; max-width: 140px; }
+  .team-golfers-mini { font-size: 0.75rem; color: #888; font-family: 'DM Mono', monospace; margin-top: 2px; }
   .earnings-display { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--green); }
   .owner-tag { font-size: 0.75rem; color: #999; }
   .my-team-row td { background: rgba(110,70,180,0.13) !important; }
@@ -1845,7 +1845,7 @@ function updateFetchStatus(status) {
 
 function startLiveFetching() {
   const btn = document.getElementById('refresh-btn');
-  if (btn) { btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
+  if (btn) { btn.style.opacity = '1'; btn.style.cursor = 'pointer'; btn.style.pointerEvents = 'auto'; }
   fetchESPNScores();
   fetchInterval = setInterval(fetchESPNScores, 60000); // every 60s
 }
@@ -2500,7 +2500,7 @@ function renderLeaderboard() {
         const earned = g.earnings > 0 ? `<span style="color:var(--green); margin-left:6px;">$${Math.round(g.earnings).toLocaleString()}</span>` :
                        g.cutMissed ? `<span style="color:#bbb; margin-left:6px;">CUT</span>` : '';
         const border = i < arr.length - 1 ? 'border-bottom:1px solid rgba(0,0,0,0.07); padding-bottom:3px; margin-bottom:3px;' : '';
-        return `<div style="${border} white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${shortName}${hasLiveData ? earned : ''}</div>`;
+        return `<div style="${border} white-space:nowrap;">${shortName}${hasLiveData ? earned : ''}</div>`;
       }).filter(Boolean).join('') : '<span style="color:#bbb;font-style:italic;font-size:0.78rem;">Hidden until tournament starts</span>'}</div></td>
       <td style="text-align:center">${earningsDisplay}</td>
     </tr>`;
