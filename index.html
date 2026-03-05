@@ -1562,7 +1562,7 @@ const GOLFERS = [
   { id: 15,  name: "Jake Knapp",                 rank: 15,  earnings: 0, teeTime: "9:05 AM" },
   { id: 16,  name: "Viktor Hovland",             rank: 16,  earnings: 0, teeTime: "10:30 AM" },
   { id: 17,  name: "Sam Burns",                  rank: 17,  earnings: 0, teeTime: "9:15 AM" },
-  { id: 18,  name: "Ludvig Aberg",               rank: 18,  earnings: 0, teeTime: "10:00 AM" },
+  { id: 18,  name: "Ludvig Åberg",               rank: 18,  earnings: 0, teeTime: "10:00 AM" },
   { id: 19,  name: "Kurt Kitayama",              rank: 19,  earnings: 0, teeTime: "8:45 AM" },
   { id: 20,  name: "Chris Gotterup",             rank: 20,  earnings: 0, teeTime: "10:10 AM" },
   { id: 21,  name: "Rickie Fowler",              rank: 21,  earnings: 0, teeTime: "10:40 AM" },
@@ -1583,7 +1583,7 @@ const GOLFERS = [
   { id: 36,  name: "Nick Taylor",                rank: 36,  earnings: 0, teeTime: "9:25 AM" },
   { id: 37,  name: "Harry Hall",                 rank: 37,  earnings: 0, teeTime: "6:05 AM" },
   { id: 38,  name: "Ryan Gerard",                rank: 38,  earnings: 0, teeTime: "8:20 AM" },
-  { id: 39,  name: "Nicolai Hojgaard",           rank: 39,  earnings: 0, teeTime: "7:50 AM" },
+  { id: 39,  name: "Nicolai Højgaard",           rank: 39,  earnings: 0, teeTime: "7:50 AM" },
   { id: 40,  name: "Sepp Straka",                rank: 40,  earnings: 0, teeTime: "6:15 AM" },
   { id: 41,  name: "Corey Conners",              rank: 41,  earnings: 0, teeTime: "6:05 AM" },
   { id: 42,  name: "Michael Thorbjornsen",       rank: 42,  earnings: 0, teeTime: "5:50 AM" },
@@ -1803,7 +1803,11 @@ function parseESPNAPI(data) {
       if (golfer) {
         golfer.liveData = liveScores[key];
         golfer.cutMissed = missedCut;
-        if (!golfer.name.includes('(Amateur)')) golfer.earnings = earnings; // amateurs never earn prize money
+        if (!golfer.name.includes('(Amateur)')) golfer.earnings = earnings;
+        // Stamp static tee time onto liveScores entry so renderer always has it
+        if (!liveScores[key].teeTime && golfer.teeTime) {
+          liveScores[key].teeTime = golfer.teeTime + ' PST';
+        }
       }
     });
 
@@ -1816,9 +1820,11 @@ function parseESPNAPI(data) {
 
 function normalizeName(name) {
   // Normalize for fuzzy matching: lowercase, remove accents, trim
-  // Also handle special chars that don't decompose via NFD (e.g. ø -> o)
+  // Explicit replacements for chars that don't fully decompose via NFD
   return name.toLowerCase()
     .replace(/ø/g, 'o').replace(/Ø/g, 'o')
+    .replace(/å/g, 'a').replace(/Å/g, 'a')
+    .replace(/æ/g, 'ae').replace(/Æ/g, 'ae')
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, ' ').trim();
 }
