@@ -732,7 +732,7 @@
           </p>
 
           <div class="hero-btns" style="display:flex; gap:12px; justify-content:center; flex-direction:column; align-items:center; margin-bottom:16px;">
-            <button class="btn btn-gold" onclick="requireAuth(() => showPage('builder'))" style="padding:15px 36px; font-size:1rem; width:100%; max-width:300px;">Build Your Team →</button>
+            <button class="btn btn-gold" id="home-team-btn" onclick="requireAuth(() => showPage('builder'))" style="padding:15px 36px; font-size:1rem; width:100%; max-width:300px;">Build Your Team →</button>
             <button class="btn btn-outline" onclick="showPage('leaderboard')" style="padding:15px 28px; width:100%; max-width:300px;">View All Teams</button>
           </div>
           <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(232,119,34,0.6); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">Bay Hill Club · March 5–8, 2026 · $10 per entry</div>
@@ -1084,7 +1084,7 @@
         <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
           <div>
             <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">Registration Open</div>
-            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Allow new teams to be entered</div>
+            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Allow new teams to be entered · Home button shows "Build Your Team" when on, "View Your Team" when off</div>
           </div>
           <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
             <input type="checkbox" id="toggle-registration" onchange="saveAdminSettings()" style="opacity:0; width:0; height:0;">
@@ -2029,6 +2029,8 @@ function updateNav() {
   document.getElementById('nav-logout').style.display = loggedIn ? '' : 'none';
   document.getElementById('nav-myteams').style.display = loggedIn ? '' : 'none';
   document.getElementById('nav-enter').style.display = adminSettings.registrationOpen ? '' : 'none';
+  const homeBtn = document.getElementById('home-team-btn');
+  if (homeBtn) homeBtn.textContent = adminSettings.registrationOpen ? 'Build Your Team →' : 'View Your Team →';
   document.getElementById('nav-tournament').style.display = TOURNAMENT_ACTIVE ? '' : 'none';
 }
 
