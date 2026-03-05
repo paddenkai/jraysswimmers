@@ -1741,7 +1741,14 @@ function parseESPNAPI(data) {
 
     // Sort non-cut players by score (lowest = best)
     // Now split properly using finalized cut status
-    const madecut = players.filter(p => !p.cut).sort((a, b) => a.scoreNum - b.scoreNum);
+    const madecut = players.filter(p => !p.cut).sort((a, b) => {
+      const aStarted = a.roundsPlayed > 0 || (a.thru && a.thru !== '–' && a.thru !== '-');
+      const bStarted = b.roundsPlayed > 0 || (b.thru && b.thru !== '–' && b.thru !== '-');
+      if (!aStarted && !bStarted) return 0;
+      if (!aStarted) return 1;  // unstarted goes to bottom
+      if (!bStarted) return -1;
+      return a.scoreNum - b.scoreNum;
+    });
     const missedCutPlayers = players.filter(p => p.cut);
 
     // Assign positions only among players who made the cut
@@ -1780,12 +1787,13 @@ function parseESPNAPI(data) {
       const pos = p.pos || 999;
       const tiedCount = p.tiedCount || 1;
       const missedCut = p.cut || (!isPostCut && cutScore !== null && p.scoreNum > cutScore);
-      const earnings = (!window._playHasStarted) ? 0 : p.wd ? 0 : missedCut ? 0 : getPayoutForPosition(pos, tiedCount);
-      const posDisplay = p.wd ? 'WD' : missedCut ? 'MC' : (p.posDisplay || '–');
+      const hasStarted = p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-');
+      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : missedCut ? 0 : getPayoutForPosition(pos, tiedCount);
+      const posDisplay = p.wd ? 'WD' : missedCut ? 'MC' : !hasStarted ? '–' : (p.posDisplay || '–');
 
       liveScores[key] = {
-        pos, posDisplay,
-        score: p.scoreStr, today: p.today, thru: p.thru,
+        pos, posDisplay, hasStarted,
+        score: hasStarted ? p.scoreStr : '–', today: hasStarted ? p.today : '–', thru: p.thru,
         teeTime: p.teeTimeDisplay || null,
         cut: missedCut, wd: p.wd || false, earnings, name: p.name,
         roundsData: p.roundsData || []
@@ -2797,7 +2805,7 @@ function renderTournament() {
     return `<tr class="${rowClass}" onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer;">
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.posDisplay || '–'}</td>
       <td><strong>${d.name || key}</strong></td>
-      ${d.teeTime && d.thru === '–' ? `<td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">TEE: ${d.teeTime}</td>` : `<td><span class="${scoreClass}" style="font-family:'DM Mono',monospace; font-weight:700;">${d.score}</span></td><td style="font-family:'DM Mono',monospace; color:#888; font-size:0.85rem;">${d.today}</td><td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.thru}</td>`}
+      ${(() => { const golfer = GOLFERS.find(g => normalizeName(g.name) === key); const tee = d.teeTime || (golfer && golfer.teeTime ? golfer.teeTime + ' PST' : null); return !d.hasStarted && tee ? `<td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">${tee}</td>` : `<td><span class="${scoreClass}" style="font-family:'DM Mono',monospace; font-weight:700;">${d.score}</span></td><td style="font-family:'DM Mono',monospace; color:#888; font-size:0.85rem;">${d.today}</td><td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.thru}</td>`; })()}
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--green-mid); font-weight:600;">${d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '–'}</td>
     </tr>
     <tr class="scorecard-expand-row" id="expand-${safeKey}" style="display:none;">
