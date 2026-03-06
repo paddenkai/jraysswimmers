@@ -696,7 +696,7 @@
       <button onclick="showPage('leaderboard')" id="nav-leaderboard">Pool Standings</button>
       <button onclick="showPage('tournament')" id="nav-tournament">Live Scores</button>
       <button onclick="showPage('stats')" id="nav-stats">Player Stats</button>
-      <button onclick="showPage('chat')" id="nav-chat">Chat</button>
+      <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:4px; right:4px; width:8px; height:8px; background:var(--gold); border-radius:50%; box-shadow:0 0 6px rgba(232,119,34,0.8);"></span></button>
       <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem;">⚙ Admin</button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
       <button id="nav-logout" onclick="logout()" style="display:none">Sign Out</button>
@@ -2102,7 +2102,7 @@ async function showPage(name) {
   if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); }
   if (name === 'tournament') renderTournament();
   if (name === 'stats') { await loadTeams(); renderStats('picks'); }
-  if (name === 'chat') { initChat(); }
+  if (name === 'chat') { initChat(); const badge = document.getElementById('chat-badge'); if (badge) badge.style.display = 'none'; }
   if (name === 'builder') { await loadTeams(); renderBuilder(); }
   if (name === 'profile') renderProfile();
   if (name === 'payment') { renderPaymentSummary(); }
@@ -2982,6 +2982,10 @@ async function initChat() {
       if (currentUser && payload.new.user_email === currentUser.email) return;
       appendChatMessage(payload.new);
       scrollChatToBottom();
+      // Show badge if user is not currently on the chat page
+      if (!document.getElementById('page-chat')?.classList.contains('active')) {
+        document.getElementById('chat-badge').style.display = 'block';
+      }
     })
     .subscribe();
 }
