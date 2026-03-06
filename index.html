@@ -986,7 +986,10 @@
         <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background:var(--green); color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default; pointer-events:none;" id="refresh-btn">↻ REFRESH NOW</button>
       </div>
     </div>
-    <div style="margin-bottom:8px; font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; text-align:right; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
+    <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+      <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 50 + ties · or within 10 strokes of the lead</div>
+      <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
+    </div>
     <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
       <table class="leaderboard-table" id="tournament-table" style="min-width:480px;">
         <thead>
