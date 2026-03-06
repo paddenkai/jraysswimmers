@@ -513,7 +513,6 @@
   .score-under { color: #c0392b; font-weight: 700; }
   .score-over { color: #666; }
   .score-even { color: #444; }
-  .cut-row td { color: #bbb !important; }
   .highlight-row { background: rgba(201,168,76,0.12) !important; }
   .highlight-row td { font-weight: 600; }
 
@@ -1840,12 +1839,16 @@ function parseESPNAPI(data) {
     // Projected cut line — only used during round 2, not after cut is official
     // Arnold Palmer rule: top 50 + ties + anyone within 10 shots of lead
     let cutScore = null;
-    if (!isPostCut && maxRounds >= 2 && madecut.length >= 50) {
-      const top50Score = madecut[49].scoreNum;
-      const leadScore = madecut[0].scoreNum;
-      const within10Score = leadScore + 10;
-      // Cut is the WORSE of: top 50 score OR within 10 of lead (whichever lets more players through)
-      cutScore = Math.max(top50Score, within10Score);
+    if (!isPostCut && madecut.length >= 50) {
+      // Use started players only to calculate projected cut (ignore unstarted who are at E)
+      const startedPlayers = madecut.filter(p => p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-'));
+      if (startedPlayers.length >= 10) { // need enough data to project meaningfully
+        const top50Score = madecut[49].scoreNum;
+        const leadScore = madecut[0].scoreNum;
+        const within10Score = leadScore + 10;
+        // Cut is the WORSE of: top 50 score OR within 10 of lead (whichever lets more players through)
+        cutScore = Math.max(top50Score, within10Score);
+      }
     }
 
     window._isPostCut = isPostCut;
@@ -1859,7 +1862,7 @@ function parseESPNAPI(data) {
       const missedCut = p.cut || (!isPostCut && cutScore !== null && p.scoreNum > cutScore);
       const hasStarted = p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
       const earnings = (!hasStarted) ? 0 : p.wd ? 0 : missedCut ? 0 : getPayoutForPosition(pos, tiedCount);
-      const posDisplay = p.wd ? 'WD' : missedCut ? 'MC' : !hasStarted ? '–' : (p.posDisplay || '–');
+      const posDisplay = p.wd ? 'WD' : (missedCut && isPostCut) ? 'MC' : !hasStarted ? '–' : (p.posDisplay || '–');
 
       liveScores[key] = {
         pos, posDisplay, hasStarted,
@@ -2584,14 +2587,14 @@ function renderLeaderboard() {
         const parts = g.name.trim().split(' ');
         const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : g.name;
         const earned = g.earnings > 0 ? `<span style="color:var(--green); margin-left:6px;">$${Math.round(g.earnings).toLocaleString()}</span>` :
-                       g.cutMissed ? `<span style="color:#bbb; margin-left:6px;">CUT</span>` : '';
+                       g.cutMissed ? `<span style="color:var(--green-mid); margin-left:6px;">${window._isPostCut ? 'CUT' : '$0'}</span>` : '';
         const pos = g.liveData?.posDisplay;
         const isWD = g.liveData?.wd || g.withdrawn;
         const posStr = !isWD && hasLiveData && pos && pos !== '–'
-          ? `<span style="color:#aaa; font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">${pos}</span>`
-          : isWD ? `<span style="color:#bbb; font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">WD</span>` : '';
+          ? `<span style="font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">${pos}</span>`
+          : isWD ? `<span style="font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">WD</span>` : '';
         const earningsOrWD = isWD
-          ? `<span style="color:#bbb; margin-left:6px;">$0</span>`
+          ? `<span style="margin-left:6px;">$0</span>`
           : (hasLiveData ? earned : '');
         const border = i < arr.length - 1 ? 'border-bottom:1px solid rgba(0,0,0,0.07); padding-bottom:3px; margin-bottom:3px;' : '';
         return `<div style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}</div>`;
@@ -2892,7 +2895,7 @@ function renderTournament() {
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.posDisplay || '–'}</td>
       <td><strong>${d.name || key}</strong></td>
       ${(() => { const golfer = GOLFERS.find(g => normalizeName(g.name) === key); const tee = d.teeTime || (golfer && golfer.teeTime ? golfer.teeTime + ' PST' : null); return !d.hasStarted && tee ? `<td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">${tee}</td>` : `<td><span class="${scoreClass}" style="font-family:'DM Mono',monospace; font-weight:700;">${d.score}</span></td><td style="font-family:'DM Mono',monospace; color:#888; font-size:0.85rem;">${d.today}</td><td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.thru}</td>`; })()}
-      <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--green-mid); font-weight:600;">${d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '–'}</td>
+      <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--green-mid); font-weight:600;">${d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '$0'}</td>
     </tr>
     <tr class="scorecard-expand-row" id="expand-${safeKey}" style="display:none;">
       <td colspan="6" style="padding:0; background:#f8f5ee; border-bottom:2px solid #e0dbd0;"></td>
