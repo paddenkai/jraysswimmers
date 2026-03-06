@@ -2933,7 +2933,7 @@ function renderTournament() {
     activeRows = sorted.map(renderRow).join('');
   }
 
-  const cutDivider = (adminSettings.showCutLine && cutPlayers.length)
+  const cutDivider = (adminSettings.showCutLine && cutPlayers.length && window._isPostCut)
     ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>`
     : '';
 
