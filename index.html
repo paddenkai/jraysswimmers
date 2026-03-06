@@ -2968,6 +2968,8 @@ async function initChat() {
   if (chatSubscription) { sb.removeChannel(chatSubscription); }
   chatSubscription = sb.channel('chat_messages_channel')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, payload => {
+      // Skip if this is our own message echoed back — we already showed it optimistically
+      if (currentUser && payload.new.user_email === currentUser.email) return;
       appendChatMessage(payload.new);
       scrollChatToBottom();
     })
@@ -3002,6 +3004,17 @@ async function sendChatMessage() {
   const message = input.value.trim();
   if (!message) return;
   input.value = '';
+
+  // Optimistically append immediately so sender sees it right away
+  const optimistic = {
+    user_email: currentUser.email,
+    user_name: currentUser.name || currentUser.email.split('@')[0],
+    message,
+    created_at: new Date().toISOString(),
+    _optimistic: true
+  };
+  appendChatMessage(optimistic);
+  scrollChatToBottom();
 
   const { error } = await sb.from('chat_messages').insert({
     user_email: currentUser.email,
