@@ -29,6 +29,7 @@
     50% { opacity: 0.5; transform: scale(0.85); }
   }
 
+  .cut-row td { color: #bbb !important; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -1206,6 +1207,18 @@
 
         <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
           <div>
+            <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">Official Cut Made</div>
+            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Mark cut as official — shows MC, greys out missed players (enable after Round 2)</div>
+          </div>
+          <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
+            <input type="checkbox" id="toggle-official-cut" onchange="saveAdminSettings()" style="opacity:0; width:0; height:0;">
+            <span id="toggle-official-cut-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
+            <span id="toggle-official-cut-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+          </label>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div>
             <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">Show Projected Cut Line</div>
             <div style="font-size:0.78rem; color:#888; margin-top:2px;">Display projected cut on the live leaderboard (enable at start of Round 2)</div>
           </div>
@@ -1454,6 +1467,7 @@ async function loadAdminSettings() {
     adminSettings.showResults = data.show_results || false;
     adminSettings.allowEditing = data.allow_editing !== undefined ? data.allow_editing : true;
     adminSettings.showCutLine = data.show_cut_line || false;
+    adminSettings.officialCut = data.official_cut || false;
     adminSettings.showProjectedWinner = data.show_projected_winner || false;
   }
 }
@@ -1464,6 +1478,7 @@ async function saveAdminSettings() {
   adminSettings.showResults = document.getElementById('toggle-results').checked;
   adminSettings.allowEditing = document.getElementById('toggle-editing').checked;
   adminSettings.showCutLine = document.getElementById('toggle-cutline').checked;
+  adminSettings.officialCut = document.getElementById('toggle-official-cut').checked;
   adminSettings.showProjectedWinner = document.getElementById('toggle-projected-winner').checked;
   const { error } = await sb.from('admin_settings').upsert({
     id: 1,
@@ -1472,6 +1487,7 @@ async function saveAdminSettings() {
     show_results: adminSettings.showResults,
     allow_editing: adminSettings.allowEditing,
     show_cut_line: adminSettings.showCutLine,
+    official_cut: adminSettings.officialCut,
     show_projected_winner: adminSettings.showProjectedWinner,
     updated_at: new Date().toISOString()
   });
@@ -1480,6 +1496,7 @@ async function saveAdminSettings() {
   updateToggleUI('toggle-picks', adminSettings.showPicks);
   updateToggleUI('toggle-results', adminSettings.showResults);
   updateToggleUI('toggle-cutline', adminSettings.showCutLine);
+  updateToggleUI('toggle-official-cut', adminSettings.officialCut);
   updateToggleUI('toggle-projected-winner', adminSettings.showProjectedWinner);
   updateToggleUI('toggle-editing', adminSettings.allowEditing);
   updateNav();
@@ -1787,7 +1804,7 @@ function parseESPNAPI(data) {
 
     // Detect current round from the data
     const maxRounds = Math.max(...competitors.map(c => (c.linescores || []).filter(r => (r.linescores || []).length > 0).length), 0);
-    const isPostCut = maxRounds >= 3; // Round 3+ means cut is official
+    const isPostCut = maxRounds >= 3 || adminSettings.officialCut; // Round 3+ OR admin manually triggered
 
     // Finalize cut/WD status
     // A player missed the cut if they only have 2 rounds when others have 3+
@@ -2894,7 +2911,7 @@ function renderTournament() {
     const isHighlighted = highlightedNames.has(key);
     const scoreClass = typeof d.score === 'string' && d.score.startsWith('-') ? 'score-under' :
                        d.score === 'E' ? 'score-even' : 'score-over';
-    const rowClass = [d.cut ? 'cut-row' : '', isHighlighted ? 'highlight-row' : ''].filter(Boolean).join(' ');
+    const rowClass = [(d.cut && window._isPostCut) ? 'cut-row' : '', isHighlighted ? 'highlight-row' : ''].filter(Boolean).join(' ');
     const safeKey = key.replace(/'/g, "\\'");
     return `<tr class="${rowClass}" onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer;">
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.posDisplay || '–'}</td>
@@ -2938,7 +2955,7 @@ function renderTournament() {
     activeRows = sorted.map(renderRow).join('');
   }
 
-  const cutDivider = (adminSettings.showCutLine && cutPlayers.length && window._isPostCut)
+  const cutDivider = (cutPlayers.length && window._isPostCut)
     ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>`
     : '';
 
