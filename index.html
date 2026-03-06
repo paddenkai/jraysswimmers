@@ -1059,6 +1059,8 @@
         <button onclick="renderStats('picks')" id="stats-sort-picks" style="padding:8px 18px; font-size:0.82rem; font-family:'DM Mono',monospace; border:2px solid var(--green); border-radius:4px; cursor:pointer; letter-spacing:0.5px;">Most Picked</button>
         <button onclick="renderStats('alpha')" id="stats-sort-alpha" style="padding:8px 18px; font-size:0.82rem; font-family:'DM Mono',monospace; border:2px solid var(--green); border-radius:4px; cursor:pointer; letter-spacing:0.5px;">A–Z</button>
       </div>
+      <div id="stats-summary" style="font-size:0.78rem; color:#888; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-bottom:8px;"></div>
+      <div id="stats-hint" style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-bottom:16px;">↓ click any player's name to see which teams they're on</div>
       <div id="stats-table-wrap"></div>
     </div>
   </div>
@@ -3089,10 +3091,15 @@ function renderStats(sortBy = 'picks') {
 
   const maxPicks = Math.max(...entries.map(([,c]) => c), 1);
 
+  // Update summary line above table
+  const pickedCount = Object.values(pickCounts).filter(c => c > 0).length;
+  const summaryEl = document.getElementById('stats-summary');
+  if (summaryEl) summaryEl.textContent = `${totalTeams} TOTAL ENTRIES · ${pickedCount}/${GOLFERS.length} GOLFERS PICKED`;
+
+  const hintEl = document.getElementById('stats-hint');
+  if (hintEl) hintEl.style.display = '';
+
   wrap.innerHTML = `
-    <div style="font-size:0.78rem; color:#888; font-family:'DM Mono',monospace; margin-bottom:12px; letter-spacing:0.5px;">
-      ${totalTeams} TOTAL ENTRIES · ${GOLFERS.length} GOLFERS
-    </div>
     <table style="width:100%; border-collapse:collapse;">
       <thead>
         <tr style="border-bottom:2px solid var(--green);">
