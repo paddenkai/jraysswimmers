@@ -1211,7 +1211,7 @@
             <div style="font-size:0.78rem; color:#888; margin-top:2px;">Mark cut as official — shows MC, greys out missed players (enable after Round 2)</div>
           </div>
           <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
-            <input type="checkbox" id="toggle-official-cut" onchange="saveAdminSettings()" style="opacity:0; width:0; height:0;">
+            <input type="checkbox" id="toggle-official-cut" onchange="toggleOfficialCut(this)" style="opacity:0; width:0; height:0;">
             <span id="toggle-official-cut-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
             <span id="toggle-official-cut-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
           </label>
@@ -1457,6 +1457,7 @@ let adminSettings = {
   allowEditing: true,
   showCutLine: false,
   showProjectedWinner: false,
+  officialCut: localStorage.getItem('officialCut') === '1',
 };
 
 async function loadAdminSettings() {
@@ -1467,9 +1468,18 @@ async function loadAdminSettings() {
     adminSettings.showResults = data.show_results || false;
     adminSettings.allowEditing = data.allow_editing !== undefined ? data.allow_editing : true;
     adminSettings.showCutLine = data.show_cut_line || false;
-    adminSettings.officialCut = data.official_cut || false;
+    // officialCut stored in localStorage (not Supabase — no schema change needed)
+    adminSettings.officialCut = localStorage.getItem('officialCut') === '1';
+    updateToggleUI('toggle-official-cut', adminSettings.officialCut);
     adminSettings.showProjectedWinner = data.show_projected_winner || false;
   }
+}
+
+function toggleOfficialCut(checkbox) {
+  adminSettings.officialCut = checkbox.checked;
+  localStorage.setItem('officialCut', checkbox.checked ? '1' : '0');
+  updateToggleUI('toggle-official-cut', checkbox.checked);
+  fetchLiveScores(); // refresh leaderboard immediately
 }
 
 async function saveAdminSettings() {
@@ -1478,7 +1488,6 @@ async function saveAdminSettings() {
   adminSettings.showResults = document.getElementById('toggle-results').checked;
   adminSettings.allowEditing = document.getElementById('toggle-editing').checked;
   adminSettings.showCutLine = document.getElementById('toggle-cutline').checked;
-  adminSettings.officialCut = document.getElementById('toggle-official-cut').checked;
   adminSettings.showProjectedWinner = document.getElementById('toggle-projected-winner').checked;
   const { error } = await sb.from('admin_settings').upsert({
     id: 1,
@@ -1487,7 +1496,7 @@ async function saveAdminSettings() {
     show_results: adminSettings.showResults,
     allow_editing: adminSettings.allowEditing,
     show_cut_line: adminSettings.showCutLine,
-    official_cut: adminSettings.officialCut,
+
     show_projected_winner: adminSettings.showProjectedWinner,
     updated_at: new Date().toISOString()
   });
@@ -1496,7 +1505,6 @@ async function saveAdminSettings() {
   updateToggleUI('toggle-picks', adminSettings.showPicks);
   updateToggleUI('toggle-results', adminSettings.showResults);
   updateToggleUI('toggle-cutline', adminSettings.showCutLine);
-  updateToggleUI('toggle-official-cut', adminSettings.officialCut);
   updateToggleUI('toggle-projected-winner', adminSettings.showProjectedWinner);
   updateToggleUI('toggle-editing', adminSettings.allowEditing);
   updateNav();
