@@ -3112,7 +3112,7 @@ function renderStats(sortBy = 'picks') {
       <tbody>
         ${entries.map(([name, count], i) => {
           const pct = totalTeams > 0 ? ((count / totalTeams) * 100).toFixed(1) : '0.0';
-          const barWidth = totalTeams > 0 ? Math.round((count / maxPicks) * 100) : 0;
+          const barWidth = totalTeams > 0 ? parseFloat(pct) : 0;
           const bg = i % 2 === 0 ? '#fff' : '#f8f5ee';
           const golfer = GOLFERS.find(g => g.name === name);
           const isAmateur = golfer && golfer.name === 'Daniel Bennett';
