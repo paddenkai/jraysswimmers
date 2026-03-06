@@ -2687,7 +2687,7 @@ function toggleScorecard(playerKey, clickedRow) {
 
   // Render scorecard for a specific round
   const renderScorecardContent = (r) => {
-    const roundScore = r.score === '0' ? 'E' : (parseInt(r.score) > 0 ? `+${r.score}` : r.score);
+    const _rs = String(r.score).replace(/^\+/, ''); const roundScore = _rs === '0' ? 'E' : (parseInt(_rs) > 0 ? `+${_rs}` : _rs);
 
     // Build a map of hole number -> hole data for played holes
     const holeMap = {};
@@ -2765,7 +2765,7 @@ function toggleScorecard(playerKey, clickedRow) {
 
   // Build round selector options
   const roundOptions = rounds.map(r => {
-    const rs = r.score === '0' ? 'E' : (parseInt(r.score) > 0 ? `+${r.score}` : r.score);
+    const _rss = String(r.score).replace(/^\+/, ''); const rs = _rss === '0' ? 'E' : (parseInt(_rss) > 0 ? `+${_rss}` : _rss);
     const isCurrent = r.round === currentRound.round;
     return `<option value="${r.round}" ${isCurrent ? 'selected' : ''}>R${r.round} &nbsp; ${rs}</option>`;
   }).join('');
