@@ -1627,7 +1627,7 @@ const GOLFERS = [
   { id: 12,  name: "Patrick Cantlay",            rank: 12,  earnings: 0, teeTime: "6:25 AM" },
   { id: 13,  name: "Ben Griffin",                rank: 13,  earnings: 0, teeTime: "9:50 AM" },
   { id: 14,  name: "Harris English",             rank: 14,  earnings: 0, teeTime: "6:25 AM" },
-  { id: 15,  name: "Jake Knapp",                 rank: 15,  earnings: 0, teeTime: "9:05 AM" },
+  { id: 15,  name: "Jake Knapp",                 rank: 15,  earnings: 0, teeTime: "9:05 AM", withdrawn: true },
   { id: 16,  name: "Viktor Hovland",             rank: 16,  earnings: 0, teeTime: "10:30 AM" },
   { id: 17,  name: "Sam Burns",                  rank: 17,  earnings: 0, teeTime: "9:15 AM" },
   { id: 18,  name: "Ludvig Åberg",               rank: 18,  earnings: 0, teeTime: "10:00 AM" },
@@ -1755,9 +1755,11 @@ function parseESPNAPI(data) {
         }))
       })).filter(r => r.holes.length > 0);
 
-      // Detect cut: ESPN status OR player only has 2 rounds while others have 3+
-      const espnCut = comp.status?.type?.name === 'STATUS_CUT' ||
-                      comp.status?.type?.description?.toLowerCase().includes('cut');
+      // Detect cut/WD: ESPN status OR player only has 2 rounds while others have 3+
+      const statusNameRaw = comp.status?.type?.name || '';
+      const statusDesc = comp.status?.type?.description?.toLowerCase() || '';
+      const espnWD = statusNameRaw === 'STATUS_WITHDRAWN' || statusDesc.includes('withdrawn') || statusDesc.includes('wd');
+      const espnCut = espnWD || statusNameRaw === 'STATUS_CUT' || statusDesc.includes('cut');
 
       // Tee time — available before play starts
       const statusName = comp.status?.type?.name || '';
@@ -1774,7 +1776,7 @@ function parseESPNAPI(data) {
       }
 
       // We'll finalize cut detection after we know maxRounds below
-      players.push({ name, scoreStr, scoreNum, cut: espnCut, thru, today, teeTimeDisplay, roundsPlayed: linescores.filter(r => (r.linescores || []).length > 0).length, roundsData });
+      players.push({ name, scoreStr, scoreNum, cut: espnCut, wd: espnWD, thru, today, teeTimeDisplay, roundsPlayed: linescores.filter(r => (r.linescores || []).length > 0).length, roundsData });
     });
 
     // Sort non-cut players — will be re-sorted after cut finalization below
@@ -1855,7 +1857,7 @@ function parseESPNAPI(data) {
       const pos = p.pos || 999;
       const tiedCount = p.tiedCount || 1;
       const missedCut = p.cut || (!isPostCut && cutScore !== null && p.scoreNum > cutScore);
-      const hasStarted = p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-');
+      const hasStarted = p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
       const earnings = (!hasStarted) ? 0 : p.wd ? 0 : missedCut ? 0 : getPayoutForPosition(pos, tiedCount);
       const posDisplay = p.wd ? 'WD' : missedCut ? 'MC' : !hasStarted ? '–' : (p.posDisplay || '–');
 
@@ -2583,8 +2585,16 @@ function renderLeaderboard() {
         const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : g.name;
         const earned = g.earnings > 0 ? `<span style="color:var(--green); margin-left:6px;">$${Math.round(g.earnings).toLocaleString()}</span>` :
                        g.cutMissed ? `<span style="color:#bbb; margin-left:6px;">CUT</span>` : '';
+        const pos = g.liveData?.posDisplay;
+        const isWD = g.liveData?.wd || g.withdrawn;
+        const posStr = !isWD && hasLiveData && pos && pos !== '–'
+          ? `<span style="color:#aaa; font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">${pos}</span>`
+          : isWD ? `<span style="color:#bbb; font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">WD</span>` : '';
+        const earningsOrWD = isWD
+          ? `<span style="color:#bbb; margin-left:6px;">$0</span>`
+          : (hasLiveData ? earned : '');
         const border = i < arr.length - 1 ? 'border-bottom:1px solid rgba(0,0,0,0.07); padding-bottom:3px; margin-bottom:3px;' : '';
-        return `<div style="${border} white-space:nowrap;">${shortName}${hasLiveData ? earned : ''}</div>`;
+        return `<div style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}</div>`;
       }).filter(Boolean).join('') : '<span style="color:#bbb;font-style:italic;font-size:0.78rem;">Hidden until tournament starts</span>'}</div></td>
       <td style="text-align:center">${earningsDisplay}</td>
     </tr>`;
