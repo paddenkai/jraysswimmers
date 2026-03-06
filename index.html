@@ -24,6 +24,11 @@
     --shadow: rgba(26,13,46,0.3);
   }
 
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -177,6 +182,15 @@
   /* ─── PAGES ─── */
   .page { display: none !important; }
   .page.active { display: block !important; }
+  #page-chat.active {
+    background: linear-gradient(160deg, #1a0d2e 0%, #2d1654 60%, #3b1f6e 100%);
+    margin: -40px -24px;
+    padding-top: 40px;
+    min-height: calc(100vh - 60px);
+  }
+  @media (max-width: 768px) {
+    #page-chat.active { margin: -20px -14px; }
+  }
   #page-home { background: var(--dark); margin: -40px -24px; padding: 0; min-height: calc(100vh - 120px); }
 
   /* ─── MODAL ─── */
@@ -677,10 +691,12 @@
     <nav id="nav">
       <button id="mobile-nav-close" onclick="closeMobileNav()">✕</button>
       <button onclick="showPage('home')" id="nav-home">Home</button>
+      <button id="nav-myteams" onclick="requireAuth(() => showPage('myteams'))" style="display:none">Profile</button>
       <button id="nav-enter" onclick="requireAuth(() => showPage('builder'))">Enter a Team</button>
       <button onclick="showPage('leaderboard')" id="nav-leaderboard">Pool Standings</button>
       <button onclick="showPage('tournament')" id="nav-tournament">Live Scores</button>
-      <button id="nav-myteams" onclick="requireAuth(() => showPage('myteams'))" style="display:none">Profile</button>
+      <button onclick="showPage('stats')" id="nav-stats">Player Stats</button>
+      <button onclick="showPage('chat')" id="nav-chat">Chat</button>
       <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem;">⚙ Admin</button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
       <button id="nav-logout" onclick="logout()" style="display:none">Sign Out</button>
@@ -993,6 +1009,58 @@
   </div>
 
   <!-- MY TEAMS -->
+
+  <div id="page-chat" class="page" style="min-height:calc(100vh - 60px);">
+    <div style="max-width:680px; margin:0 auto; padding:32px 16px 24px; display:flex; flex-direction:column; height:calc(100vh - 60px);">
+
+      <!-- Header -->
+      <div style="margin-bottom:20px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+          <div style="width:10px; height:10px; background:#4caf50; border-radius:50%; box-shadow:0 0 6px #4caf50; animation:pulse-dot 2s infinite;"></div>
+          <h2 style="font-family:'Libre Baskerville',serif; color:#fff; font-size:1.4rem; margin:0;">Live Chat</h2>
+        </div>
+        <p style="color:rgba(255,255,255,0.45); font-size:0.82rem; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-left:20px;">TALK TRASH · CELEBRATE · COMMISERATE</p>
+      </div>
+
+      <!-- Messages -->
+      <div id="chat-messages" style="flex:1; overflow-y:auto; padding:16px; background:rgba(255,255,255,0.06); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.12); border-radius:12px; margin-bottom:14px; display:flex; flex-direction:column; gap:10px; min-height:200px; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.2) transparent;">
+        <!-- messages injected here -->
+      </div>
+
+      <!-- Login prompt -->
+      <div id="chat-login-prompt" style="display:none; text-align:center; padding:10px; color:rgba(255,255,255,0.5); font-size:0.85rem; font-family:'DM Mono',monospace;">
+        <a href="#" onclick="openModal('auth-modal'); return false;" style="color:var(--gold); text-decoration:none;">Sign in</a> to send messages
+      </div>
+
+      <!-- Input row -->
+      <div id="chat-input-row" style="display:flex; gap:10px; align-items:center;">
+        <input id="chat-input" type="text" placeholder="Say something..." maxlength="300"
+          style="flex:1; padding:12px 16px; border:1.5px solid rgba(255,255,255,0.2); border-radius:24px; font-family:'Libre Baskerville',serif; font-size:0.9rem; outline:none; background:rgba(255,255,255,0.1); color:#fff; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='rgba(232,119,34,0.7)'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'"
+          onkeydown="if(event.key==='Enter') sendChatMessage()" />
+        <button onclick="sendChatMessage()"
+          style="background:var(--gold); color:#fff; border:none; border-radius:24px; padding:12px 22px; font-family:'DM Mono',monospace; font-size:0.8rem; cursor:pointer; letter-spacing:1px; font-weight:600; box-shadow:0 4px 14px rgba(232,119,34,0.4); transition:transform 0.15s, box-shadow 0.15s; white-space:nowrap;"
+          onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(232,119,34,0.5)'"
+          onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px rgba(232,119,34,0.4)'">
+          SEND ↑
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="page-stats" class="page">
+    <div style="max-width:900px; margin:0 auto; padding:32px 16px;">
+      <h2 style="font-family:'Libre Baskerville',serif; color:var(--green); margin-bottom:8px;">Player Stats</h2>
+      <p style="color:#888; font-size:0.9rem; margin-bottom:24px;">How many times each golfer has been selected across all pool entries.</p>
+      <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+        <button onclick="renderStats('picks')" id="stats-sort-picks" style="padding:8px 18px; font-size:0.82rem; font-family:'DM Mono',monospace; border:2px solid var(--green); border-radius:4px; cursor:pointer; letter-spacing:0.5px;">Most Picked</button>
+        <button onclick="renderStats('alpha')" id="stats-sort-alpha" style="padding:8px 18px; font-size:0.82rem; font-family:'DM Mono',monospace; border:2px solid var(--green); border-radius:4px; cursor:pointer; letter-spacing:0.5px;">A–Z</button>
+      </div>
+      <div id="stats-table-wrap"></div>
+    </div>
+  </div>
+
   <div id="page-myteams" class="page">
     <div class="section-header">
       <div>
@@ -2031,6 +2099,8 @@ async function showPage(name) {
   if (name === 'admin') renderAdminPanel();
   if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); }
   if (name === 'tournament') renderTournament();
+  if (name === 'stats') { await loadTeams(); renderStats('picks'); }
+  if (name === 'chat') { initChat(); }
   if (name === 'builder') { await loadTeams(); renderBuilder(); }
   if (name === 'profile') renderProfile();
   if (name === 'payment') { renderPaymentSummary(); }
@@ -2821,9 +2891,233 @@ function renderTournament() {
 
   const cutLabel = window._isPostCut ? '— CUT —' : '— PROJECTED CUT —';
 
-  tbody.innerHTML = sorted.map(renderRow).join('') +
-    (cutPlayers.length ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>` : '') +
-    cutPlayers.map(renderRow).join('');
+  // Build projected cut divider row among active players (R1/R2 only, when showCutLine is on)
+  let activeRows = '';
+  if (!window._isPostCut && adminSettings.showCutLine && sorted.length >= 50) {
+    const leader = sorted.find(([,d]) => d.hasStarted);
+    const started = sorted.filter(([,d]) => d.hasStarted);
+    if (started.length >= 50) {
+      const leadScore = parseInt(started[0][1].score) || 0;
+      const top50Score = parseInt(started[49][1].score) || 0;
+      const projCut = Math.max(top50Score, leadScore + 10);
+      let cutInserted = false;
+      const cutRowHtml = `<tr><td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${projCut === 0 ? 'E' : projCut > 0 ? '+'+projCut : projCut} —</td></tr>`;
+      activeRows = sorted.map(entry => {
+        const [,d] = entry;
+        const scoreNum = parseInt(d.score) || 0;
+        let row = renderRow(entry);
+        if (!cutInserted && d.hasStarted && scoreNum > projCut) {
+          cutInserted = true;
+          row = cutRowHtml + row;
+        }
+        return row;
+      }).join('');
+      if (!cutInserted) activeRows += cutRowHtml; // append at end if everyone made cut
+    } else {
+      activeRows = sorted.map(renderRow).join('');
+    }
+  } else {
+    activeRows = sorted.map(renderRow).join('');
+  }
+
+  const cutDivider = (adminSettings.showCutLine && cutPlayers.length)
+    ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>`
+    : '';
+
+  tbody.innerHTML = activeRows + cutDivider + cutPlayers.map(renderRow).join('');
+}
+
+
+
+// ═══════════════════════════════════════════════════════
+// LIVE CHAT
+// ═══════════════════════════════════════════════════════
+let chatSubscription = null;
+
+async function initChat() {
+  const messagesEl = document.getElementById('chat-messages');
+  const inputRow = document.getElementById('chat-input-row');
+  const loginPrompt = document.getElementById('chat-login-prompt');
+
+  // Show/hide input based on auth
+  if (currentUser) {
+    inputRow.style.display = 'flex';
+    loginPrompt.style.display = 'none';
+  } else {
+    inputRow.style.display = 'none';
+    loginPrompt.style.display = 'block';
+  }
+
+  // Load recent messages
+  const { data, error } = await sb
+    .from('chat_messages')
+    .select('*')
+    .order('created_at', { ascending: true })
+    .limit(100);
+
+  if (error) {
+    messagesEl.innerHTML = '<div style="color:#aaa; font-size:0.85rem; text-align:center; padding:20px;">Could not load messages. Make sure the chat_messages table exists in Supabase.</div>';
+    return;
+  }
+
+  messagesEl.innerHTML = '';
+  (data || []).forEach(msg => appendChatMessage(msg));
+  scrollChatToBottom();
+
+  // Subscribe to new messages in real time
+  if (chatSubscription) { sb.removeChannel(chatSubscription); }
+  chatSubscription = sb.channel('chat_messages_channel')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, payload => {
+      appendChatMessage(payload.new);
+      scrollChatToBottom();
+    })
+    .subscribe();
+}
+
+function appendChatMessage(msg) {
+  const messagesEl = document.getElementById('chat-messages');
+  if (!messagesEl) return;
+  const isMe = currentUser && msg.user_email === currentUser.email;
+  const time = new Date(msg.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const div = document.createElement('div');
+  div.style.cssText = `display:flex; flex-direction:column; align-items:${isMe ? 'flex-end' : 'flex-start'};`;
+  div.innerHTML = `
+    <div style="font-size:0.68rem; color:rgba(255,255,255,0.35); font-family:'DM Mono',monospace; margin-bottom:3px; letter-spacing:0.3px; ${isMe ? 'text-align:right;' : ''}">
+      ${isMe ? 'You' : escapeHtml(msg.user_name)} · ${time}
+    </div>
+    <div style="background:${isMe ? 'var(--gold)' : 'rgba(255,255,255,0.12)'}; color:#fff; border:1px solid ${isMe ? 'transparent' : 'rgba(255,255,255,0.15)'}; border-radius:${isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px'}; padding:10px 14px; max-width:78%; font-family:'Libre Baskerville',serif; font-size:0.88rem; line-height:1.45; word-break:break-word; box-shadow:${isMe ? '0 2px 10px rgba(232,119,34,0.3)' : '0 1px 4px rgba(0,0,0,0.2)'};">
+      ${escapeHtml(msg.message)}
+    </div>`;
+  messagesEl.appendChild(div);
+}
+
+function scrollChatToBottom() {
+  const el = document.getElementById('chat-messages');
+  if (el) el.scrollTop = el.scrollHeight;
+}
+
+async function sendChatMessage() {
+  if (!currentUser) return;
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (!message) return;
+  input.value = '';
+
+  const { error } = await sb.from('chat_messages').insert({
+    user_email: currentUser.email,
+    user_name: currentUser.name || currentUser.email.split('@')[0],
+    message
+  });
+
+  if (error) {
+    console.error('Chat send error:', error);
+    showToast('Could not send message.', 'error');
+  }
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════════════════
+// PICK STATS
+// ═══════════════════════════════════════════════════════
+function renderStats(sortBy = 'picks') {
+  const wrap = document.getElementById('stats-table-wrap');
+  if (!wrap) return;
+
+  // Count picks per golfer across all paid (non-seeded) teams
+  const pickCounts = {};
+  GOLFERS.forEach(g => pickCounts[g.name] = 0);
+
+  const teamsToCount = allTeams.filter(t => !t.seeded);
+  teamsToCount.forEach(team => {
+    (team.golfers || []).forEach(id => {
+      const golfer = GOLFERS.find(g => g.id === id);
+      if (golfer && pickCounts.hasOwnProperty(golfer.name)) pickCounts[golfer.name]++;
+    });
+  });
+
+  const totalTeams = teamsToCount.length;
+
+  // Sort
+  let entries = Object.entries(pickCounts);
+  if (sortBy === 'picks') {
+    entries.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  } else {
+    entries.sort((a, b) => a[0].localeCompare(b[0]));
+  }
+
+  // Update button styles
+  const picksBtn = document.getElementById('stats-sort-picks');
+  const alphaBtn = document.getElementById('stats-sort-alpha');
+  if (picksBtn) { picksBtn.style.background = sortBy === 'picks' ? 'var(--green)' : '#fff'; picksBtn.style.color = sortBy === 'picks' ? '#fff' : 'var(--green)'; }
+  if (alphaBtn) { alphaBtn.style.background = sortBy === 'alpha' ? 'var(--green)' : '#fff'; alphaBtn.style.color = sortBy === 'alpha' ? '#fff' : 'var(--green)'; }
+
+  const maxPicks = Math.max(...entries.map(([,c]) => c), 1);
+
+  wrap.innerHTML = `
+    <div style="font-size:0.78rem; color:#888; font-family:'DM Mono',monospace; margin-bottom:12px; letter-spacing:0.5px;">
+      ${totalTeams} TOTAL ENTRIES · ${GOLFERS.length} GOLFERS
+    </div>
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--green);">
+          <th style="text-align:left; padding:8px 12px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; color:#888;">GOLFER</th>
+          <th style="text-align:center; padding:8px 12px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; color:#888;">PICKS</th>
+          <th style="text-align:center; padding:8px 12px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; color:#888;">% PICKED</th>
+          <th style="padding:8px 12px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${entries.map(([name, count], i) => {
+          const pct = totalTeams > 0 ? ((count / totalTeams) * 100).toFixed(1) : '0.0';
+          const barWidth = totalTeams > 0 ? Math.round((count / maxPicks) * 100) : 0;
+          const bg = i % 2 === 0 ? '#fff' : '#f8f5ee';
+          const golfer = GOLFERS.find(g => g.name === name);
+          const isAmateur = golfer && golfer.name === 'Daniel Bennett';
+          return `<tr style="background:${bg}; border-bottom:1px solid #e8e4da;">
+            <td style="padding:10px 12px; font-family:'Libre Baskerville',serif; font-size:0.9rem; ${isAmateur ? 'color:#aaa; font-style:italic;' : ''}">
+              <span onclick="openGolferTeams('${name}')" style="cursor:pointer; text-decoration:underline; text-decoration-color:#ccc; text-underline-offset:3px;">${name}</span>${isAmateur ? ' <span style="font-size:0.72rem; color:#bbb;">(a)</span>' : ''}
+            </td>
+            <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-weight:700; font-size:0.95rem; color:var(--green);">${count}</td>
+            <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${pct}%</td>
+            <td style="padding:10px 12px; min-width:120px;">
+              <div style="background:#e8e4da; border-radius:3px; height:8px; overflow:hidden;">
+                <div style="background:var(--green); height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
+              </div>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+}
+
+
+function openGolferTeams(golferName) {
+  const teamsWithGolfer = allTeams.filter(t => !t.seeded && (t.golfers || []).some(id => {
+    const g = GOLFERS.find(g => g.id === id);
+    return g && g.name === golferName;
+  }));
+
+  document.getElementById('golfer-teams-title').textContent = golferName;
+  document.getElementById('golfer-teams-subtitle').textContent =
+    `PICKED ON ${teamsWithGolfer.length} TEAM${teamsWithGolfer.length !== 1 ? 'S' : ''}`;
+
+  const listEl = document.getElementById('golfer-teams-list');
+  if (teamsWithGolfer.length === 0) {
+    listEl.innerHTML = '<p style="color:#aaa; font-style:italic; font-size:0.9rem;">Not picked by any team.</p>';
+  } else {
+    listEl.innerHTML = teamsWithGolfer.map((t, i) => {
+      const bg = i % 2 === 0 ? '#fff' : '#f8f5ee';
+      const golferNames = (t.golfers || []).map(id => GOLFERS.find(g => g.id === id)?.name).filter(Boolean);
+      return `<div style="background:${bg}; border-bottom:1px solid #e8e4da; padding:10px 12px;">
+        <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.92rem; color:var(--green);">${t.name}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.75rem; color:#888; margin-top:3px;">${golferNames.join(' · ')}</div>
+      </div>`;
+    }).join('');
+  }
+  openModal('golfer-teams-modal');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3464,5 +3758,14 @@ initApp();
       </div>
     </div>
   </div>
+
+<div class="modal-overlay" id="golfer-teams-modal">
+  <div class="modal" style="max-width:480px; max-height:80vh; overflow-y:auto;">
+    <button class="modal-close" onclick="closeModal('golfer-teams-modal')">×</button>
+    <h2 id="golfer-teams-title" style="font-size:1.2rem; font-family:'Libre Baskerville',serif; color:var(--green); margin-bottom:4px;"></h2>
+    <p id="golfer-teams-subtitle" style="font-size:0.8rem; color:#888; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-bottom:20px;"></p>
+    <div id="golfer-teams-list"></div>
+  </div>
+</div>
 </body>
 </html>
