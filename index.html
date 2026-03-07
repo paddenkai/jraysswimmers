@@ -1643,7 +1643,7 @@ let fetchInterval = null;
 // ═══════════════════════════════════════════════════════
 const GOLFERS = [
   { id: 1,   name: "Scottie Scheffler",          rank: 1,   earnings: 0, teeTime: "7:20 AM" },
-  { id: 2,   name: "Rory McIlroy",               rank: 2,   earnings: 0, teeTime: "10:30 AM" },
+  { id: 2,   name: "Rory McIlroy",               rank: 2,   earnings: 0, teeTime: "10:30 AM", withdrawn: true },
   { id: 3,   name: "Tommy Fleetwood",            rank: 3,   earnings: 0, teeTime: "9:50 AM" },
   { id: 4,   name: "Xander Schauffele",          rank: 4,   earnings: 0, teeTime: "7:05 AM" },
   { id: 5,   name: "Matt Fitzpatrick",           rank: 5,   earnings: 0, teeTime: "9:05 AM" },
@@ -1696,7 +1696,7 @@ const GOLFERS = [
   { id: 52,  name: "Chris Kirk",               rank: 52,  earnings: 0, teeTime: "10:50 AM" },
   { id: 53,  name: "Joel Dahmen",               rank: 53,  earnings: 0, teeTime: "4:40 AM" },
   { id: 54,  name: "Keith Mitchell",                rank: 54,  earnings: 0, teeTime: "7:40 AM" },
-  { id: 55,  name: "Austin Smotherman",               rank: 55,  earnings: 0, teeTime: "7:50 AM" },
+  { id: 55,  name: "Austin Smotherman",               rank: 55,  earnings: 0, teeTime: "7:50 AM", withdrawn: true },
   { id: 56,  name: "Ryo Hisatsune",            rank: 56,  earnings: 0, teeTime: "8:10 AM" },
   { id: 57,  name: "Brian Harman",             rank: 57,  earnings: 0, teeTime: "6:45 AM" },
   { id: 58,  name: "Patrick Rodgers",          rank: 58,  earnings: 0, teeTime: "5:10 AM" },
@@ -1785,10 +1785,11 @@ function parseESPNAPI(data) {
         }))
       })).filter(r => r.holes.length > 0);
 
-      // Detect cut/WD: ESPN status OR player only has 2 rounds while others have 3+
+      // Detect cut/WD: ESPN status OR hardcoded withdrawn flag in GOLFERS array
       const statusNameRaw = comp.status?.type?.name || '';
       const statusDesc = comp.status?.type?.description?.toLowerCase() || '';
-      const espnWD = statusNameRaw === 'STATUS_WITHDRAWN' || statusDesc.includes('withdrawn') || statusDesc.includes('wd');
+      const hardcodedWD = GOLFERS.some(g => normalizeName(g.name) === normalizeName(name) && g.withdrawn);
+      const espnWD = hardcodedWD || statusNameRaw === 'STATUS_WITHDRAWN' || statusDesc.includes('withdrawn') || statusDesc.includes('wd');
       const espnCut = espnWD || statusNameRaw === 'STATUS_CUT' || statusDesc.includes('cut');
 
       // Tee time — available before play starts
