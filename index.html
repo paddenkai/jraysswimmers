@@ -1815,26 +1815,40 @@ function parseESPNAPI(data) {
     const isPostCut = maxRounds >= 3 || adminSettings.officialCut; // Round 3+ OR admin manually triggered
 
     // Finalize cut/WD status
-    // A player missed the cut if they only have 2 rounds when others have 3+
-    // A player WD'd if they have fewer than 2 rounds
-    // Never mark a player as cut just because they haven't started the current round yet
     if (isPostCut) {
-      players.forEach(p => {
-        if (p.roundsPlayed < 2) {
-          p.wd = true; // never completed 2 rounds
-          p.cut = true;
-        } else if (p.roundsPlayed === 2 && (maxRounds >= 3 || adminSettings.officialCut)) {
-          p.cut = true; // completed exactly 2 rounds while field is on round 3+ = missed cut
+      if (maxRounds >= 3) {
+        // R3+ has started: anyone still on 2 rounds missed the cut
+        players.forEach(p => {
+          if (p.roundsPlayed < 2) { p.wd = true; p.cut = true; }
+          else if (p.roundsPlayed === 2) { p.cut = true; }
+        });
+      } else {
+        // officialCut toggled manually after R2: apply the actual cut rule
+        // Sort by score to find cut line
+        const completedTwo = players.filter(p => p.roundsPlayed >= 2 && !p.wd);
+        const sorted = [...completedTwo].sort((a, b) => a.scoreNum - b.scoreNum);
+        const leadScore = sorted.length ? sorted[0].scoreNum : 0;
+        const top10Cutoff = leadScore + 10;
+
+        // Find top 50 + ties cutoff score
+        let cutScore = null;
+        if (sorted.length >= 50) {
+          const fiftiethScore = sorted[49].scoreNum;
+          // include all ties at that score
+          cutScore = Math.max(fiftiethScore, top10Cutoff);
+        } else {
+          cutScore = top10Cutoff;
         }
-        // roundsPlayed === 3 while maxRounds === 4 is fine — they made cut, just haven't started R4
-      });
+
+        players.forEach(p => {
+          if (p.roundsPlayed < 2) { p.wd = true; p.cut = true; }
+          else if (!p.wd && p.scoreNum > cutScore) { p.cut = true; }
+        });
+      }
     } else if (maxRounds >= 2) {
       // During round 2, WD = only has R1 data
       players.forEach(p => {
-        if (p.roundsPlayed < 1) {
-          p.wd = true;
-          p.cut = true;
-        }
+        if (p.roundsPlayed < 1) { p.wd = true; p.cut = true; }
       });
     }
 
