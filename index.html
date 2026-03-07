@@ -1823,7 +1823,7 @@ function parseESPNAPI(data) {
         if (p.roundsPlayed < 2) {
           p.wd = true; // never completed 2 rounds
           p.cut = true;
-        } else if (p.roundsPlayed === 2 && maxRounds >= 3) {
+        } else if (p.roundsPlayed === 2 && (maxRounds >= 3 || adminSettings.officialCut)) {
           p.cut = true; // completed exactly 2 rounds while field is on round 3+ = missed cut
         }
         // roundsPlayed === 3 while maxRounds === 4 is fine — they made cut, just haven't started R4
