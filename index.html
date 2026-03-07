@@ -1818,10 +1818,28 @@ function parseESPNAPI(data) {
     // Finalize cut/WD status
     if (isPostCut) {
       if (maxRounds >= 3) {
-        // R3+ has started: anyone still on 2 rounds missed the cut
+        // R3+ has started: trust ESPN's cut status. Only fall back to roundsPlayed check
+        // for players ESPN hasn't explicitly flagged — and only if they have NO R3 data at all
+        // and the field is well into R3 (maxRounds >= 3 means at least someone finished R3)
+        // Use score-based cut rule — most reliable regardless of tee times or ESPN flags
+        const completedTwo = players.filter(p => p.roundsPlayed >= 2 && !p.wd);
+        const sorted2 = [...completedTwo].sort((a, b) => a.scoreNum - b.scoreNum);
+        const leadScore2 = sorted2.length ? sorted2[0].scoreNum : 0;
+        const top10Cutoff2 = leadScore2 + 10;
+        let cutScore2 = null;
+        if (sorted2.length >= 50) {
+          cutScore2 = Math.max(sorted2[49].scoreNum, top10Cutoff2);
+        } else {
+          cutScore2 = top10Cutoff2;
+        }
         players.forEach(p => {
-          if (p.roundsPlayed < 2) { p.wd = true; p.cut = true; }
-          else if (p.roundsPlayed === 2) { p.cut = true; }
+          if (p.wd) { p.cut = true; }
+          else if (p.roundsPlayed < 2) { p.wd = true; p.cut = true; }
+          else if (p.roundsPlayed === 2 && cutScore2 !== null && p.scoreNum > cutScore2) {
+            p.cut = true;
+          } else if (p.cut && p.roundsPlayed >= 3) {
+            // ESPN flagged cut but they have R3 data — trust ESPN (WD mid-round etc)
+          }
         });
       } else {
         // officialCut toggled manually after R2: apply the actual cut rule
