@@ -1733,6 +1733,7 @@ async function fetchESPNScores() {
     updateFetchStatus('success');
     renderLeaderboard();
     renderTournament();
+    updateStats();
   } catch(e) {
     console.warn('ESPN fetch failed:', e);
     updateFetchStatus('error');
