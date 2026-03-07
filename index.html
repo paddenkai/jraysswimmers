@@ -2659,8 +2659,8 @@ function renderLeaderboard() {
         const pos = g.liveData?.posDisplay;
         const isWD = g.liveData?.wd || g.withdrawn;
         const posStr = !isWD && hasLiveData && pos && pos !== '–'
-          ? `<span style="font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">${pos}</span>`
-          : isWD ? `<span style="font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">WD</span>` : '';
+          ? `<span style="color:var(--gold); font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">${pos}</span>`
+          : isWD ? `<span style="color:var(--gold); font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">WD</span>` : '';
         const earningsOrWD = isWD
           ? `<span style="color:var(--green-mid); margin-left:6px;">$0</span>`
           : (hasLiveData ? earned : '');
