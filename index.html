@@ -1823,22 +1823,26 @@ function parseESPNAPI(data) {
         // and the field is well into R3 (maxRounds >= 3 means at least someone finished R3)
         // Use score-based cut rule — most reliable regardless of tee times or ESPN flags
         const completedTwo = players.filter(p => p.roundsPlayed >= 2 && !p.wd);
-        const sorted2 = [...completedTwo].sort((a, b) => a.scoreNum - b.scoreNum);
-        const leadScore2 = sorted2.length ? sorted2[0].scoreNum : 0;
-        const top10Cutoff2 = leadScore2 + 10;
+        // Use R1+R2 score only — never let R3 scores shift the cut line
+        function getTwoRoundScore(p) {
+          if (p.roundsData && p.roundsData.length >= 2) {
+            return p.roundsData.slice(0, 2).reduce((sum, r) => {
+              return sum + (r.score === 'E' ? 0 : parseInt(r.score) || 0);
+            }, 0);
+          }
+          return p.scoreNum;
+        }
+        const sorted2 = [...completedTwo].sort((a, b) => getTwoRoundScore(a) - getTwoRoundScore(b));
         let cutScore2 = null;
         if (sorted2.length >= 50) {
-          cutScore2 = Math.max(sorted2[49].scoreNum, top10Cutoff2);
-        } else {
-          cutScore2 = top10Cutoff2;
+          cutScore2 = sorted2[49] ? getTwoRoundScore(sorted2[49]) : null;
         }
         players.forEach(p => {
           if (p.wd) { p.cut = true; }
           else if (p.roundsPlayed < 2) { p.wd = true; p.cut = true; }
-          else if (p.roundsPlayed === 2 && cutScore2 !== null && p.scoreNum > cutScore2) {
+          else if (p.roundsPlayed >= 3) { p.cut = false; } // started R3 = made cut, always
+          else if (p.roundsPlayed === 2 && cutScore2 !== null && getTwoRoundScore(p) > cutScore2) {
             p.cut = true;
-          } else if (p.cut && p.roundsPlayed >= 3) {
-            // ESPN flagged cut but they have R3 data — trust ESPN (WD mid-round etc)
           }
         });
       } else {
