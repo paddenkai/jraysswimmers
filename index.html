@@ -2283,7 +2283,7 @@ function renderGolferGrid(golfers) {
     ].filter(Boolean).join(' ');
     const earningsDisplay = isAmateur
       ? 'Amateur – $0' // Bennett is an amateur, earns no prize money
-      : (g.earnings > 0 ? '$' + g.earnings.toLocaleString() : g.cutMissed ? (window._isPostCut ? '<span style="color:var(--green-mid)">Cut</span>' : '<span style="color:var(--green-mid)">$0</span>') : '–');
+      : (g.earnings > 0 ? '$' + g.earnings.toLocaleString() : g.cutMissed ? '<span style="color:var(--green-mid)">$0</span>' : '–');
     return `
     <div class="${classes}" onclick="${isAmateur ? '' : `toggleGolfer(${g.id})`}">
       <div class="golfer-name">${g.name}</div>
@@ -2631,7 +2631,7 @@ function renderLeaderboard() {
         const parts = g.name.trim().split(' ');
         const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : g.name;
         const earned = g.earnings > 0 ? `<span style="color:var(--green); margin-left:6px;">$${Math.round(g.earnings).toLocaleString()}</span>` :
-                       g.cutMissed ? `<span style="color:var(--green-mid); margin-left:6px;">${window._isPostCut ? 'CUT' : '$0'}</span>` : '';
+                       g.cutMissed ? `<span style="color:var(--green-mid); margin-left:6px;">$0</span>` : '';
         const pos = g.liveData?.posDisplay;
         const isWD = g.liveData?.wd || g.withdrawn;
         const posStr = !isWD && hasLiveData && pos && pos !== '–'
@@ -3265,7 +3265,7 @@ function renderMyTeams() {
       ${!team.paid ? '<div style="padding:8px 20px; background:#fff8f0; border-bottom:1px solid #f0e8d8; font-size:0.75rem; color:#e67e22; font-family:\'DM Mono\',monospace; letter-spacing:0.5px;">⏳ Awaiting payment confirmation</div>' : ''}
       <div class="team-card-body">
         ${golfers.map(g => {
-          const earningsStr = g.earnings > 0 ? '$'+g.earnings.toLocaleString() : g.cutMissed ? (window._isPostCut ? 'CUT' : '$0') : (g.teeTime ? g.teeTime+' PST' : '–');
+          const earningsStr = g.earnings > 0 ? '$'+g.earnings.toLocaleString() : g.cutMissed ? '$0' : (g.teeTime ? g.teeTime+' PST' : '–');
           const earningsColor = g.earnings > 0 ? 'var(--green-mid)' : g.cutMissed ? 'var(--green-mid)' : '#aaa';
           return `<div class="golfer-list-item"><span>${g.name}</span><span class="golfer-list-earnings" style="color:${earningsColor};">${earningsStr}</span></div>`;
         }).join('')}
