@@ -2076,6 +2076,19 @@ async function initApp() {
   showPage('home');
   updateStats();
   if (TOURNAMENT_ACTIVE) startLiveFetching();
+  startChatNotificationListener();
+}
+
+function startChatNotificationListener() {
+  sb.channel('chat_notifications_channel')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, payload => {
+      if (currentUser && payload.new.user_email === currentUser.email) return;
+      if (!document.getElementById('page-chat')?.classList.contains('active')) {
+        const badge = document.getElementById('chat-badge');
+        if (badge) badge.style.display = 'block';
+      }
+    })
+    .subscribe();
 }
 
 async function loadTeams() {
@@ -3065,12 +3078,14 @@ function appendChatMessage(msg) {
   const messagesEl = document.getElementById('chat-messages');
   if (!messagesEl) return;
   const isMe = currentUser && msg.user_email === currentUser.email;
-  const time = new Date(msg.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const msgDate = new Date(msg.created_at);
+  const time = msgDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const date = `${msgDate.getMonth()+1}/${msgDate.getDate()}`;
   const div = document.createElement('div');
   div.style.cssText = `display:flex; flex-direction:column; align-items:${isMe ? 'flex-end' : 'flex-start'};`;
   div.innerHTML = `
     <div style="font-size:0.68rem; color:rgba(255,255,255,0.35); font-family:'DM Mono',monospace; margin-bottom:3px; letter-spacing:0.3px; ${isMe ? 'text-align:right;' : ''}">
-      ${isMe ? 'You' : escapeHtml(msg.user_name)} · ${time}
+      ${isMe ? 'You' : escapeHtml(msg.user_name)} · ${date} · ${time}
     </div>
     <div style="background:${isMe ? 'var(--gold)' : 'rgba(255,255,255,0.12)'}; color:#fff; border:1px solid ${isMe ? 'transparent' : 'rgba(255,255,255,0.15)'}; border-radius:${isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px'}; padding:10px 14px; max-width:78%; font-family:'Libre Baskerville',serif; font-size:0.88rem; line-height:1.45; word-break:break-word; box-shadow:${isMe ? '0 2px 10px rgba(232,119,34,0.3)' : '0 1px 4px rgba(0,0,0,0.2)'};">
       ${escapeHtml(msg.message)}
