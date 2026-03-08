@@ -599,7 +599,7 @@
 
     /* ─── NAV ─── */
     #music-player { display: none !important; }
-    #hamburger { display: flex !important; }
+    #hamburger-wrap { display: block !important; }
     .ham-line { display: block; width: 24px; height: 2px; background: var(--gold-light); border-radius: 2px; transition: all 0.25s; }
     #hamburger.open .ham-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     #hamburger.open .ham-line:nth-child(2) { opacity: 0; }
@@ -683,12 +683,14 @@
 <header>
   <div class="header-inner">
     <div class="logo" onclick="showPage('home'); closeMobileNav();">J.Ray's Swimmers</div>
-    <button id="hamburger" onclick="toggleMobileNav()" aria-label="Menu" style="display:none; position:relative; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; align-items:center; justify-content:center;">
-      <span class="ham-line"></span>
-      <span class="ham-line"></span>
-      <span class="ham-line"></span>
-      <span id="mobile-chat-badge" style="display:none; position:absolute; top:2px; right:2px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(232,119,34,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span>
-    </button>
+    <div style="position:relative; display:none;" id="hamburger-wrap">
+      <button id="hamburger" onclick="toggleMobileNav()" aria-label="Menu" style="display:flex; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; align-items:center; justify-content:center;">
+        <span class="ham-line"></span>
+        <span class="ham-line"></span>
+        <span class="ham-line"></span>
+      </button>
+      <span id="mobile-chat-badge" style="display:none; position:absolute; top:2px; right:2px; width:11px; height:11px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(232,119,34,0.9); border:2px solid var(--green); animation:pulse-dot 1.5s infinite; pointer-events:none; z-index:9999;"></span>
+    </div>
     <nav id="nav">
       <button id="mobile-nav-close" onclick="closeMobileNav()">✕</button>
       <button onclick="showPage('home')" id="nav-home">Home</button>
