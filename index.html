@@ -517,6 +517,45 @@
   .highlight-row { background: rgba(201,168,76,0.12) !important; }
   .highlight-row td { font-weight: 600; }
 
+  /* ─── LIVE CHANGE ANIMATIONS ─── */
+  @keyframes earningsFlash {
+    0%   { background: rgba(232,119,34,0.0); }
+    15%  { background: rgba(232,119,34,0.28); }
+    50%  { background: rgba(232,119,34,0.18); }
+    100% { background: rgba(232,119,34,0.0); }
+  }
+  @keyframes firstPlacePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(232,119,34,0.0); }
+    20%  { box-shadow: 0 0 0 8px rgba(232,119,34,0.35); }
+    60%  { box-shadow: 0 0 0 14px rgba(232,119,34,0.12); }
+    100% { box-shadow: 0 0 0 20px rgba(232,119,34,0.0); }
+  }
+  @keyframes possBadgeIn {
+    0%   { opacity: 0; transform: translateY(-6px) scale(0.8); }
+    30%  { opacity: 1; transform: translateY(0) scale(1.15); }
+    60%  { transform: translateY(0) scale(1); }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  tr.earnings-changed td { animation: earningsFlash 2.2s ease forwards; }
+  tr.took-first-place td { animation: earningsFlash 2.2s ease forwards; }
+  tr.took-first-place .rank-badge { animation: firstPlacePulse 2.2s ease forwards; }
+  .pos-change-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 1px 5px;
+    border-radius: 8px;
+    margin-left: 5px;
+    vertical-align: middle;
+    animation: possBadgeIn 3.5s ease forwards;
+    pointer-events: none;
+  }
+  .pos-change-badge.up   { background: rgba(46,180,100,0.18); color: #1a7a42; }
+  .pos-change-badge.down { background: rgba(200,60,60,0.15);  color: #a02020; }
+
   /* ─── PAYMENT ─── */
 
 
@@ -1703,6 +1742,8 @@ function getPayoutForPosition(pos, tiedCount) {
 
 // Live scoring state — populated by ESPN fetch
 let liveScores = {}; // { "Scottie Scheffler": { pos: 1, tied: 1, earnings: 3600000, score: "-17", today: "-6", thru: "F" } }
+let _prevEarnings = {};   // teamId -> earnings, persists between renders
+let _prevPositions = {};  // teamId -> pos, persists between renders
 let lastFetchTime = null;
 let fetchInterval = null;
 
@@ -2930,6 +2971,51 @@ function renderLeaderboard() {
 
   if (filtered.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#aaa; font-style:italic;">No teams match your search.</td></tr>`;
+  }
+
+  // ── Live change animations ──
+  if (hasLiveData) {
+    filtered.forEach((team, idx) => {
+      const row = tbody.rows[idx];
+      if (!row) return;
+      const { pos } = positionMap.get(team.id) || {};
+      const earnings = getTeamEarnings(team);
+      const prevEarn = _prevEarnings[team.id];
+      const prevPos  = _prevPositions[team.id];
+      const earnChanged = prevEarn !== undefined && prevEarn !== earnings;
+      const posChanged  = prevPos  !== undefined && prevPos  !== pos;
+
+      // Flash the row if earnings changed
+      if (earnChanged) {
+        row.classList.remove('earnings-changed', 'took-first-place');
+        void row.offsetWidth; // force reflow to restart animation
+        row.classList.add(pos === 1 && !positionMap.get(team.id)?.isTied ? 'took-first-place' : 'earnings-changed');
+      }
+
+      // Position change badge next to team name
+      if (posChanged && pos && prevPos) {
+        const delta = prevPos - pos; // positive = moved up
+        if (delta !== 0) {
+          const nameTd = row.cells[1];
+          if (nameTd) {
+            // Remove any existing badge
+            nameTd.querySelectorAll('.pos-change-badge').forEach(b => b.remove());
+            const badge = document.createElement('span');
+            badge.className = 'pos-change-badge ' + (delta > 0 ? 'up' : 'down');
+            badge.textContent = (delta > 0 ? '▲' : '▼') + Math.abs(delta);
+            nameTd.appendChild(badge);
+            // Auto-remove after animation completes
+            setTimeout(() => badge.remove(), 3600);
+          }
+        }
+      }
+    });
+
+    // Snapshot current state for next render
+    filtered.forEach(team => {
+      _prevEarnings[team.id] = getTeamEarnings(team);
+      _prevPositions[team.id] = positionMap.get(team.id)?.pos;
+    });
   }
 }
 
