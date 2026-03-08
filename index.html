@@ -2082,17 +2082,61 @@ async function initApp() {
   startChatNotificationListener();
 }
 
-function startChatNotificationListener() {
-  sb.channel('chat_notifications_channel')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, payload => {
-      if (currentUser && payload.new.user_email === currentUser.email) return;
+let lastChatMsgId = null;
+
+function showChatBadge() {
+  const badge = document.getElementById('chat-badge');
+  if (badge) badge.style.display = 'block';
+  const mb = document.getElementById('mobile-chat-badge');
+  if (mb) mb.style.display = 'block';
+}
+
+function hideChatBadge() {
+  const badge = document.getElementById('chat-badge');
+  if (badge) badge.style.display = 'none';
+  const mb = document.getElementById('mobile-chat-badge');
+  if (mb) mb.style.display = 'none';
+}
+
+async function pollChatNotifications() {
+  try {
+    const query = sb.from('chat_messages').select('id, user_email').order('id', { ascending: false }).limit(1);
+    const { data } = await query;
+    if (!data || data.length === 0) return;
+    const latest = data[0];
+    // Skip own messages
+    if (currentUser && latest.user_email === currentUser.email) {
+      lastChatMsgId = latest.id;
+      return;
+    }
+    // First load — just record it, don't badge
+    if (lastChatMsgId === null) { lastChatMsgId = latest.id; return; }
+    // New message arrived
+    if (latest.id !== lastChatMsgId) {
+      lastChatMsgId = latest.id;
       if (!document.getElementById('page-chat')?.classList.contains('active')) {
-        const badge = document.getElementById('chat-badge');
-        if (badge) badge.style.display = 'block';
-        const mb2 = document.getElementById('mobile-chat-badge'); if (mb2) mb2.style.display = 'block';
+        showChatBadge();
       }
-    })
-    .subscribe();
+    }
+  } catch(e) {}
+}
+
+function startChatNotificationListener() {
+  // Poll every 15 seconds — works reliably on mobile Safari where websockets drop
+  pollChatNotifications();
+  setInterval(pollChatNotifications, 15000);
+
+  // Also try realtime as a bonus (works on desktop)
+  try {
+    sb.channel('chat_notifications_channel')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, payload => {
+        if (currentUser && payload.new.user_email === currentUser.email) return;
+        if (!document.getElementById('page-chat')?.classList.contains('active')) {
+          showChatBadge();
+        }
+      })
+      .subscribe();
+  } catch(e) {}
 }
 
 async function loadTeams() {
@@ -2190,7 +2234,7 @@ async function showPage(name) {
   if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); }
   if (name === 'tournament') renderTournament();
   if (name === 'stats') { await loadTeams(); renderStats('picks'); }
-  if (name === 'chat') { initChat(); const badge = document.getElementById('chat-badge'); if (badge) badge.style.display = 'none'; const mb = document.getElementById('mobile-chat-badge'); if (mb) mb.style.display = 'none'; }
+  if (name === 'chat') { initChat(); hideChatBadge(); }
   if (name === 'builder') { await loadTeams(); renderBuilder(); }
   if (name === 'profile') renderProfile();
   if (name === 'payment') { renderPaymentSummary(); }
@@ -3072,8 +3116,7 @@ async function initChat() {
       scrollChatToBottom();
       // Show badge if user is not currently on the chat page
       if (!document.getElementById('page-chat')?.classList.contains('active')) {
-        document.getElementById('chat-badge').style.display = 'block';
-        const mb = document.getElementById('mobile-chat-badge'); if (mb) mb.style.display = 'block';
+        showChatBadge();
       }
     })
     .subscribe();
