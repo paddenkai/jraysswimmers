@@ -3402,7 +3402,8 @@ function renderStats(sortBy = 'picks') {
   if (sortBy === 'picks') {
     entries.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   } else {
-    entries.sort((a, b) => a[0].localeCompare(b[0]));
+    const lastName = n => { const p = n.trim().split(' '); return p[p.length-1]; };
+    entries.sort((a, b) => lastName(a[0]).localeCompare(lastName(b[0])));
   }
 
   // Update button styles
