@@ -519,10 +519,10 @@
 
   /* ─── LIVE CHANGE ANIMATIONS ─── */
   @keyframes earningsFlash {
-    0%   { background: rgba(232,119,34,0.0); }
-    15%  { background: rgba(232,119,34,0.28); }
-    50%  { background: rgba(232,119,34,0.18); }
-    100% { background: rgba(232,119,34,0.0); }
+    0%   { background: rgba(90,58,138,0.0); }
+    15%  { background: rgba(90,58,138,0.45); }
+    50%  { background: rgba(90,58,138,0.28); }
+    100% { background: rgba(90,58,138,0.0); }
   }
   @keyframes firstPlacePulse {
     0%   { box-shadow: 0 0 0 0 rgba(232,119,34,0.0); }
@@ -554,6 +554,18 @@
   }
   .pos-change-badge.up   { background: rgba(46,180,100,0.18); color: #1a7a42; }
   .pos-change-badge.down { background: rgba(200,60,60,0.15);  color: #a02020; }
+  .golfer-pos-arrow {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    margin-left: 5px;
+    vertical-align: middle;
+    animation: possBadgeIn 3.5s ease forwards;
+    pointer-events: none;
+  }
+  .golfer-pos-arrow.up   { color: #2eb464; }
+  .golfer-pos-arrow.down { color: #c03c3c; }
 
   /* ─── PAYMENT ─── */
 
@@ -1743,6 +1755,7 @@ function getPayoutForPosition(pos, tiedCount) {
 let liveScores = {}; // { "Scottie Scheffler": { pos: 1, tied: 1, earnings: 3600000, score: "-17", today: "-6", thru: "F" } }
 let _prevEarnings = {};       // teamId -> earnings, persists between renders
 let _prevGolferEarnings = {};  // teamId_golferId -> earnings, for per-golfer flash
+let _prevGolferPos = {};       // golferId -> posDisplay, for per-golfer arrows
 let _prevPositions = {};  // teamId -> pos, persists between renders
 let lastFetchTime = null;
 let fetchInterval = null;
@@ -2963,7 +2976,7 @@ function renderLeaderboard() {
           ? `<span style="color:var(--green-mid); margin-left:6px;">$0</span>`
           : (hasLiveData ? earned : '');
         const border = i < arr.length - 1 ? 'border-bottom:1px solid rgba(0,0,0,0.07); padding-bottom:3px; margin-bottom:3px;' : '';
-        return `<div id="gf-${team.id}-${g.id}" style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}</div>`;
+        return `<div id="gf-${team.id}-${g.id}" style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}<span class="golfer-pos-arrow" id="gfa-${team.id}-${g.id}"></span></div>`;
       }).filter(Boolean).join('') : '<span style="color:#bbb;font-style:italic;font-size:0.78rem;">Hidden until tournament starts</span>'}</div></td>
       <td style="text-align:center">${earningsDisplay}</td>
     </tr>`;
@@ -2983,21 +2996,46 @@ function renderLeaderboard() {
       const prevPos  = _prevPositions[team.id];
       const posChanged = prevPos !== undefined && prevPos !== pos;
 
-      // Flash individual golfer divs whose earnings changed
+      // Flash individual golfer divs whose earnings changed + show position arrows
       team.golfers.forEach(gid => {
         const g = GOLFERS.find(g => g.id === gid);
         if (!g) return;
         const key = `${team.id}_${gid}`;
         const prevGEarn = _prevGolferEarnings[key];
+        const prevGPos  = _prevGolferPos[gid];
+        const curPos    = g.liveData?.posDisplay;
+
+        // Earnings flash
         if (prevGEarn !== undefined && prevGEarn !== g.earnings) {
           const div = document.getElementById(`gf-${team.id}-${gid}`);
           if (div) {
             div.classList.remove('golfer-earnings-changed');
-            void div.offsetWidth; // force reflow
+            void div.offsetWidth;
             div.classList.add('golfer-earnings-changed');
           }
         }
+
+        // Position arrow — only show if pos changed and both are numeric
+        if (prevGPos !== undefined && prevGPos !== curPos) {
+          const toNum = p => { if (!p || p === '–') return null; const n = parseInt((p||'').replace(/^T/,'')); return isNaN(n) ? null : n; };
+          const prev = toNum(prevGPos), cur = toNum(curPos);
+          if (prev !== null && cur !== null && prev !== cur) {
+            const arrow = document.getElementById(`gfa-${team.id}-${gid}`);
+            if (arrow) {
+              const delta = prev - cur; // positive = moved up (lower number = better)
+              arrow.className = 'golfer-pos-arrow ' + (delta > 0 ? 'up' : 'down');
+              arrow.textContent = (delta > 0 ? '▲' : '▼') + Math.abs(delta);
+              // Reset animation
+              arrow.style.animation = 'none';
+              void arrow.offsetWidth;
+              arrow.style.animation = '';
+              setTimeout(() => { arrow.textContent = ''; arrow.className = 'golfer-pos-arrow'; }, 3600);
+            }
+          }
+        }
+
         _prevGolferEarnings[key] = g.earnings;
+        _prevGolferPos[gid] = curPos;
       });
 
       // 1st place pulse on rank badge
