@@ -700,6 +700,7 @@
       <button onclick="showPage('tournament')" id="nav-tournament">Live Scores</button>
       <button onclick="showPage('stats')" id="nav-stats">Player Stats</button>
       <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(232,119,34,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
+      <button onclick="showPage('history')" id="nav-history">History</button>
       <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem;">⚙ Admin</button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
       <button id="nav-logout" onclick="logout()" style="display:none">Sign Out</button>
@@ -1016,6 +1017,33 @@
 
   <!-- MY TEAMS -->
 
+  <!-- HISTORY PAGE -->
+  <div id="page-history" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Tournament History</div>
+        <div class="section-sub">J.Ray's Swimmers · All-Time Results (March 2026–)</div>
+      </div>
+    </div>
+
+    <!-- Tournament list -->
+    <div id="history-tournament-list"></div>
+
+    <!-- Tournament detail view (shown when a tournament is clicked) -->
+    <div id="history-detail" style="display:none;">
+      <button onclick="showHistoryList()" style="background:none; border:none; color:var(--green-mid); font-family:'DM Mono',monospace; font-size:0.78rem; cursor:pointer; padding:0; margin-bottom:20px; letter-spacing:0.5px;">← Back to all tournaments</button>
+      <div id="history-detail-title" style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--green); margin-bottom:6px;"></div>
+      <div id="history-detail-sub" style="font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--green-mid); letter-spacing:1px; margin-bottom:24px;"></div>
+      <div id="history-detail-table"></div>
+    </div>
+
+    <div id="history-empty" style="display:none; text-align:center; padding:60px 20px; color:#aaa;">
+      <div style="font-size:2.5rem; margin-bottom:12px;">🏆</div>
+      <div style="font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--green-mid);">No completed tournaments yet</div>
+
+    </div>
+  </div>
+
   <div id="page-chat" class="page" style="min-height:calc(100vh - 60px);">
     <div style="max-width:680px; margin:0 auto; padding:32px 16px 24px; display:flex; flex-direction:column; height:calc(100vh - 60px);">
 
@@ -1105,6 +1133,32 @@
       <div class="empty-icon">🏌️</div>
       <p>You haven't entered any teams yet.<br>Build your first team now!</p>
       <button class="btn btn-gold" onclick="showPage('builder')" style="margin-top:16px;">Build a Team →</button>
+    </div>
+
+    <!-- Career Stats -->
+    <div id="career-stats-bar" style="display:none; background:var(--cream); border:1px solid rgba(59,31,110,0.12); border-radius:8px; padding:16px 20px; margin-top:32px; margin-bottom:24px;">
+      <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:2px; color:var(--green-mid); text-transform:uppercase; margin-bottom:12px;">Career Stats</div>
+      <div style="display:flex; gap:28px; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div id="career-tournaments" style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--green);">0</div>
+          <div style="font-size:0.62rem; font-family:'DM Mono',monospace; letter-spacing:1px; color:var(--green-mid); text-transform:uppercase;">Tournaments</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="career-wins" style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--green);">0</div>
+          <div style="font-size:0.62rem; font-family:'DM Mono',monospace; letter-spacing:1px; color:var(--green-mid); text-transform:uppercase;">Wins</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="career-best-finish" style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--green);">–</div>
+          <div style="font-size:0.62rem; font-family:'DM Mono',monospace; letter-spacing:1px; color:var(--green-mid); text-transform:uppercase;">Best Finish</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tournament History -->
+    <div id="tournament-history-section" style="display:none; margin-bottom:32px;">
+      <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--green); margin-bottom:16px;">Tournament History</div>
+      <div id="tournament-history-list"></div>
     </div>
 
 
@@ -1245,6 +1299,18 @@
         </div>
 
       </div>
+    <!-- Lock Tournament Results -->
+    <div id="lock-tournament-panel" style="background:#fff8f0; border:1.5px solid var(--gold); border-radius:8px; padding:16px 20px; margin-bottom:20px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+        <div>
+          <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">🔒 Lock Tournament Results</div>
+          <div style="font-size:0.78rem; color:#888; margin-top:2px;">Saves final golfer positions & earnings to each team. Run once after the tournament ends so profile history is preserved.</div>
+          <div id="lock-status" style="font-size:0.75rem; font-family:'DM Mono',monospace; margin-top:6px; color:#888;"></div>
+        </div>
+        <button onclick="lockTournamentResults()" id="lock-btn" style="background:var(--gold); color:white; border:none; border-radius:6px; padding:10px 20px; font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:1px; cursor:pointer; white-space:nowrap; flex-shrink:0;">LOCK RESULTS</button>
+      </div>
+    </div>
+
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <input type="text" id="admin-search" placeholder="Search by name or email..." oninput="renderAdminTable()"
         style="padding:9px 14px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:var(--cream); flex:1; min-width:200px;" />
@@ -1538,6 +1604,7 @@ function initAdminToggles() {
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
 const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
+const TOURNAMENT_NAME = 'Arnold Palmer Invitational 2026'; // must match tournament column in DB
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
@@ -2050,6 +2117,134 @@ function normalizeName(s) {
 }
 
 // Load session on startup
+
+// ═══════════════════════════════════════════════════════
+// HISTORY PAGE
+// ═══════════════════════════════════════════════════════
+
+function renderHistoryPage() {
+  document.getElementById('history-tournament-list').style.display = 'block';
+  document.getElementById('history-detail').style.display = 'none';
+  document.getElementById('history-empty').style.display = 'none';
+
+  // Get all teams with locked results
+  const lockedTeams = allTeams.filter(t => t.results && t.paid);
+
+  if (lockedTeams.length === 0) {
+    document.getElementById('history-tournament-list').style.display = 'none';
+    document.getElementById('history-empty').style.display = 'block';
+    return;
+  }
+
+  // Group by tournament
+  const byTournament = {};
+  lockedTeams.forEach(t => {
+    const name = t.results.tournament || t.tournament || 'Unknown Tournament';
+    if (!byTournament[name]) byTournament[name] = [];
+    byTournament[name].push(t);
+  });
+
+  const tournaments = Object.keys(byTournament).sort((a, b) => {
+    // Sort by lock date descending (most recent first)
+    const aDate = byTournament[a][0].results?.lockedAt || '';
+    const bDate = byTournament[b][0].results?.lockedAt || '';
+    return bDate.localeCompare(aDate);
+  });
+
+  const listHTML = tournaments.map(tName => {
+    const tTeams = byTournament[tName];
+    const winner = tTeams.find(t => t.results.poolRank === 1);
+    const winnerName = winner ? winner.name : '–';
+    const winnerOwner = winner ? winner.owner.split('@')[0] : '';
+    const totalPot = tTeams.reduce((sum, t) => sum + (t.results.teamEarnings || 0), 0);
+    const lockedDate = tTeams[0].results?.lockedAt ? new Date(tTeams[0].results.lockedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+
+    return `<div onclick="showHistoryDetail('${tName.replace(/'/g, "\'")}')"
+      style="background:var(--cream); border:1px solid rgba(59,31,110,0.12); border-radius:8px; padding:18px 22px; margin-bottom:12px; cursor:pointer; transition:box-shadow 0.2s; display:flex; align-items:center; justify-content:space-between; gap:16px;"
+      onmouseover="this.style.boxShadow='0 4px 16px rgba(59,31,110,0.12)'" onmouseout="this.style.boxShadow='none'">
+      <div>
+        <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green);">${tName}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--green-mid); margin-top:4px; letter-spacing:0.5px;">${tTeams.length} teams · ${lockedDate}</div>
+        <div style="font-size:0.8rem; color:#666; margin-top:6px; font-family:'Libre Baskerville',serif;">🏆 <strong>${winnerName}</strong>${winnerOwner ? ` <span style="color:#aaa; font-size:0.72rem;">(${winnerOwner})</span>` : ''}</div>
+      </div>
+      <div style="text-align:right; flex-shrink:0;">
+        <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green);">$${Math.round(totalPot).toLocaleString()}</div>
+        <div style="font-size:0.62rem; font-family:'DM Mono',monospace; color:var(--green-mid); letter-spacing:1px; text-transform:uppercase;">Total Earnings</div>
+        <div style="color:var(--green-mid); font-size:0.8rem; margin-top:6px;">View →</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('history-tournament-list').innerHTML = listHTML;
+}
+
+function showHistoryDetail(tName) {
+  document.getElementById('history-tournament-list').style.display = 'none';
+  document.getElementById('history-detail').style.display = 'block';
+
+  const tTeams = allTeams.filter(t => t.paid && t.results && (t.results.tournament || t.tournament) === tName);
+  const sorted = [...tTeams].sort((a, b) => a.results.poolRank - b.results.poolRank);
+
+  document.getElementById('history-detail-title').textContent = tName;
+  document.getElementById('history-detail-sub').textContent = `${sorted.length} TEAMS · FINAL STANDINGS`;
+
+  const rowsHTML = sorted.map((t, i) => {
+    const snap = t.results;
+    const rank = snap.poolRank;
+    const isFirst = rank === 1;
+    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+
+    const golferRows = (snap.golfers || []).map(sg => {
+      const parts = sg.name.trim().split(' ');
+      const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : sg.name;
+      const isZero = sg.cut || sg.wd || sg.earnings === 0;
+      const posLabel = sg.wd ? 'WD' : (sg.cut ? 'MC' : (sg.position && sg.position !== '–' ? sg.position : ''));
+      const posStr = posLabel ? `<span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.65rem; margin-right:4px;">${posLabel}</span>` : '';
+      const earningsStr = isZero ? `<span style="color:var(--green-mid);">$0</span>` : `<span style="color:var(--green);">$${Math.round(sg.earnings).toLocaleString()}</span>`;
+      return `<div style="display:flex; justify-content:space-between; align-items:center; padding:2px 0; font-size:0.76rem;">
+        <span style="color:#666; font-family:'Libre Baskerville',serif;">${posStr}${shortName}</span>
+        <span style="font-family:'DM Mono',monospace; font-size:0.72rem;">${earningsStr}</span>
+      </div>`;
+    }).join('');
+
+    return `<tr style="${isFirst ? 'background:rgba(232,119,34,0.06);' : ''}">
+      <td style="text-align:center;"><span class="rank-badge ${rankClass}">${rank}</span></td>
+      <td>
+        <div style="font-weight:700; font-size:0.9rem; color:var(--green); font-family:'Libre Baskerville',serif;">${t.name}</div>
+        <div style="font-size:0.7rem; color:#aaa; font-family:'DM Mono',monospace;">${t.owner.split('@')[0]}</div>
+      </td>
+      <td>
+        <div style="background:rgba(59,31,110,0.04); border-radius:4px; padding:6px 10px;">
+          ${golferRows}
+        </div>
+      </td>
+      <td style="text-align:right;">
+        <div style="font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--green);">$${Math.round(snap.teamEarnings).toLocaleString()}</div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('history-detail-table').innerHTML = `
+    <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+      <table class="leaderboard-table" style="min-width:500px;">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th>Team</th>
+            <th>Golfers</th>
+            <th style="text-align:right;">Earnings</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHTML}</tbody>
+      </table>
+    </div>`;
+}
+
+function showHistoryList() {
+  document.getElementById('history-detail').style.display = 'none';
+  document.getElementById('history-tournament-list').style.display = 'block';
+}
+
 async function initApp() {
   // Check if this is a password reset redirect from Supabase
   const hash = window.location.hash;
@@ -2225,7 +2420,7 @@ async function showPage(name) {
   if (el) el.classList.add('active');
   // Highlight active nav button
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  const navMap = { home: 'nav-home', leaderboard: 'nav-leaderboard', tournament: 'nav-tournament', builder: 'nav-enter', myteams: 'nav-myteams', profile: 'nav-myteams', admin: 'nav-admin' };
+  const navMap = { home: 'nav-home', leaderboard: 'nav-leaderboard', history: 'nav-history', tournament: 'nav-tournament', builder: 'nav-enter', myteams: 'nav-myteams', profile: 'nav-myteams', admin: 'nav-admin' };
   const activeBtn = document.getElementById(navMap[name]);
   if (activeBtn) activeBtn.classList.add('active');
   window.scrollTo(0, 0);
@@ -2234,6 +2429,7 @@ async function showPage(name) {
   if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); }
   if (name === 'tournament') renderTournament();
   if (name === 'stats') { await loadTeams(); renderStats('picks'); }
+  if (name === 'history') { renderHistoryPage(); }
   if (name === 'chat') { initChat(); hideChatBadge(); }
   if (name === 'builder') { await loadTeams(); renderBuilder(); }
   if (name === 'profile') renderProfile();
@@ -3462,15 +3658,135 @@ async function saveEditPicks() {
 function renderProfile() {
   if (!currentUser) return;
   const avatarEl = document.getElementById('profile-avatar');
-  if (!avatarEl) return; // not on page yet
+  if (!avatarEl) return;
   avatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
   document.getElementById('profile-name').textContent = currentUser.name;
   document.getElementById('profile-email').textContent = currentUser.email;
+
   const myTeams = allTeams.filter(t => t.owner === currentUser.email && t.paid);
   document.getElementById('profile-teams').textContent = myTeams.length;
+
+  // Best rank in current tournament
   const sorted = allTeams.filter(t=>t.paid).sort((a,b)=>getTeamEarnings(b)-getTeamEarnings(a));
   const best = sorted.findIndex(t => t.owner === currentUser.email);
   document.getElementById('profile-best-rank').textContent = best >= 0 ? '#'+(best+1) : '–';
+
+  // Career stats + tournament history
+  renderCareerStats(myTeams);
+}
+
+function renderCareerStats(myTeams) {
+  if (!myTeams || myTeams.length === 0) return;
+
+  // Group my teams by tournament
+  const byTournament = {};
+  myTeams.forEach(t => {
+    const tName = t.tournament || 'Unknown Tournament';
+    if (!byTournament[tName]) byTournament[tName] = [];
+    byTournament[tName].push(t);
+  });
+
+  const tournaments = Object.keys(byTournament);
+  if (tournaments.length === 0) return;
+
+  let totalWins = 0;
+  let bestFinishNum = Infinity;
+  let totalEarnings = 0;
+
+  const historyHTML = tournaments.map(tName => {
+    const tTeams = byTournament[tName];
+
+    // All paid teams for this tournament (for ranking)
+    const allTourneyTeams = allTeams.filter(t => t.paid && (t.tournament || 'Unknown Tournament') === tName);
+    const allSorted = allTourneyTeams.sort((a,b) => getTeamEarnings(b) - getTeamEarnings(a));
+
+    // Best pool finish — prefer locked snapshot, fall back to live ranking
+    let bestPoolFinish = Infinity;
+    tTeams.forEach(t => {
+      const rank = t.results ? t.results.poolRank : allSorted.findIndex(s => s.id === t.id) + 1;
+      if (rank > 0 && rank < bestPoolFinish) bestPoolFinish = rank;
+    });
+
+    const isWin = bestPoolFinish === 1;
+    if (isWin) totalWins++;
+    if (bestPoolFinish < bestFinishNum) bestFinishNum = bestPoolFinish;
+
+    const tEarnings = tTeams.reduce((sum, t) => sum + (t.results ? t.results.teamEarnings : getTeamEarnings(t)), 0);
+    totalEarnings += tEarnings;
+
+    const finishLabel = bestPoolFinish === Infinity ? '–' : (bestPoolFinish === 1 ? '🏆 1st' : `#${bestPoolFinish}`);
+    const finishColor = isWin ? 'var(--gold)' : 'var(--green)';
+
+    // Build team rows — use locked snapshot if available, else live data
+    const teamRows = tTeams.map(t => {
+      const snap = t.results;
+      const earnings = snap ? snap.teamEarnings : getTeamEarnings(t);
+      const rankLabel = snap ? `#${snap.poolRank}` : (allSorted.findIndex(s => s.id === t.id) >= 0 ? `#${allSorted.findIndex(s => s.id === t.id)+1}` : '–');
+      const golferRows = (snap ? snap.golfers : t.golfers.map(id => {
+        const g = GOLFERS.find(g => g.id === id);
+        if (!g) return null;
+        return { name: g.name, earnings: g.earnings || 0, position: g.liveData?.posDisplay || '–', wd: g.withdrawn || g.liveData?.wd, cut: g.cutMissed };
+      }).filter(Boolean)).map(sg => {
+        const parts = sg.name.trim().split(' ');
+        const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : sg.name;
+        const isZero = sg.cut || sg.wd || sg.earnings === 0;
+        const posLabel = sg.wd ? 'WD' : (sg.cut ? 'MC' : (sg.position && sg.position !== '–' ? sg.position : ''));
+        const posStr = posLabel ? `<span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.68rem; margin-right:5px;">${posLabel}</span>` : '';
+        const earningsStr = isZero && sg.earnings === 0 ? '<span style="color:var(--green-mid);">$0</span>' : `<span style="color:var(--green);">$${Math.round(sg.earnings).toLocaleString()}</span>`;
+        return `<div style="display:flex; justify-content:space-between; align-items:center; padding:3px 0; font-size:0.78rem;">
+          <span style="color:#555; font-family:'Libre Baskerville',serif;">${posStr}${shortName}</span>
+          <span style="font-family:'DM Mono',monospace; font-size:0.75rem;">${earningsStr}</span>
+        </div>`;
+      }).join('');
+
+      return `<div style="padding:10px 0; border-bottom:1px solid rgba(59,31,110,0.07);">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:6px;">
+          <div style="font-weight:700; font-size:0.88rem; color:var(--green); font-family:'Libre Baskerville',serif;">${t.name}</div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--green);">$${Math.round(earnings).toLocaleString()}</div>
+            <div style="font-size:0.68rem; font-family:'DM Mono',monospace; color:#aaa;">Pool ${rankLabel}</div>
+          </div>
+        </div>
+        <div style="background:rgba(59,31,110,0.04); border-radius:5px; padding:6px 10px;">
+          ${golferRows}
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div style="background:var(--cream); border:1px solid rgba(59,31,110,0.12); border-radius:8px; margin-bottom:12px; overflow:hidden;">
+      <div onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.querySelector('.hist-arrow').textContent = this.nextElementSibling.style.display === 'none' ? '▸' : '▾';"
+           style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; cursor:pointer; user-select:none;">
+        <div>
+          <div style="font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--green);">${tName}</div>
+          <div style="font-size:0.7rem; font-family:'DM Mono',monospace; color:var(--green-mid); margin-top:2px;">${tTeams.length} team${tTeams.length !== 1 ? 's' : ''} · $${Math.round(tEarnings).toLocaleString()} earned</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:${finishColor};">${finishLabel}</div>
+          <span class="hist-arrow" style="color:var(--green-mid); font-size:0.9rem;">▸</span>
+        </div>
+      </div>
+      <div style="display:none; padding:0 18px 14px;">
+        ${teamRows}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Show career stats bar
+  const statsBar = document.getElementById('career-stats-bar');
+  if (statsBar) {
+    statsBar.style.display = 'block';
+    document.getElementById('career-tournaments').textContent = tournaments.length;
+    document.getElementById('career-wins').textContent = totalWins;
+    document.getElementById('career-best-finish').textContent = bestFinishNum === Infinity ? '–' : (bestFinishNum === 1 ? '🏆' : '#' + bestFinishNum);
+  }
+
+  // Show history section
+  const histSection = document.getElementById('tournament-history-section');
+  const histList = document.getElementById('tournament-history-list');
+  if (histSection && histList) {
+    histSection.style.display = 'block';
+    histList.innerHTML = historyHTML;
+  }
 }
 
 function updateMobileTracker() {
@@ -3692,6 +4008,75 @@ function submitAdminLogin() {
     renderAdminPanel();
   } else {
     document.getElementById('admin-login-error').textContent = 'Incorrect password.';
+  }
+}
+
+async function lockTournamentResults() {
+  const btn = document.getElementById('lock-btn');
+  const status = document.getElementById('lock-status');
+  const paidTeams = allTeams.filter(t => t.paid && (t.tournament || '') === TOURNAMENT_NAME);
+
+  if (paidTeams.length === 0) {
+    status.textContent = '⚠ No paid teams found for ' + TOURNAMENT_NAME;
+    status.style.color = '#e07000';
+    return;
+  }
+
+  if (!confirm(`Lock final results for ${paidTeams.length} teams in "${TOURNAMENT_NAME}"? This will snapshot current golfer positions and earnings into each team's record.`)) return;
+
+  btn.disabled = true;
+  btn.textContent = 'LOCKING...';
+  status.textContent = 'Saving results...';
+  status.style.color = '#888';
+
+  // Build all-team ranking for pool position
+  const allSorted = [...paidTeams].sort((a,b) => getTeamEarnings(b) - getTeamEarnings(a));
+
+  let successCount = 0;
+  let errorCount = 0;
+
+  for (const team of paidTeams) {
+    const poolRank = allSorted.findIndex(t => t.id === team.id) + 1;
+    const golferSnapshots = team.golfers.map(id => {
+      const g = GOLFERS.find(g => g.id === id);
+      if (!g) return { id, name: '?', earnings: 0, position: '–', wd: false, cut: false };
+      const pos = g.liveData?.posDisplay || '–';
+      const isWD = g.withdrawn || g.liveData?.wd || false;
+      const isCut = g.cutMissed || false;
+      return {
+        id,
+        name: g.name,
+        earnings: g.earnings || 0,
+        position: isWD ? 'WD' : (isCut ? 'MC' : pos),
+        wd: isWD,
+        cut: isCut
+      };
+    });
+
+    const results = {
+      lockedAt: new Date().toISOString(),
+      tournament: TOURNAMENT_NAME,
+      poolRank,
+      totalTeams: paidTeams.length,
+      teamEarnings: getTeamEarnings(team),
+      golfers: golferSnapshots
+    };
+
+    const { error } = await sb.from('teams').update({ results }).eq('id', team.id);
+    if (error) { errorCount++; console.error('Error saving team', team.id, error); }
+    else successCount++;
+  }
+
+  if (errorCount === 0) {
+    btn.textContent = '✓ LOCKED';
+    btn.style.background = '#4caf50';
+    status.textContent = `✅ Results locked for ${successCount} teams. Profile history will now show final standings.`;
+    status.style.color = '#2e7d32';
+  } else {
+    btn.disabled = false;
+    btn.textContent = 'RETRY';
+    status.textContent = `⚠ ${successCount} saved, ${errorCount} failed. Check console for errors.`;
+    status.style.color = '#e07000';
   }
 }
 
