@@ -683,10 +683,11 @@
 <header>
   <div class="header-inner">
     <div class="logo" onclick="showPage('home'); closeMobileNav();">J.Ray's Swimmers</div>
-    <button id="hamburger" onclick="toggleMobileNav()" aria-label="Menu" style="display:none; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; align-items:center; justify-content:center;">
+    <button id="hamburger" onclick="toggleMobileNav()" aria-label="Menu" style="display:none; position:relative; background:none; border:none; cursor:pointer; padding:8px; flex-direction:column; gap:5px; align-items:center; justify-content:center;">
       <span class="ham-line"></span>
       <span class="ham-line"></span>
       <span class="ham-line"></span>
+      <span id="mobile-chat-badge" style="display:none; position:absolute; top:2px; right:2px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(232,119,34,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span>
     </button>
     <nav id="nav">
       <button id="mobile-nav-close" onclick="closeMobileNav()">✕</button>
@@ -696,7 +697,7 @@
       <button onclick="showPage('leaderboard')" id="nav-leaderboard">Pool Standings</button>
       <button onclick="showPage('tournament')" id="nav-tournament">Live Scores</button>
       <button onclick="showPage('stats')" id="nav-stats">Player Stats</button>
-      <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:4px; right:4px; width:8px; height:8px; background:var(--gold); border-radius:50%; box-shadow:0 0 6px rgba(232,119,34,0.8);"></span></button>
+      <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(232,119,34,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
       <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem;">⚙ Admin</button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
       <button id="nav-logout" onclick="logout()" style="display:none">Sign Out</button>
@@ -2086,6 +2087,7 @@ function startChatNotificationListener() {
       if (!document.getElementById('page-chat')?.classList.contains('active')) {
         const badge = document.getElementById('chat-badge');
         if (badge) badge.style.display = 'block';
+        const mb2 = document.getElementById('mobile-chat-badge'); if (mb2) mb2.style.display = 'block';
       }
     })
     .subscribe();
@@ -2186,7 +2188,7 @@ async function showPage(name) {
   if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); }
   if (name === 'tournament') renderTournament();
   if (name === 'stats') { await loadTeams(); renderStats('picks'); }
-  if (name === 'chat') { initChat(); const badge = document.getElementById('chat-badge'); if (badge) badge.style.display = 'none'; }
+  if (name === 'chat') { initChat(); const badge = document.getElementById('chat-badge'); if (badge) badge.style.display = 'none'; const mb = document.getElementById('mobile-chat-badge'); if (mb) mb.style.display = 'none'; }
   if (name === 'builder') { await loadTeams(); renderBuilder(); }
   if (name === 'profile') renderProfile();
   if (name === 'payment') { renderPaymentSummary(); }
@@ -3069,6 +3071,7 @@ async function initChat() {
       // Show badge if user is not currently on the chat page
       if (!document.getElementById('page-chat')?.classList.contains('active')) {
         document.getElementById('chat-badge').style.display = 'block';
+        const mb = document.getElementById('mobile-chat-badge'); if (mb) mb.style.display = 'block';
       }
     })
     .subscribe();
