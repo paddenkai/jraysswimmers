@@ -2194,7 +2194,7 @@ function showHistoryDetail(tName) {
     const isFirst = rank === 1;
     const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
 
-    const golferRows = (snap.golfers || []).map(sg => {
+    const golferRows = [...(snap.golfers || [])].sort((a,b) => { const pa = a.wd ? 998 : a.cut ? 997 : parseInt((a.position||'999').replace(/^T/,''))||999; const pb = b.wd ? 998 : b.cut ? 997 : parseInt((b.position||'999').replace(/^T/,''))||999; return pa-pb; }).map(sg => {
       const parts = sg.name.trim().split(' ');
       const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : sg.name;
       const isZero = sg.cut || sg.wd || sg.earnings === 0;
@@ -2906,7 +2906,7 @@ function renderLeaderboard() {
       <td style="text-align:center">${rankDisplay}</td>
       <td style="text-align:center"><strong>${team.name}</strong>${isMyTeam ? ' <span style="font-size:0.7rem;color:var(--gold);font-family:DM Mono,monospace;">YOU</span>' : ''}</td>
       <td style="text-align:center"><div style="font-size:0.88rem;">${team.owner_name || team.name}</div></td>
-      <td style="text-align:center"><div class="team-golfers-mini">${adminSettings.showPicks || (currentUser && team.owner === currentUser.email) ? team.golfers.map((id, i, arr) => {
+      <td style="text-align:center"><div class="team-golfers-mini">${adminSettings.showPicks || (currentUser && team.owner === currentUser.email) ? [...team.golfers].sort((a,b) => { const ga=GOLFERS.find(g=>g.id===a), gb=GOLFERS.find(g=>g.id===b); const getPosSort = g => { if (!g.liveData?.posDisplay || g.liveData?.posDisplay === '–') return 999; if (g.liveData?.wd || g.withdrawn) return 998; if (g.cutMissed) return 997; const p = g.liveData.posDisplay.replace(/^T/,''); const n = parseInt(p); return isNaN(n) ? 996 : n; }; return getPosSort(ga||{}) - getPosSort(gb||{}); }).map((id, i, arr) => {
         const g = GOLFERS.find(g => g.id === id);
         if (!g) return '';
         const parts = g.name.trim().split(' ');
@@ -3524,7 +3524,10 @@ function renderMyTeams() {
   });
 
   grid.innerHTML = sortedMyTeams.map(team => {
-    const golfers = team.golfers.map(id => GOLFERS.find(g=>g.id===id)).filter(Boolean);
+    const golfers = team.golfers.map(id => GOLFERS.find(g=>g.id===id)).filter(Boolean).sort((a,b) => {
+      const getPos = g => { if (g.withdrawn || g.liveData?.wd) return 998; if (g.cutMissed) return 997; const p = g.liveData?.posDisplay; if (!p || p === '–') return 999; const n = parseInt(p.replace(/^T/,'')); return isNaN(n) ? 996 : n; };
+      return getPos(a) - getPos(b);
+    });
     const total = golfers.reduce((s,g) => s + g.earnings, 0);
     const { pos, isTied } = positionMap.get(team.id) || {};
     const getOrdinal = n => {
@@ -3726,7 +3729,9 @@ function renderCareerStats(myTeams) {
       const snap = t.results;
       const earnings = snap ? snap.teamEarnings : getTeamEarnings(t);
       const rankLabel = snap ? `#${snap.poolRank}` : (allSorted.findIndex(s => s.id === t.id) >= 0 ? `#${allSorted.findIndex(s => s.id === t.id)+1}` : '–');
-      const golferRows = (snap ? snap.golfers : t.golfers.map(id => {
+      const getPosSort2 = g => { if (!g.liveData?.posDisplay || g.liveData?.posDisplay === '–') return 999; if (g.liveData?.wd || g.withdrawn) return 998; if (g.cutMissed) return 997; const p = g.liveData.posDisplay.replace(/^T/,''); const n = parseInt(p); return isNaN(n) ? 996 : n; };
+      const sortedGolferIds = [...t.golfers].sort((a,b) => { const ga=GOLFERS.find(g=>g.id===a), gb=GOLFERS.find(g=>g.id===b); return getPosSort2(ga||{}) - getPosSort2(gb||{}); });
+      const golferRows = (snap ? [...snap.golfers].sort((a,b) => { const pa = a.wd ? 998 : a.cut ? 997 : parseInt((a.position||'999').replace(/^T/,''))||999; const pb = b.wd ? 998 : b.cut ? 997 : parseInt((b.position||'999').replace(/^T/,''))||999; return pa-pb; }) : sortedGolferIds.map(id => {
         const g = GOLFERS.find(g => g.id === id);
         if (!g) return null;
         return { name: g.name, earnings: g.earnings || 0, position: g.liveData?.posDisplay || '–', wd: g.withdrawn || g.liveData?.wd, cut: g.cutMissed };
