@@ -3678,10 +3678,14 @@ function renderProfile() {
 function renderCareerStats(myTeams) {
   if (!myTeams || myTeams.length === 0) return;
 
-  // Group my teams by tournament
+  // Only show career stats and history for tournaments with locked results
+  const lockedTeams = myTeams.filter(t => t.results);
+  if (lockedTeams.length === 0) return;
+
+  // Group locked teams by tournament only
   const byTournament = {};
-  myTeams.forEach(t => {
-    const tName = t.tournament || 'Unknown Tournament';
+  lockedTeams.forEach(t => {
+    const tName = t.results.tournament || t.tournament || 'Unknown Tournament';
     if (!byTournament[tName]) byTournament[tName] = [];
     byTournament[tName].push(t);
   });
@@ -3739,12 +3743,16 @@ function renderCareerStats(myTeams) {
         </div>`;
       }).join('');
 
+      const rankNum = snap ? snap.poolRank : (allSorted.findIndex(s => s.id === t.id) + 1);
+      const rankBadgeClass = rankNum === 1 ? 'rank-1' : rankNum === 2 ? 'rank-2' : rankNum === 3 ? 'rank-3' : 'rank-other';
       return `<div style="padding:10px 0; border-bottom:1px solid rgba(59,31,110,0.07);">
-        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:6px;">
-          <div style="font-weight:700; font-size:0.88rem; color:var(--green); font-family:'Libre Baskerville',serif;">${t.name}</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="rank-badge ${rankBadgeClass}" style="font-size:0.78rem; width:26px; height:26px; flex-shrink:0;">${rankNum}</span>
+            <div style="font-weight:700; font-size:0.88rem; color:var(--green); font-family:'Libre Baskerville',serif;">${t.name}</div>
+          </div>
           <div style="text-align:right; flex-shrink:0;">
             <div style="font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--green);">$${Math.round(earnings).toLocaleString()}</div>
-            <div style="font-size:0.68rem; font-family:'DM Mono',monospace; color:#aaa;">Pool ${rankLabel}</div>
           </div>
         </div>
         <div style="background:rgba(59,31,110,0.04); border-radius:5px; padding:6px 10px;">
