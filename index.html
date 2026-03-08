@@ -567,6 +567,52 @@
   .golfer-pos-arrow.down { color: #c03c3c; }
   .golfer-pos-arrow.animating { animation: possBadgeIn 3.5s ease forwards; }
 
+  /* ─── HEAD TO HEAD ─── */
+  .h2h-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 3px 10px 3px 12px;
+    font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--cream);
+    letter-spacing: 0.5px;
+  }
+  .h2h-chip button { background:none; border:none; color:rgba(255,255,255,0.5); cursor:pointer; font-size:0.8rem; padding:0; line-height:1; }
+  .h2h-chip button:hover { color: white; }
+  .h2h-section-label {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px;
+  }
+  .h2h-golfer-row {
+    display: grid; gap: 0 10px;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.8rem;
+  }
+  .h2h-golfer-row:last-child { border-bottom: none; }
+  .h2h-name { font-family: 'Libre Baskerville', serif; color: var(--cream); }
+  .h2h-pos  { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--gold); }
+  .h2h-earn { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: #7ee8a2; }
+  .h2h-earn.zero { color: rgba(255,255,255,0.3); }
+  .h2h-owner-tag { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: rgba(255,255,255,0.4); }
+  .h2h-btn-active {
+    width:28px !important; height:28px !important; border-radius:50% !important;
+    border:2px solid var(--gold) !important; background:var(--gold) !important;
+    cursor:pointer !important; font-size:0.8rem !important; color:var(--dark) !important;
+    display:flex !important; align-items:center !important; justify-content:center !important;
+    margin:auto !important; font-weight:700 !important;
+  }
+  .h2h-total-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; border-radius: 6px; margin-top: 4px;
+    background: rgba(255,255,255,0.07);
+    font-family: 'DM Mono', monospace;
+  }
+  .h2h-total-bar .label { font-size: 0.65rem; letter-spacing: 1px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+  .h2h-total-bar .amount { font-size: 0.92rem; font-weight: 700; color: #7ee8a2; }
+  .h2h-total-bar.winner { background: rgba(232,119,34,0.15); border: 1px solid rgba(232,119,34,0.3); }
+  .h2h-total-bar.winner .amount { color: var(--gold); }
+  #btn-h2h-add-hint-label { font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(255,255,255,0.3); }
+
   /* ─── PAYMENT ─── */
 
 
@@ -727,7 +773,7 @@
 </style>
 </head>
 <body>
-<div style="max-width:100vw; overflow-x:hidden; position:relative;">
+<div style="max-width:100vw; overflow-x:hidden;">
 
 <!-- HEADER -->
 <header>
@@ -1008,6 +1054,7 @@
             <th style="text-align:center">Swimmer</th>
             <th style="text-align:center; max-width:140px;">Golfers</th>
             <th style="text-align:center">Total Projected Earnings</th>
+            <th style="width:44px; text-align:center"></th>
           </tr>
         </thead>
         <tbody id="leaderboard-body"></tbody>
@@ -1754,6 +1801,7 @@ function getPayoutForPosition(pos, tiedCount) {
 // Live scoring state — populated by ESPN fetch
 let liveScores = {}; // { "Scottie Scheffler": { pos: 1, tied: 1, earnings: 3600000, score: "-17", today: "-6", thru: "F" } }
 let _prevEarnings = {};       // teamId -> earnings, persists between renders
+const h2hTeams = new Set();   // set of team IDs currently in H2H comparison
 let _prevGolferEarnings = {};  // teamId_golferId -> earnings, for per-golfer flash
 let _prevGolferPos = {};       // golferId -> posDisplay, for per-golfer arrows
 let _prevPositions = {};  // teamId -> pos, persists between renders
@@ -1858,6 +1906,7 @@ async function fetchESPNScores() {
     renderLeaderboard();
     renderTournament();
     updateStats();
+    if (h2hTeams.size >= 2) renderH2H();
   } catch(e) {
     console.warn('ESPN fetch failed:', e);
     updateFetchStatus('error');
@@ -2979,12 +3028,25 @@ function renderLeaderboard() {
         return `<div id="gf-${team.id}-${g.id}" style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}<span class="golfer-pos-arrow" id="gfa-${team.id}-${g.id}"></span></div>`;
       }).filter(Boolean).join('') : '<span style="color:#bbb;font-style:italic;font-size:0.78rem;">Hidden until tournament starts</span>'}</div></td>
       <td style="text-align:center">${earningsDisplay}</td>
+      <td style="text-align:center; padding:4px;">
+        <button
+          onclick="toggleH2HTeam(${team.id})"
+          id="h2h-btn-${team.id}"
+          title="Add to comparison"
+          style="width:28px; height:28px; border-radius:50%; border:2px solid #d0c8e0; background:transparent; cursor:pointer; font-size:0.8rem; color:#bbb; transition:all 0.15s; display:flex; align-items:center; justify-content:center; margin:auto;"
+          onmouseover="if(!h2hTeams.has(${team.id}))this.style.cssText=this.style.cssText+'border-color:var(--green-mid);color:var(--green-mid);'"
+          onmouseout="if(!h2hTeams.has(${team.id}))this.style.cssText='width:28px;height:28px;border-radius:50%;border:2px solid #d0c8e0;background:transparent;cursor:pointer;font-size:0.8rem;color:#bbb;transition:all 0.15s;display:flex;align-items:center;justify-content:center;margin:auto;'"
+        >＋</button>
+      </td>
     </tr>`;
   }).join('');
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#aaa; font-style:italic;">No teams match your search.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#aaa; font-style:italic;">No teams match your search.</td></tr>`;
   }
+
+  // Restore H2H button states after re-render
+  if (h2hTeams.size > 0) updateH2HButtons();
 
   // ── Live change animations ──
   if (hasLiveData) {
@@ -4455,7 +4517,209 @@ function closeMobileNav() {
 }
 
 initApp();
+// ═══════════════════════════════════════════════════════
+// HEAD TO HEAD
+// ═══════════════════════════════════════════════════════
+
+function toggleH2HTeam(teamId) {
+  if (h2hTeams.has(teamId)) {
+    h2hTeams.delete(teamId);
+  } else {
+    if (h2hTeams.size >= 5) return; // max 5
+    h2hTeams.add(teamId);
+  }
+  updateH2HButtons();
+  if (h2hTeams.size >= 2) {
+    document.getElementById('h2h-panel').style.display = 'block';
+    renderH2H();
+  } else if (h2hTeams.size === 1) {
+    document.getElementById('h2h-panel').style.display = 'block';
+    renderH2H(); // show "add another team" state
+  } else {
+    document.getElementById('h2h-panel').style.display = 'none';
+  }
+}
+
+function closeH2H() {
+  h2hTeams.clear();
+  updateH2HButtons();
+  document.getElementById('h2h-panel').style.display = 'none';
+}
+
+function updateH2HButtons() {
+  // Update all compare buttons in the table
+  document.querySelectorAll('[id^="h2h-btn-"]').forEach(btn => {
+    const id = parseInt(btn.id.replace('h2h-btn-', ''));
+    if (h2hTeams.has(id)) {
+      btn.className = 'h2h-btn-active';
+      btn.textContent = '✓';
+      btn.title = 'Remove from comparison';
+    } else {
+      btn.className = '';
+      btn.style.cssText = 'width:28px;height:28px;border-radius:50%;border:2px solid #d0c8e0;background:transparent;cursor:pointer;font-size:0.8rem;color:#bbb;transition:all 0.15s;display:flex;align-items:center;justify-content:center;margin:auto;';
+      btn.textContent = '＋';
+      btn.title = h2hTeams.size >= 5 ? 'Max 5 teams' : 'Add to comparison';
+    }
+  });
+
+  // Update chips
+  const chipsEl = document.getElementById('h2h-chips');
+  const hint = document.getElementById('h2h-add-hint');
+  if (!chipsEl) return;
+  chipsEl.innerHTML = [...h2hTeams].map(id => {
+    const t = allTeams.find(t => t.id === id);
+    if (!t) return '';
+    return `<span class="h2h-chip">${t.name}<button onclick="toggleH2HTeam(${id})" title="Remove">✕</button></span>`;
+  }).join('');
+  if (hint) hint.style.display = h2hTeams.size >= 5 ? 'none' : 'inline';
+}
+
+function renderH2H() {
+  const content = document.getElementById('h2h-content');
+  if (!content) return;
+
+  const teams = [...h2hTeams].map(id => allTeams.find(t => t.id === id)).filter(Boolean);
+
+  if (teams.length < 2) {
+    content.innerHTML = `<div style="text-align:center; padding:20px 0; font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(255,255,255,0.3); letter-spacing:1px;">ADD ANOTHER TEAM TO START COMPARING</div>`;
+    return;
+  }
+
+  const hasLive = Object.keys(liveScores).length > 0 && (window._playHasStarted || false);
+
+  // Build golfer id → earnings + posDisplay map
+  const golferData = {};
+  GOLFERS.forEach(g => {
+    golferData[g.id] = {
+      name: g.name,
+      earnings: g.earnings || 0,
+      pos: g.liveData?.posDisplay || '–',
+      wd: g.withdrawn || g.liveData?.wd,
+      cut: g.cutMissed,
+    };
+  });
+
+  // Categorize each golfer across selected teams
+  // shared_all: on every team | shared_some: on 2+ but not all | unique: on exactly 1
+  const teamGolferSets = teams.map(t => new Set(t.golfers));
+  const allGolferIds = new Set(teams.flatMap(t => t.golfers));
+
+  const sharedAll = [], sharedSome = [], unique = [];
+  allGolferIds.forEach(gid => {
+    const count = teams.filter(t => t.golfers.includes(gid)).length;
+    if (count === teams.length) sharedAll.push(gid);
+    else if (count >= 2) sharedSome.push(gid);
+    else unique.push(gid);
+  });
+
+  // Helper: short name
+  const short = name => { const p = name.trim().split(' '); return p.length > 1 ? p[0][0]+'. '+p.slice(1).join(' ') : name; };
+
+  // Helper: render a golfer row — columns depend on section
+  const golferRow = (gid, ownerTeams) => {
+    const g = golferData[gid];
+    if (!g) return '';
+    const pos = g.wd ? 'WD' : g.cut ? 'MC' : g.pos;
+    const earn = g.wd || g.cut ? 0 : g.earnings;
+    const earnStr = hasLive ? (earn > 0 ? `$${Math.round(earn).toLocaleString()}` : '$0') : '–';
+    const earnClass = earn > 0 ? 'h2h-earn' : 'h2h-earn zero';
+    const ownerStr = ownerTeams ? `<span class="h2h-owner-tag">${ownerTeams.map(t=>t.name).join(', ')}</span>` : '';
+    return `
+      <div class="h2h-golfer-row" style="grid-template-columns: 28px 1fr auto ${ownerTeams ? '1fr' : ''};">
+        <span class="h2h-pos">${pos !== '–' ? pos : ''}</span>
+        <span class="h2h-name">${short(g.name)}</span>
+        <span class="${earnClass}">${earnStr}</span>
+        ${ownerStr}
+      </div>`;
+  };
+
+  // Unique golfers per team — build team-level breakdown
+  const teamUniqueEarnings = teams.map(t => {
+    const uIds = t.golfers.filter(gid => unique.includes(gid));
+    const earn = uIds.reduce((s, gid) => {
+      const g = golferData[gid];
+      return s + (g && !g.wd && !g.cut ? g.earnings : 0);
+    }, 0);
+    return { team: t, golferIds: uIds, earn };
+  });
+
+  // Sort by unique earnings desc to find who's winning
+  const sorted = [...teamUniqueEarnings].sort((a,b) => b.earn - a.earn);
+  const leaderId = sorted[0]?.team.id;
+  const leaderEarn = sorted[0]?.earn || 0;
+
+  let html = '';
+
+  // ── SHARED BY ALL (cancel out) ──
+  if (sharedAll.length) {
+    html += `<div style="margin-bottom:16px;">
+      <div class="h2h-section-label">🤝 Shared by all — cancel out</div>
+      <div style="opacity:0.45;">
+        ${sharedAll.map(gid => golferRow(gid, null)).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ── SHARED BY SOME ──
+  if (sharedSome.length) {
+    html += `<div style="margin-bottom:16px;">
+      <div class="h2h-section-label">⚖️ Partial overlap</div>
+      ${sharedSome.map(gid => {
+        const owners = teams.filter(t => t.golfers.includes(gid));
+        return golferRow(gid, owners);
+      }).join('')}
+    </div>`;
+  }
+
+  // ── UNIQUE — THE REAL BATTLE ──
+  if (unique.length) {
+    html += `<div style="margin-bottom:14px;">
+      <div class="h2h-section-label">⚡ Pure differentiators</div>
+      <div style="display:grid; grid-template-columns:repeat(${teams.length}, 1fr); gap:10px; align-items:start;">
+        ${teams.map(team => {
+          const uIds = team.golfers.filter(gid => unique.includes(gid));
+          return `<div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px; text-transform:uppercase;">${team.name}</div>
+            ${uIds.length ? uIds.map(gid => {
+              const g = golferData[gid];
+              if (!g) return '';
+              const pos = g.wd ? 'WD' : g.cut ? 'MC' : g.pos;
+              const earn = g.wd || g.cut ? 0 : g.earnings;
+              const earnStr = hasLive ? (earn > 0 ? `$${Math.round(earn).toLocaleString()}` : '$0') : '–';
+              return `<div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.78rem;">
+                <span style="font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--gold); margin-right:5px;">${pos !== '–' ? pos : ''}</span>
+                <span style="color:var(--cream);">${short(g.name)}</span>
+                <span style="float:right; font-family:'DM Mono',monospace; font-size:0.72rem; color:${earn>0?'#7ee8a2':'rgba(255,255,255,0.3)'};">${earnStr}</span>
+              </div>`;
+            }).join('') : `<div style="font-size:0.72rem; color:rgba(255,255,255,0.2); font-style:italic;">No unique players</div>`}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+
+    // ── TOTALS (unique only) ──
+    html += `<div style="display:grid; grid-template-columns:repeat(${teams.length}, 1fr); gap:10px; margin-top:4px;">
+      ${sorted.map((item, idx) => {
+        const isLeader = item.team.id === leaderId;
+        const gap = isLeader ? '' : (leaderEarn - item.earn > 0 ? ` <span style="font-size:0.65rem; color:rgba(255,255,255,0.35);">−$${(leaderEarn-item.earn).toLocaleString()}</span>` : '');
+        return `<div class="h2h-total-bar${isLeader && teams.length>1 ? ' winner' : ''}">
+          <div>
+            <div class="label">${item.team.name}</div>
+            <div class="amount">$${Math.round(item.earn).toLocaleString()}${gap}</div>
+          </div>
+          ${isLeader && teams.length>1 ? '<span style="font-size:1rem;">🏆</span>' : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  } else if (teams.length >= 2) {
+    html += `<div style="text-align:center; padding:10px 0; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.3); letter-spacing:1px;">ALL GOLFERS ARE SHARED — PERFECTLY MATCHED</div>`;
+  }
+
+  content.innerHTML = html;
+}
+
 </script>
+
 </div>
 
   <!-- Duplicate lineup confirm modal -->
@@ -4483,5 +4747,31 @@ initApp();
     <div id="golfer-teams-list"></div>
   </div>
 </div>
+<!-- ═══ HEAD TO HEAD PANEL ═══ -->
+<div id="h2h-panel" style="
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--dark);
+  border-top: 3px solid var(--gold);
+  z-index: 1000;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.35);
+  max-height: 55vh;
+  overflow-y: auto;
+  font-family: 'Libre Baskerville', serif;
+">
+  <!-- Header bar -->
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 18px 8px; border-bottom:1px solid rgba(255,255,255,0.08); position:sticky; top:0; background:var(--dark); z-index:2;">
+    <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+      <span style="font-family:'Playfair Display',serif; font-size:0.85rem; font-weight:700; color:var(--gold); letter-spacing:2px; text-transform:uppercase;">Head to Head</span>
+      <div id="h2h-chips" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+      <span id="h2h-add-hint" style="font-family:'DM Mono',monospace; font-size:0.65rem; color:rgba(255,255,255,0.3); letter-spacing:1px;">SELECT UP TO 5 TEAMS</span>
+    </div>
+    <button onclick="closeH2H()" style="background:none; border:none; color:rgba(255,255,255,0.4); font-size:1.2rem; cursor:pointer; padding:0 4px; line-height:1;" title="Close">✕</button>
+  </div>
+  <!-- Content -->
+  <div id="h2h-content" style="padding:14px 18px 18px;"></div>
+</div>
+
 </body>
 </html>
