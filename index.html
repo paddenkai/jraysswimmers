@@ -12,16 +12,16 @@
 
 <style>
   :root {
-    --green: #3b1f6e;
-    --green-mid: #5a3a8a;
-    --green-light: #7a55a8;
-    --gold: #e87722;
-    --gold-light: #f09040;
-    --gold-pale: #fdf0e6;
-    --cream: #faf6ff;
-    --dark: #1a0d2e;
+    --green: #003362;
+    --green-mid: #1a5490;
+    --green-light: #3a74b0;
+    --gold: #ceaa78;
+    --gold-light: #dfc090;
+    --gold-pale: #f8f3ea;
+    --cream: #f5f8fc;
+    --dark: #001f3f;
     --white: #ffffff;
-    --shadow: rgba(26,13,46,0.3);
+    --shadow: rgba(0,33,62,0.3);
   }
 
   @keyframes pulse-dot {
@@ -184,7 +184,7 @@
   .page { display: none !important; }
   .page.active { display: block !important; }
   #page-chat.active {
-    background: linear-gradient(160deg, #1a0d2e 0%, #2d1654 60%, #3b1f6e 100%);
+    background: linear-gradient(160deg, #001f3f 0%, #2d1654 60%, #003362 100%);
     margin: -40px -24px;
     padding-top: 40px;
     min-height: calc(100vh - 60px);
@@ -525,10 +525,10 @@
     100% { background: rgba(90,58,138,0.0); }
   }
   @keyframes firstPlacePulse {
-    0%   { box-shadow: 0 0 0 0 rgba(232,119,34,0.0); }
-    20%  { box-shadow: 0 0 0 8px rgba(232,119,34,0.35); }
-    60%  { box-shadow: 0 0 0 14px rgba(232,119,34,0.12); }
-    100% { box-shadow: 0 0 0 20px rgba(232,119,34,0.0); }
+    0%   { box-shadow: 0 0 0 0 rgba(206,170,120,0.0); }
+    20%  { box-shadow: 0 0 0 8px rgba(206,170,120,0.35); }
+    60%  { box-shadow: 0 0 0 14px rgba(206,170,120,0.12); }
+    100% { box-shadow: 0 0 0 20px rgba(206,170,120,0.0); }
   }
   @keyframes possBadgeIn {
     0%   { opacity: 0; transform: translateY(-6px) scale(0.8); }
@@ -577,15 +577,23 @@
   }
   .h2h-chip button { background:none; border:none; color:rgba(255,255,255,0.5); cursor:pointer; font-size:0.8rem; padding:0; line-height:1; }
   .h2h-chip button:hover { color: white; }
-
-
-  .h2h-add-btn {
-    width:28px; height:28px; border-radius:50%; border:2px solid #d0c8e0;
-    background:transparent; cursor:pointer; font-size:0.8rem; color:#bbb;
-    transition:all 0.15s; display:flex; align-items:center; justify-content:center; margin:auto;
+  .h2h-section-label {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px;
   }
-  .h2h-add-btn:hover { border-color:var(--green-mid); color:var(--green-mid); }
-
+  .h2h-golfer-row {
+    display: grid; gap: 0 10px;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.8rem;
+  }
+  .h2h-golfer-row:last-child { border-bottom: none; }
+  .h2h-name { font-family: 'Libre Baskerville', serif; color: var(--cream); }
+  .h2h-pos  { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--gold); }
+  .h2h-earn { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: #7ee8a2; }
+  .h2h-earn.zero { color: rgba(255,255,255,0.3); }
+  .h2h-owner-tag { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: rgba(255,255,255,0.4); }
   .h2h-btn-active {
     width:28px !important; height:28px !important; border-radius:50% !important;
     border:2px solid var(--gold) !important; background:var(--gold) !important;
@@ -593,92 +601,16 @@
     display:flex !important; align-items:center !important; justify-content:center !important;
     margin:auto !important; font-weight:700 !important;
   }
-
-  /* H2H column layout */
-  .h2h-cols {
-    display: grid;
-    gap: 10px;
-    align-items: start;
-  }
-  .h2h-col {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .h2h-col-winner {
-    background: rgba(232,119,34,0.1);
-    border-color: rgba(232,119,34,0.4);
-  }
-  .h2h-col-header {
+  .h2h-total-bar {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 12px 6px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 8px 12px; border-radius: 6px; margin-top: 4px;
+    background: rgba(255,255,255,0.07);
+    font-family: 'DM Mono', monospace;
   }
-  .h2h-col-teamname {
-    font-family: 'DM Mono', monospace; font-size: 0.62rem;
-    letter-spacing: 1px; text-transform: uppercase;
-    color: rgba(255,255,255,0.55); white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis;
-  }
-  .h2h-col-winner .h2h-col-teamname { color: var(--gold); }
-  .h2h-winner-crown { font-size: 0.85rem; flex-shrink: 0; }
-
-  .h2h-col-golfers { padding: 6px 0; }
-
-  .h2h-col-row {
-    display: grid;
-    grid-template-columns: 30px 1fr auto auto;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 12px;
-    transition: opacity 0.15s;
-  }
-  .h2h-col-row.h2h-shared {
-    opacity: 0.35;
-  }
-  .h2h-col-pos {
-    font-family: 'DM Mono', monospace; font-size: 0.62rem;
-    color: var(--gold); text-align: right;
-  }
-  .h2h-col-name {
-    font-family: 'Libre Baskerville', serif; font-size: 0.78rem;
-    color: var(--cream); white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis;
-  }
-  .h2h-shared-dot {
-    margin-left: 4px; color: rgba(255,255,255,0.3); font-size: 0.9rem;
-  }
-  .h2h-col-earn {
-    font-family: 'DM Mono', monospace; font-size: 0.72rem;
-    color: #7ee8a2; text-align: right; white-space: nowrap;
-  }
-  .h2h-col-earn.dim { color: rgba(255,255,255,0.2); }
-  .h2h-col-thru {
-    font-family: 'DM Mono', monospace; font-size: 0.6rem;
-    color: rgba(255,255,255,0.3); text-align: right; white-space: nowrap;
-  }
-
-  .h2h-col-footer {
-    padding: 8px 12px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-  .h2h-col-total {
-    font-family: 'Playfair Display', serif; font-size: 1rem;
-    font-weight: 700; color: #7ee8a2;
-  }
-  .h2h-col-winner .h2h-col-total { color: var(--gold); }
-  .h2h-col-gap {
-    font-family: 'DM Mono', monospace; font-size: 0.6rem;
-    color: rgba(255,255,255,0.3); margin-top: 1px;
-  }
-
-  .h2h-shared-note {
-    margin-top: 10px;
-    font-family: 'DM Mono', monospace; font-size: 0.6rem;
-    color: rgba(255,255,255,0.25); letter-spacing: 0.5px;
-    text-align: center;
-  }
+  .h2h-total-bar .label { font-size: 0.65rem; letter-spacing: 1px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+  .h2h-total-bar .amount { font-size: 0.92rem; font-weight: 700; color: #7ee8a2; }
+  .h2h-total-bar.winner { background: rgba(206,170,120,0.15); border: 1px solid rgba(206,170,120,0.3); }
+  .h2h-total-bar.winner .amount { color: var(--gold); }
   #btn-h2h-add-hint-label { font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(255,255,255,0.3); }
 
   /* ─── PAYMENT ─── */
@@ -841,7 +773,7 @@
 </style>
 </head>
 <body>
-<div style="max-width:100vw; overflow-x:hidden;">
+<div style="max-width:100vw; overflow-x:hidden; position:relative;">
 
 <!-- HEADER -->
 <header>
@@ -853,7 +785,7 @@
         <span class="ham-line"></span>
         <span class="ham-line"></span>
       </button>
-      <span id="mobile-chat-badge" style="display:none; position:absolute; top:2px; right:2px; width:11px; height:11px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(232,119,34,0.9); border:2px solid var(--green); animation:pulse-dot 1.5s infinite; pointer-events:none; z-index:9999;"></span>
+      <span id="mobile-chat-badge" style="display:none; position:absolute; top:2px; right:2px; width:11px; height:11px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(206,170,120,0.9); border:2px solid var(--green); animation:pulse-dot 1.5s infinite; pointer-events:none; z-index:9999;"></span>
     </div>
     <nav id="nav">
       <button id="mobile-nav-close" onclick="closeMobileNav()">✕</button>
@@ -863,7 +795,7 @@
       <button onclick="showPage('leaderboard')" id="nav-leaderboard">Pool Standings</button>
       <button onclick="showPage('tournament')" id="nav-tournament">Live Scores</button>
       <button onclick="showPage('stats')" id="nav-stats">Player Stats</button>
-      <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(232,119,34,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
+      <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(206,170,120,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
       <button onclick="showPage('history')" id="nav-history">History</button>
       <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem;">⚙ Admin</button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
@@ -893,9 +825,9 @@
 
       <!-- Background -->
       <div style="position:absolute; inset:0; background: linear-gradient(160deg, var(--dark) 0%, #2a1050 50%, var(--green) 100%);"></div>
-      <div style="position:absolute; width:600px; height:600px; border-radius:50%; background: radial-gradient(circle, rgba(232,119,34,0.1) 0%, transparent 70%); top:-150px; right:-150px; animation: drift 8s ease-in-out infinite;"></div>
+      <div style="position:absolute; width:600px; height:600px; border-radius:50%; background: radial-gradient(circle, rgba(206,170,120,0.1) 0%, transparent 70%); top:-150px; right:-150px; animation: drift 8s ease-in-out infinite;"></div>
       <div style="position:absolute; width:400px; height:400px; border-radius:50%; background: radial-gradient(circle, rgba(122,85,168,0.18) 0%, transparent 70%); bottom:-100px; left:-100px; animation: drift 11s ease-in-out infinite reverse;"></div>
-      <div style="position:absolute; inset:0; background: repeating-linear-gradient(-55deg, transparent, transparent 80px, rgba(232,119,34,0.02) 80px, rgba(232,119,34,0.02) 81px); pointer-events:none;"></div>
+      <div style="position:absolute; inset:0; background: repeating-linear-gradient(-55deg, transparent, transparent 80px, rgba(206,170,120,0.02) 80px, rgba(206,170,120,0.02) 81px); pointer-events:none;"></div>
 
       <div style="position:relative; z-index:2; padding: 50px 40px 56px; max-width:900px; margin:0 auto; box-sizing:border-box; width:100%;">
 
@@ -903,7 +835,7 @@
         <div style="text-align:center; margin-bottom:44px;">
           <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:24px; max-width:100%; overflow:hidden;">
             <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
-            <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Arnold Palmer Invitational · 2026</div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">The Players Championship · 2026</div>
             <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
           </div>
 
@@ -919,35 +851,35 @@
             <button class="btn btn-gold" id="home-team-btn" onclick="requireAuth(() => showPage(adminSettings.registrationOpen ? 'builder' : 'myteams'))" style="padding:15px 36px; font-size:1rem; width:100%; max-width:300px;">Build Your Team →</button>
             <button class="btn btn-outline" onclick="showPage('leaderboard')" style="padding:15px 28px; width:100%; max-width:300px;">View All Teams</button>
           </div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(232,119,34,0.6); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">Bay Hill Club · March 5–8, 2026 · $10 per entry</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(206,170,120,0.6); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">TPC Sawgrass · March 12–15, 2026 · $10 per entry</div>
         </div>
 
         <!-- Divider -->
         <div style="display:flex; align-items:center; gap:16px; margin-bottom:36px;">
-          <div style="flex:1; height:1px; background:rgba(232,119,34,0.2);"></div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:4px; color:rgba(232,119,34,0.5); text-transform:uppercase; white-space:nowrap;">How It Works</div>
-          <div style="flex:1; height:1px; background:rgba(232,119,34,0.2);"></div>
+          <div style="flex:1; height:1px; background:rgba(206,170,120,0.2);"></div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:4px; color:rgba(206,170,120,0.5); text-transform:uppercase; white-space:nowrap;">How It Works</div>
+          <div style="flex:1; height:1px; background:rgba(206,170,120,0.2);"></div>
         </div>
 
         <!-- Cards -->
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:1px; background:rgba(232,119,34,0.1); border:1px solid rgba(232,119,34,0.12); border-radius:8px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:1px; background:rgba(206,170,120,0.1); border:1px solid rgba(206,170,120,0.12); border-radius:8px; overflow:hidden;">
 
-          <div style="background:rgba(26,13,46,0.6); padding:28px 24px; backdrop-filter:blur(4px);">
+          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px);">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--white); margin-bottom:8px;">Draft Your Teams</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Pick 5 golfers from the Arnold Palmer Invitational field. Enter as many teams as you want — more teams, more chances to win.</div>
+            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Pick 5 golfers from the The Players Championship field. Enter as many teams as you want — more teams, more chances to win.</div>
           </div>
 
-          <div style="background:rgba(26,13,46,0.6); padding:28px 24px; backdrop-filter:blur(4px);">
+          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px);">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--white); margin-bottom:8px;">Pay via Venmo</div>
             <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Send $10 per team to <span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.78rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</div>
           </div>
 
-          <div style="background:rgba(26,13,46,0.6); padding:28px 24px; backdrop-filter:blur(4px);">
+          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px);">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--white); margin-bottom:8px;">Most Earnings Wins</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Your score is the total prize money earned by your 5 golfers at Bay Hill. Highest total takes the pot.</div>
+            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Your score is the total prize money earned by your 5 golfers at TPC Sawgrass. Highest total takes the pot.</div>
           </div>
 
-          <div style="background:rgba(26,13,46,0.6); padding:28px 24px; backdrop-filter:blur(4px);">
+          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px);">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--white); margin-bottom:8px;">Follow Live</div>
             <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Live scores update throughout the tournament. Track your team against the field from anywhere.</div>
           </div>
@@ -1039,7 +971,7 @@
               <span id="cart-total-val" style="font-family:'Playfair Display',serif; font-weight:700; color:var(--gold-light); font-size:1.1rem;">$0.00</span>
             </div>
           </div>
-          <button class="btn btn-full" id="checkout-btn" onclick="proceedToPayment()" disabled style="margin-top:16px; font-size:1.05rem; padding:16px; background:#e87722; box-shadow:0 4px 14px rgba(201,168,76,0.5); opacity:0.4; color:var(--dark); border:none; cursor:pointer; border-radius:4px; font-family:'Libre Baskerville',serif; font-weight:700;">
+          <button class="btn btn-full" id="checkout-btn" onclick="proceedToPayment()" disabled style="margin-top:16px; font-size:1.05rem; padding:16px; background:#ceaa78; box-shadow:0 4px 14px rgba(201,168,76,0.5); opacity:0.4; color:var(--dark); border:none; cursor:pointer; border-radius:4px; font-family:'Libre Baskerville',serif; font-weight:700;">
             Submit Teams + Checkout →
           </button>
         </div>
@@ -1138,7 +1070,7 @@
   <div id="page-tournament" class="page">
     <div class="section-header">
       <div class="section-title">Live Scores</div>
-      <div class="section-sub">Live Arnold Palmer Invitational scores</div>
+      <div class="section-sub">Live The Players Championship scores</div>
     </div>
     <div style="margin-bottom:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1235,12 +1167,12 @@
       <div id="chat-input-row" style="display:flex; gap:10px; align-items:center;">
         <input id="chat-input" type="text" placeholder="Say something..." maxlength="300"
           style="flex:1; padding:12px 16px; border:1.5px solid rgba(255,255,255,0.2); border-radius:24px; font-family:'Libre Baskerville',serif; font-size:0.9rem; outline:none; background:rgba(255,255,255,0.1); color:#fff; transition:border-color 0.2s;"
-          onfocus="this.style.borderColor='rgba(232,119,34,0.7)'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'"
+          onfocus="this.style.borderColor='rgba(206,170,120,0.7)'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'"
           onkeydown="if(event.key==='Enter') sendChatMessage()" />
         <button onclick="sendChatMessage()"
-          style="background:var(--gold); color:#fff; border:none; border-radius:24px; padding:12px 22px; font-family:'DM Mono',monospace; font-size:0.8rem; cursor:pointer; letter-spacing:1px; font-weight:600; box-shadow:0 4px 14px rgba(232,119,34,0.4); transition:transform 0.15s, box-shadow 0.15s; white-space:nowrap;"
-          onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(232,119,34,0.5)'"
-          onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px rgba(232,119,34,0.4)'">
+          style="background:var(--gold); color:#fff; border:none; border-radius:24px; padding:12px 22px; font-family:'DM Mono',monospace; font-size:0.8rem; cursor:pointer; letter-spacing:1px; font-weight:600; box-shadow:0 4px 14px rgba(206,170,120,0.4); transition:transform 0.15s, box-shadow 0.15s; white-space:nowrap;"
+          onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(206,170,120,0.5)'"
+          onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px rgba(206,170,120,0.4)'">
           SEND ↑
         </button>
       </div>
@@ -1301,7 +1233,7 @@
     </div>
 
     <!-- Career Stats -->
-    <div id="career-stats-bar" style="display:none; background:var(--cream); border:1px solid rgba(59,31,110,0.12); border-radius:8px; padding:16px 20px; margin-top:32px; margin-bottom:24px;">
+    <div id="career-stats-bar" style="display:none; background:var(--cream); border:1px solid rgba(0,51,98,0.12); border-radius:8px; padding:16px 20px; margin-top:32px; margin-bottom:24px;">
       <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:2px; color:var(--green-mid); text-transform:uppercase; margin-bottom:12px;">Career Stats</div>
       <div style="display:flex; gap:28px; flex-wrap:wrap;">
         <div style="text-align:center;">
@@ -1533,7 +1465,7 @@
     🔇
   </button>
   <div id="music-label" style="background:var(--green); border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-    ♪ Bay Hill Theme
+    ♪ TPC Sawgrass Theme
   </div>
 </div>
 <div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
@@ -1768,8 +1700,8 @@ function initAdminToggles() {
 // ═══════════════════════════════════════════════════════
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
-const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
-const TOURNAMENT_NAME = 'Arnold Palmer Invitational 2026'; // must match tournament column in DB
+const TOURNAMENT_ACTIVE = false; // true = show live scores tab & leaderboard earnings
+const TOURNAMENT_NAME = 'The Players Championship 2026'; // must match tournament column in DB
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
@@ -1882,78 +1814,129 @@ let fetchInterval = null;
 // Feb 26 – Mar 1, 2026 · Purse: $9,600,000
 // ═══════════════════════════════════════════════════════
 const GOLFERS = [
-  { id: 1,   name: "Scottie Scheffler",          rank: 1,   earnings: 0, teeTime: "8:40 AM" },
-  { id: 2,   name: "Rory McIlroy",               rank: 2,   earnings: 0, teeTime: "10:30 AM", withdrawn: true },
-  { id: 3,   name: "Tommy Fleetwood",            rank: 3,   earnings: 0, teeTime: "E" },
-  { id: 4,   name: "Xander Schauffele",          rank: 4,   earnings: 0, teeTime: "9:25 AM" },
-  { id: 5,   name: "Matt Fitzpatrick",           rank: 5,   earnings: 0, teeTime: "8:30 AM" },
-  { id: 6,   name: "Hideki Matsuyama",           rank: 6,   earnings: 0, teeTime: "7:00 AM" },
-  { id: 7,   name: "Russell Henley",             rank: 7,   earnings: 0, teeTime: "10:10 AM" },
-  { id: 8,   name: "Collin Morikawa",            rank: 8,   earnings: 0, teeTime: "10:30 AM" },
-  { id: 9,   name: "Si Woo Kim",                 rank: 9,   earnings: 0, teeTime: "8:50 AM" },
-  { id: 10,  name: "Cameron Young",              rank: 10,  earnings: 0, teeTime: "10:40 AM" },
-  { id: 11,  name: "Robert MacIntyre",           rank: 11,  earnings: 0, teeTime: "7:35 AM" },
-  { id: 12,  name: "Patrick Cantlay",            rank: 12,  earnings: 0, teeTime: "6:25 AM" },
-  { id: 13,  name: "Ben Griffin",                rank: 13,  earnings: 0, teeTime: "9:50 AM" },
-  { id: 14,  name: "Harris English",             rank: 14,  earnings: 0, teeTime: "8:40 AM" },
-  { id: 15,  name: "Jake Knapp",                 rank: 15,  earnings: 0, teeTime: "9:05 AM", withdrawn: true },
-  { id: 16,  name: "Viktor Hovland",             rank: 16,  earnings: 0, teeTime: "9:55 AM" },
-  { id: 17,  name: "Sam Burns",                  rank: 17,  earnings: 0, teeTime: "9:15 AM" },
-  { id: 18,  name: "Ludvig Åberg",               rank: 18,  earnings: 0, teeTime: "10:20 AM" },
-  { id: 19,  name: "Kurt Kitayama",              rank: 19,  earnings: 0, teeTime: "8:30 AM" },
-  { id: 20,  name: "Chris Gotterup",             rank: 20,  earnings: 0, teeTime: "10:20 AM" },
-  { id: 21,  name: "Rickie Fowler",              rank: 21,  earnings: 0, teeTime: "9:55 AM" },
-  { id: 22,  name: "Maverick McNealy",           rank: 22,  earnings: 0, teeTime: "9:00 AM" },
-  { id: 23,  name: "Justin Rose",                rank: 23,  earnings: 0, teeTime: "6:55 AM" },
-  { id: 24,  name: "Adam Scott",                 rank: 24,  earnings: 0, teeTime: "9:35 AM" },
-  { id: 25,  name: "Shane Lowry",                rank: 25,  earnings: 0, teeTime: "7:05 AM" },
-  { id: 26,  name: "Justin Thomas",              rank: 26,  earnings: 0, teeTime: "10:20 AM" },
-  { id: 27,  name: "Min Woo Lee",                rank: 27,  earnings: 0, teeTime: "10:30 AM" },
-  { id: 28,  name: "Jason Day",                  rank: 28,  earnings: 0, teeTime: "8:20 AM" },
-  { id: 29,  name: "Keegan Bradley",             rank: 29,  earnings: 0, teeTime: "9:35 AM" },
-  { id: 30,  name: "Jordan Spieth",              rank: 30,  earnings: 0, teeTime: "9:45 AM" },
-  { id: 31,  name: "Pierceson Coody",            rank: 31,  earnings: 0, teeTime: "8:45 AM" },
-  { id: 32,  name: "Jacob Bridgeman",            rank: 32,  earnings: 0, teeTime: "8:50 AM" },
-  { id: 33,  name: "J.J. Spaun",                 rank: 33,  earnings: 0, teeTime: "9:25 AM" },
-  { id: 34,  name: "Akshay Bhatia",              rank: 34,  earnings: 0, teeTime: "10:50 AM" },
-  { id: 35,  name: "Alex Noren",                 rank: 35,  earnings: 0, teeTime: "9:00 AM" },
-  { id: 36,  name: "Nick Taylor",                rank: 36,  earnings: 0, teeTime: "E" },
-  { id: 37,  name: "Harry Hall",                 rank: 37,  earnings: 0, teeTime: "10:10 AM" },
-  { id: 38,  name: "Ryan Gerard",                rank: 38,  earnings: 0, teeTime: "8:20 AM" },
-  { id: 39,  name: "Nicolai Højgaard",           rank: 39,  earnings: 0, teeTime: "8:20 AM" },
-  { id: 40,  name: "Sepp Straka",                rank: 40,  earnings: 0, teeTime: "10:40 AM" },
-  { id: 41,  name: "Corey Conners",              rank: 41,  earnings: 0, teeTime: "7:55 AM" },
-  { id: 42,  name: "Michael Thorbjornsen",       rank: 42,  earnings: 0, teeTime: "9:25 AM" },
-  { id: 43,  name: "Taylor Pendrith",            rank: 43,  earnings: 0, teeTime: "7:25 AM" },
-  { id: 44,  name: "Sam Stevens",                rank: 44,  earnings: 0, teeTime: "8:55 AM" },
-  { id: 45,  name: "Daniel Berger",              rank: 45,  earnings: 0, teeTime: "10:50 AM" },
-  { id: 46,  name: "Sahith Theegala",            rank: 46,  earnings: 0, teeTime: "9:15 AM" },
-  { id: 47,  name: "J.T. Poston",                rank: 47,  earnings: 0, teeTime: "7:40 AM" },
-  { id: 48,  name: "Matt McCarty",               rank: 48,  earnings: 0, teeTime: "7:45 AM" },
-  { id: 49,  name: "Ryan Fox",                   rank: 49,  earnings: 0, teeTime: "7:55 AM" },
-  { id: 50,  name: "Sungjae Im",                 rank: 50,  earnings: 0, teeTime: "9:15 AM" },
-  { id: 51,  name: "Denny McCarthy",             rank: 51,  earnings: 0, teeTime: "8:35 AM" },
-  { id: 52,  name: "Chris Kirk",               rank: 52,  earnings: 0, teeTime: "E" },
-  { id: 53,  name: "Joel Dahmen",               rank: 53,  earnings: 0, teeTime: "4:40 AM" },
-  { id: 54,  name: "Keith Mitchell",                rank: 54,  earnings: 0, teeTime: "7:00 AM" },
-  { id: 55,  name: "Austin Smotherman",               rank: 55,  earnings: 0, teeTime: "7:50 AM", withdrawn: true },
-  { id: 56,  name: "Ryo Hisatsune",            rank: 56,  earnings: 0, teeTime: "8:20 AM" },
-  { id: 57,  name: "Brian Harman",             rank: 57,  earnings: 0, teeTime: "E" },
-  { id: 58,  name: "Patrick Rodgers",          rank: 58,  earnings: 0, teeTime: "9:15 AM" },
-  { id: 59,  name: "Nico Echavarria",           rank: 59,  earnings: 0, teeTime: "7:25 AM" },
-  { id: 60,  name: "Aldrich Potgieter",        rank: 60,  earnings: 0, teeTime: "7:30 AM" },
-  { id: 61,  name: "Bud Cauley",               rank: 61,  earnings: 0, teeTime: "9:45 AM" },
-  { id: 62,  name: "Andrew Novak",             rank: 62,  earnings: 0, teeTime: "7:35 AM" },
-  { id: 63,  name: "Michael Kim",              rank: 63,  earnings: 0, teeTime: "8:05 AM" },
-  { id: 64,  name: "Lucas Glover",             rank: 64,  earnings: 0, teeTime: "7:45 AM" },
-  { id: 65,  name: "Tom Hoge",                 rank: 65,  earnings: 0, teeTime: "4:50 AM" },
-  { id: 66,  name: "Billy Horschel",           rank: 66,  earnings: 0, teeTime: "8:05 AM" },
-  { id: 67,  name: "Taylor Moore",             rank: 67,  earnings: 0, teeTime: "7:10 AM" },
-  { id: 68,  name: "Jhonattan Vegas",          rank: 68,  earnings: 0, teeTime: "9:35 AM" },
-  { id: 69,  name: "Daniel Bennett",           rank: 69,  earnings: 0, teeTime: "E" },
-  { id: 70,  name: "Brian Campbell",           rank: 70,  earnings: 0, teeTime: "5:10 AM" },
-  { id: 71,  name: "Max Greyserman",           rank: 71,  earnings: 0, teeTime: "7:00 AM" },
-  { id: 72,  name: "Andrew Putnam",            rank: 72,  earnings: 0, teeTime: "7:10 AM" },
+  { id: 1, name: "Mark Hubbard", earnings: 0, teeTime: "4:40 AM" },
+  { id: 2, name: "Thorbjorn Olesen", earnings: 0, teeTime: "4:40 AM" },
+  { id: 3, name: "Mac Meissner", earnings: 0, teeTime: "4:40 AM" },
+  { id: 4, name: "Mackenzie Hughes", earnings: 0, teeTime: "4:40 AM" },
+  { id: 5, name: "Eric Cole", earnings: 0, teeTime: "4:40 AM" },
+  { id: 6, name: "Rico Hoey", earnings: 0, teeTime: "4:40 AM" },
+  { id: 7, name: "Bud Cauley", earnings: 0, teeTime: "4:52 AM" },
+  { id: 8, name: "Vince Whaley", earnings: 0, teeTime: "4:52 AM" },
+  { id: 9, name: "Chandler Phillips", earnings: 0, teeTime: "4:52 AM" },
+  { id: 10, name: "Max Homa", earnings: 0, teeTime: "4:52 AM" },
+  { id: 11, name: "Daniel Berger", earnings: 0, teeTime: "4:52 AM" },
+  { id: 12, name: "Michael Thorbjornsen", earnings: 0, teeTime: "4:52 AM" },
+  { id: 13, name: "Emiliano Grillo", earnings: 0, teeTime: "5:04 AM" },
+  { id: 14, name: "Christiaan Bezuidenhout", earnings: 0, teeTime: "5:04 AM" },
+  { id: 15, name: "Max Greyserman", earnings: 0, teeTime: "5:04 AM" },
+  { id: 16, name: "Rasmus Hojgaard", earnings: 0, teeTime: "5:04 AM" },
+  { id: 17, name: "Danny Walker", earnings: 0, teeTime: "5:04 AM" },
+  { id: 18, name: "Kristoffer Reitan", earnings: 0, teeTime: "5:04 AM" },
+  { id: 19, name: "Kevin Yu", earnings: 0, teeTime: "5:16 AM" },
+  { id: 20, name: "Cam Davis", earnings: 0, teeTime: "5:16 AM" },
+  { id: 21, name: "Gary Woodland", earnings: 0, teeTime: "5:16 AM" },
+  { id: 22, name: "Jhonattan Vegas", earnings: 0, teeTime: "5:16 AM" },
+  { id: 23, name: "Taylor Pendrith", earnings: 0, teeTime: "5:16 AM" },
+  { id: 24, name: "Alex Noren", earnings: 0, teeTime: "5:16 AM" },
+  { id: 25, name: "Ricky Castillo", earnings: 0, teeTime: "5:28 AM" },
+  { id: 26, name: "Ryan Gerard", earnings: 0, teeTime: "5:28 AM" },
+  { id: 27, name: "Patrick Cantlay", earnings: 0, teeTime: "5:28 AM" },
+  { id: 28, name: "Akshay Bhatia", earnings: 0, teeTime: "5:28 AM" },
+  { id: 29, name: "Brooks Koepka", earnings: 0, teeTime: "5:28 AM" },
+  { id: 30, name: "Tony Finau", earnings: 0, teeTime: "5:28 AM" },
+  { id: 31, name: "Adam Schenk", earnings: 0, teeTime: "5:40 AM" },
+  { id: 32, name: "Garrick Higgo", earnings: 0, teeTime: "5:40 AM" },
+  { id: 33, name: "Matt McCarty", earnings: 0, teeTime: "5:40 AM" },
+  { id: 34, name: "Collin Morikawa", earnings: 0, teeTime: "5:40 AM" },
+  { id: 35, name: "Ludvig Aberg", earnings: 0, teeTime: "5:40 AM" },
+  { id: 36, name: "Si Woo Kim", earnings: 0, teeTime: "5:40 AM" },
+  { id: 37, name: "Brian Harman", earnings: 0, teeTime: "5:52 AM" },
+  { id: 38, name: "Maverick McNealy", earnings: 0, teeTime: "5:52 AM" },
+  { id: 39, name: "Davis Riley", earnings: 0, teeTime: "5:52 AM" },
+  { id: 40, name: "Scottie Scheffler", earnings: 0, teeTime: "5:52 AM" },
+  { id: 41, name: "Tommy Fleetwood", earnings: 0, teeTime: "5:52 AM" },
+  { id: 42, name: "Justin Thomas", earnings: 0, teeTime: "5:52 AM" },
+  { id: 43, name: "Sami Valimaki", earnings: 0, teeTime: "6:04 AM" },
+  { id: 44, name: "Lucas Glover", earnings: 0, teeTime: "6:04 AM" },
+  { id: 45, name: "Matt Fitzpatrick", earnings: 0, teeTime: "6:04 AM" },
+  { id: 46, name: "Viktor Hovland", earnings: 0, teeTime: "6:04 AM" },
+  { id: 47, name: "Russell Henley", earnings: 0, teeTime: "6:04 AM" },
+  { id: 48, name: "Robert MacIntyre", earnings: 0, teeTime: "6:04 AM" },
+  { id: 49, name: "Michael Brennan", earnings: 0, teeTime: "6:16 AM" },
+  { id: 50, name: "Harris English", earnings: 0, teeTime: "6:16 AM" },
+  { id: 51, name: "J.T. Poston", earnings: 0, teeTime: "6:16 AM" },
+  { id: 52, name: "Aldrich Potgieter", earnings: 0, teeTime: "6:16 AM" },
+  { id: 53, name: "Jake Knapp", earnings: 0, teeTime: "6:16 AM" },
+  { id: 54, name: "Sungjae Im", earnings: 0, teeTime: "6:16 AM" },
+  { id: 55, name: "Haotong Li", earnings: 0, teeTime: "6:28 AM" },
+  { id: 56, name: "Zecheng Dou", earnings: 0, teeTime: "6:28 AM" },
+  { id: 57, name: "Jordan Smith", earnings: 0, teeTime: "6:28 AM" },
+  { id: 58, name: "Patton Kizzire", earnings: 0, teeTime: "6:28 AM" },
+  { id: 59, name: "Seamus Power", earnings: 0, teeTime: "6:28 AM" },
+  { id: 60, name: "Johnny Keefer", earnings: 0, teeTime: "6:28 AM" },
+  { id: 61, name: "Lee Hodges", earnings: 0, teeTime: "9:30 AM" },
+  { id: 62, name: "Andrew Putnam", earnings: 0, teeTime: "9:30 AM" },
+  { id: 63, name: "Sam Stevens", earnings: 0, teeTime: "9:30 AM" },
+  { id: 64, name: "Tom Hoge", earnings: 0, teeTime: "9:30 AM" },
+  { id: 65, name: "Denny McCarthy", earnings: 0, teeTime: "9:30 AM" },
+  { id: 66, name: "Nicolai Hojgaard", earnings: 0, teeTime: "9:30 AM" },
+  { id: 67, name: "Erik van Rooyen", earnings: 0, teeTime: "9:42 AM" },
+  { id: 68, name: "Keith Mitchell", earnings: 0, teeTime: "9:42 AM" },
+  { id: 69, name: "Michael Kim", earnings: 0, teeTime: "9:42 AM" },
+  { id: 70, name: "Patrick Rodgers", earnings: 0, teeTime: "9:42 AM" },
+  { id: 71, name: "Kevin Roy", earnings: 0, teeTime: "9:42 AM" },
+  { id: 72, name: "Marco Penge", earnings: 0, teeTime: "9:42 AM" },
+  { id: 73, name: "Taylor Moore", earnings: 0, teeTime: "9:54 AM" },
+  { id: 74, name: "Joel Dahmen", earnings: 0, teeTime: "9:54 AM" },
+  { id: 75, name: "Ryo Hisatsune", earnings: 0, teeTime: "9:54 AM" },
+  { id: 76, name: "Chad Ramey", earnings: 0, teeTime: "9:54 AM" },
+  { id: 77, name: "Alex Smalley", earnings: 0, teeTime: "9:54 AM" },
+  { id: 78, name: "Pierceson Coody", earnings: 0, teeTime: "9:54 AM" },
+  { id: 79, name: "Jacob Bridgeman", earnings: 0, teeTime: "10:06 AM" },
+  { id: 80, name: "Ben Griffin", earnings: 0, teeTime: "10:06 AM" },
+  { id: 81, name: "Adam Scott", earnings: 0, teeTime: "10:06 AM" },
+  { id: 82, name: "Kurt Kitayama", earnings: 0, teeTime: "10:06 AM" },
+  { id: 83, name: "Harry Hall", earnings: 0, teeTime: "10:06 AM" },
+  { id: 84, name: "Stephan Jaeger", earnings: 0, teeTime: "10:06 AM" },
+  { id: 85, name: "J.J. Spaun", earnings: 0, teeTime: "10:18 AM" },
+  { id: 86, name: "Sepp Straka", earnings: 0, teeTime: "10:18 AM" },
+  { id: 87, name: "Shane Lowry", earnings: 0, teeTime: "10:18 AM" },
+  { id: 88, name: "Keegan Bradley", earnings: 0, teeTime: "10:18 AM" },
+  { id: 89, name: "Ryan Fox", earnings: 0, teeTime: "10:18 AM" },
+  { id: 90, name: "Chris Kirk", earnings: 0, teeTime: "10:18 AM" },
+  { id: 91, name: "Sahith Theegala", earnings: 0, teeTime: "10:30 AM" },
+  { id: 92, name: "Rickie Fowler", earnings: 0, teeTime: "10:30 AM" },
+  { id: 93, name: "Jordan Spieth", earnings: 0, teeTime: "10:30 AM" },
+  { id: 94, name: "Andrew Novak", earnings: 0, teeTime: "10:30 AM" },
+  { id: 95, name: "Nick Taylor", earnings: 0, teeTime: "10:30 AM" },
+  { id: 96, name: "Wyndham Clark", earnings: 0, teeTime: "10:30 AM" },
+  { id: 97, name: "Xander Schauffele", earnings: 0, teeTime: "10:42 AM" },
+  { id: 98, name: "Rory McIlroy", earnings: 0, teeTime: "10:42 AM" },
+  { id: 99, name: "Hideki Matsuyama", earnings: 0, teeTime: "10:42 AM" },
+  { id: 100, name: "Steven Fisk", earnings: 0, teeTime: "10:42 AM" },
+  { id: 101, name: "William Mouw", earnings: 0, teeTime: "10:42 AM" },
+  { id: 102, name: "Joe Highsmith", earnings: 0, teeTime: "10:42 AM" },
+  { id: 103, name: "Chris Gotterup", earnings: 0, teeTime: "10:54 AM" },
+  { id: 104, name: "Justin Rose", earnings: 0, teeTime: "10:54 AM" },
+  { id: 105, name: "Min Woo Lee", earnings: 0, teeTime: "10:54 AM" },
+  { id: 106, name: "Cameron Young", earnings: 0, teeTime: "10:54 AM" },
+  { id: 107, name: "Davis Thompson", earnings: 0, teeTime: "10:54 AM" },
+  { id: 108, name: "Sam Burns", earnings: 0, teeTime: "10:54 AM" },
+  { id: 109, name: "Brian Campbell", earnings: 0, teeTime: "11:06 AM" },
+  { id: 110, name: "Karl Vilips", earnings: 0, teeTime: "11:06 AM" },
+  { id: 111, name: "Aaron Rai", earnings: 0, teeTime: "11:06 AM" },
+  { id: 112, name: "Nico Echavarria", earnings: 0, teeTime: "11:06 AM" },
+  { id: 113, name: "Jason Day", earnings: 0, teeTime: "11:06 AM" },
+  { id: 114, name: "Corey Conners", earnings: 0, teeTime: "11:06 AM" },
+  { id: 115, name: "Matti Schmid", earnings: 0, teeTime: "11:18 AM" },
+  { id: 116, name: "Max McGreevy", earnings: 0, teeTime: "11:18 AM" },
+  { id: 117, name: "Takumi Kanaya", earnings: 0, teeTime: "11:18 AM" },
+  { id: 118, name: "Matthieu Pavon", earnings: 0, teeTime: "11:18 AM" },
+  { id: 119, name: "S.H. Kim", earnings: 0, teeTime: "11:18 AM" },
+  { id: 120, name: "Austin Smotherman", earnings: 0, teeTime: "11:18 AM" },
+  { id: 121, name: "Zach Bauchou", earnings: 0, teeTime: "11:30 AM" },
+  { id: 122, name: "Sudarshan Yellamaraju", earnings: 0, teeTime: "11:30 AM" },
+  { id: 123, name: "A.J. Ewart", earnings: 0, teeTime: "11:30 AM" },
 ];
 
 // ═══════════════════════════════════════════════════════
@@ -2331,8 +2314,8 @@ function renderHistoryPage() {
     const lockedDate = tTeams[0].results?.lockedAt ? new Date(tTeams[0].results.lockedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
     return `<div onclick="showHistoryDetail('${tName.replace(/'/g, "\'")}')"
-      style="background:var(--cream); border:1px solid rgba(59,31,110,0.12); border-radius:8px; padding:18px 22px; margin-bottom:12px; cursor:pointer; transition:box-shadow 0.2s; display:flex; align-items:center; justify-content:space-between; gap:16px;"
-      onmouseover="this.style.boxShadow='0 4px 16px rgba(59,31,110,0.12)'" onmouseout="this.style.boxShadow='none'">
+      style="background:var(--cream); border:1px solid rgba(0,51,98,0.12); border-radius:8px; padding:18px 22px; margin-bottom:12px; cursor:pointer; transition:box-shadow 0.2s; display:flex; align-items:center; justify-content:space-between; gap:16px;"
+      onmouseover="this.style.boxShadow='0 4px 16px rgba(0,51,98,0.12)'" onmouseout="this.style.boxShadow='none'">
       <div>
         <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green);">${tName}</div>
         <div style="font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--green-mid); margin-top:4px; letter-spacing:0.5px;">${tTeams.length} teams · ${lockedDate}</div>
@@ -2378,14 +2361,14 @@ function showHistoryDetail(tName) {
       </div>`;
     }).join('');
 
-    return `<tr style="${isFirst ? 'background:rgba(232,119,34,0.06);' : ''}">
+    return `<tr style="${isFirst ? 'background:rgba(206,170,120,0.06);' : ''}">
       <td style="text-align:center;"><span class="rank-badge ${rankClass}">${rank}</span></td>
       <td>
         <div style="font-weight:700; font-size:0.9rem; color:var(--green); font-family:'Libre Baskerville',serif;">${t.name}</div>
         <div style="font-size:0.7rem; color:#aaa; font-family:'DM Mono',monospace;">${t.owner.split('@')[0]}</div>
       </td>
       <td>
-        <div style="background:rgba(59,31,110,0.04); border-radius:4px; padding:6px 10px;">
+        <div style="background:rgba(0,51,98,0.04); border-radius:4px; padding:6px 10px;">
           ${golferRows}
         </div>
       </td>
@@ -3097,7 +3080,14 @@ function renderLeaderboard() {
       }).filter(Boolean).join('') : '<span style="color:#bbb;font-style:italic;font-size:0.78rem;">Hidden until tournament starts</span>'}</div></td>
       <td style="text-align:center">${earningsDisplay}</td>
       <td style="text-align:center; padding:4px;">
-        <button onclick="toggleH2HTeam('${team.id}')" id="h2h-btn-${team.id}" title="Add to comparison" class="h2h-add-btn">＋</button>
+        <button
+          onclick="toggleH2HTeam(${team.id})"
+          id="h2h-btn-${team.id}"
+          title="Add to comparison"
+          style="width:28px; height:28px; border-radius:50%; border:2px solid #d0c8e0; background:transparent; cursor:pointer; font-size:0.8rem; color:#bbb; transition:all 0.15s; display:flex; align-items:center; justify-content:center; margin:auto;"
+          onmouseover="if(!h2hTeams.has(${team.id}))this.style.cssText=this.style.cssText+'border-color:var(--green-mid);color:var(--green-mid);'"
+          onmouseout="if(!h2hTeams.has(${team.id}))this.style.cssText='width:28px;height:28px;border-radius:50%;border:2px solid #d0c8e0;background:transparent;cursor:pointer;font-size:0.8rem;color:#bbb;transition:all 0.15s;display:flex;align-items:center;justify-content:center;margin:auto;'"
+        >＋</button>
       </td>
     </tr>`;
   }).join('');
@@ -3210,7 +3200,7 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = [4,3,4,5,4,5,3,4,4, 4,4,5,4,3,4,5,3,4]; // Bay Hill Club par 72
+const HOLE_PARS = [4,5,3,4,4,4,3,4,5, 4,4,4,5,4,3,5,3,4]; // TPC Sawgrass par 72
 
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
@@ -3231,7 +3221,7 @@ function toggleScorecard(playerKey, clickedRow) {
   const currentRound = rounds[rounds.length - 1];
   const hasHoleData = currentRound && currentRound.holes.length > 0;
 
-  // If no round data yet, show blank scorecard using Bay Hill pars
+  // If no round data yet, show blank scorecard using TPC Sawgrass pars
   if (!hasHoleData) {
     const blankHoles = Array.from({length: 18}, (_, i) => ({ hole: i+1, score: null, par: HOLE_PARS[i] }));
     const front = blankHoles.slice(0, 9);
@@ -3604,7 +3594,7 @@ function appendChatMessage(msg) {
     <div style="font-size:0.68rem; color:rgba(255,255,255,0.35); font-family:'DM Mono',monospace; margin-bottom:3px; letter-spacing:0.3px; ${isMe ? 'text-align:right;' : ''}">
       ${isMe ? 'You' : escapeHtml(msg.user_name)} · ${date} · ${time}
     </div>
-    <div style="background:${isMe ? 'var(--gold)' : 'rgba(255,255,255,0.12)'}; color:#fff; border:1px solid ${isMe ? 'transparent' : 'rgba(255,255,255,0.15)'}; border-radius:${isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px'}; padding:10px 14px; max-width:78%; font-family:'Libre Baskerville',serif; font-size:0.88rem; line-height:1.45; word-break:break-word; box-shadow:${isMe ? '0 2px 10px rgba(232,119,34,0.3)' : '0 1px 4px rgba(0,0,0,0.2)'};">
+    <div style="background:${isMe ? 'var(--gold)' : 'rgba(255,255,255,0.12)'}; color:#fff; border:1px solid ${isMe ? 'transparent' : 'rgba(255,255,255,0.15)'}; border-radius:${isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px'}; padding:10px 14px; max-width:78%; font-family:'Libre Baskerville',serif; font-size:0.88rem; line-height:1.45; word-break:break-word; box-shadow:${isMe ? '0 2px 10px rgba(206,170,120,0.3)' : '0 1px 4px rgba(0,0,0,0.2)'};">
       ${escapeHtml(msg.message)}
     </div>`;
   messagesEl.appendChild(div);
@@ -4024,7 +4014,7 @@ function renderCareerStats(myTeams) {
 
       const rankNum = snap ? snap.poolRank : (allSorted.findIndex(s => s.id === t.id) + 1);
       const rankBadgeClass = rankNum === 1 ? 'rank-1' : rankNum === 2 ? 'rank-2' : rankNum === 3 ? 'rank-3' : 'rank-other';
-      return `<div style="padding:10px 0; border-bottom:1px solid rgba(59,31,110,0.07);">
+      return `<div style="padding:10px 0; border-bottom:1px solid rgba(0,51,98,0.07);">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px;">
           <div style="display:flex; align-items:center; gap:10px;">
             <span class="rank-badge ${rankBadgeClass}" style="font-size:0.78rem; width:26px; height:26px; flex-shrink:0;">${rankNum}</span>
@@ -4034,13 +4024,13 @@ function renderCareerStats(myTeams) {
             <div style="font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--green);">$${Math.round(earnings).toLocaleString()}</div>
           </div>
         </div>
-        <div style="background:rgba(59,31,110,0.04); border-radius:5px; padding:6px 10px;">
+        <div style="background:rgba(0,51,98,0.04); border-radius:5px; padding:6px 10px;">
           ${golferRows}
         </div>
       </div>`;
     }).join('');
 
-    return `<div style="background:var(--cream); border:1px solid rgba(59,31,110,0.12); border-radius:8px; margin-bottom:12px; overflow:hidden;">
+    return `<div style="background:var(--cream); border:1px solid rgba(0,51,98,0.12); border-radius:8px; margin-bottom:12px; overflow:hidden;">
       <div onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.querySelector('.hist-arrow').textContent = this.nextElementSibling.style.display === 'none' ? '▸' : '▾';"
            style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; cursor:pointer; user-select:none;">
         <div>
@@ -4531,7 +4521,7 @@ function startMusic() {
   musicPlaying = true;
   updateMusicBtn();
   const label = document.getElementById('music-label');
-  label.textContent = '♪ Bay Hill Theme';
+  label.textContent = '♪ TPC Sawgrass Theme';
   label.style.opacity = '1';
   setTimeout(() => { label.style.opacity = '0'; }, 3500);
 }
@@ -4554,7 +4544,7 @@ function updateMusicBtn() {
 window.addEventListener('load', () => {
   setTimeout(() => {
     const label = document.getElementById('music-label');
-    label.textContent = '♪ Click for Bay Hill theme';
+    label.textContent = '♪ Click for Players theme';
     label.style.opacity = '1';
     setTimeout(() => { label.style.opacity = '0'; }, 4000);
   }, 1500);
@@ -4576,6 +4566,16 @@ function closeMobileNav() {
   nav.classList.remove('mobile-open');
   hamburger.classList.remove('open');
 }
+
+// Clear old tournament localStorage on new tournament
+(function() {
+  const prevTournament = localStorage.getItem('poolTournament');
+  if (prevTournament !== 'The Players Championship 2026') {
+    localStorage.removeItem('officialCutMade');
+    localStorage.setItem('poolTournament', 'The Players Championship 2026');
+    console.log('[Pool] New tournament detected — localStorage cleared');
+  }
+})();
 
 initApp();
 // ═══════════════════════════════════════════════════════
@@ -4610,14 +4610,14 @@ function closeH2H() {
 function updateH2HButtons() {
   // Update all compare buttons in the table
   document.querySelectorAll('[id^="h2h-btn-"]').forEach(btn => {
-    const id = btn.id.replace('h2h-btn-', '');
+    const id = parseInt(btn.id.replace('h2h-btn-', ''));
     if (h2hTeams.has(id)) {
       btn.className = 'h2h-btn-active';
       btn.textContent = '✓';
       btn.title = 'Remove from comparison';
     } else {
-      btn.className = 'h2h-add-btn';
-      btn.style.cssText = '';
+      btn.className = '';
+      btn.style.cssText = 'width:28px;height:28px;border-radius:50%;border:2px solid #d0c8e0;background:transparent;cursor:pointer;font-size:0.8rem;color:#bbb;transition:all 0.15s;display:flex;align-items:center;justify-content:center;margin:auto;';
       btn.textContent = '＋';
       btn.title = h2hTeams.size >= 5 ? 'Max 5 teams' : 'Add to comparison';
     }
@@ -4630,108 +4630,153 @@ function updateH2HButtons() {
   chipsEl.innerHTML = [...h2hTeams].map(id => {
     const t = allTeams.find(t => t.id === id);
     if (!t) return '';
-    return `<span class="h2h-chip">${t.name}<button onclick="toggleH2HTeam('${id}')" title="Remove">✕</button></span>`;
+    return `<span class="h2h-chip">${t.name}<button onclick="toggleH2HTeam(${id})" title="Remove">✕</button></span>`;
   }).join('');
   if (hint) hint.style.display = h2hTeams.size >= 5 ? 'none' : 'inline';
 }
 
 function renderH2H() {
-  const container = document.getElementById('h2h-content');
-  if (!container) return;
+  const content = document.getElementById('h2h-content');
+  if (!content) return;
 
   const teams = [...h2hTeams].map(id => allTeams.find(t => t.id === id)).filter(Boolean);
 
   if (teams.length < 2) {
-    container.innerHTML = `<div style="text-align:center; padding:16px 0; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.3); letter-spacing:2px;">ADD ANOTHER TEAM TO COMPARE</div>`;
+    content.innerHTML = `<div style="text-align:center; padding:20px 0; font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(255,255,255,0.3); letter-spacing:1px;">ADD ANOTHER TEAM TO START COMPARING</div>`;
     return;
   }
 
   const hasLive = Object.keys(liveScores).length > 0 && (window._playHasStarted || false);
 
-  // Build golfer data map
+  // Build golfer id → earnings + posDisplay map
   const golferData = {};
   GOLFERS.forEach(g => {
     golferData[g.id] = {
       name: g.name,
-      earnings: (!g.liveData?.wd && !g.cutMissed) ? (g.earnings || 0) : 0,
-      pos: g.liveData?.wd ? 'WD' : g.cutMissed ? 'MC' : (g.liveData?.posDisplay || '–'),
-      thru: g.liveData?.thru || '–',
+      earnings: g.earnings || 0,
+      pos: g.liveData?.posDisplay || '–',
       wd: g.withdrawn || g.liveData?.wd,
       cut: g.cutMissed,
     };
   });
 
+  // Categorize each golfer across selected teams
+  // shared_all: on every team | shared_some: on 2+ but not all | unique: on exactly 1
+  const teamGolferSets = teams.map(t => new Set(t.golfers));
+  const allGolferIds = new Set(teams.flatMap(t => t.golfers));
+
+  const sharedAll = [], sharedSome = [], unique = [];
+  allGolferIds.forEach(gid => {
+    const count = teams.filter(t => t.golfers.includes(gid)).length;
+    if (count === teams.length) sharedAll.push(gid);
+    else if (count >= 2) sharedSome.push(gid);
+    else unique.push(gid);
+  });
+
+  // Helper: short name
   const short = name => { const p = name.trim().split(' '); return p.length > 1 ? p[0][0]+'. '+p.slice(1).join(' ') : name; };
 
-  // Total earnings per team
-  const teamTotals = teams.map(t => ({
-    team: t,
-    total: t.golfers.reduce((s, gid) => s + (golferData[gid]?.earnings || 0), 0)
-  }));
-  const maxTotal = Math.max(...teamTotals.map(x => x.total), 1);
-  const winnerTotal = Math.max(...teamTotals.map(x => x.total));
-  const winnerId = teamTotals.find(x => x.total === winnerTotal)?.team.id;
+  // Helper: render a golfer row — columns depend on section
+  const golferRow = (gid, ownerTeams) => {
+    const g = golferData[gid];
+    if (!g) return '';
+    const pos = g.wd ? 'WD' : g.cut ? 'MC' : g.pos;
+    const earn = g.wd || g.cut ? 0 : g.earnings;
+    const earnStr = hasLive ? (earn > 0 ? `$${Math.round(earn).toLocaleString()}` : '$0') : '–';
+    const earnClass = earn > 0 ? 'h2h-earn' : 'h2h-earn zero';
+    const ownerStr = ownerTeams ? `<span class="h2h-owner-tag">${ownerTeams.map(t=>t.name).join(', ')}</span>` : '';
+    return `
+      <div class="h2h-golfer-row" style="grid-template-columns: 28px 1fr auto ${ownerTeams ? '1fr' : ''};">
+        <span class="h2h-pos">${pos !== '–' ? pos : ''}</span>
+        <span class="h2h-name">${short(g.name)}</span>
+        <span class="${earnClass}">${earnStr}</span>
+        ${ownerStr}
+      </div>`;
+  };
 
-  // Which golfers are shared vs unique
-  const sharedSet = new Set();
-  teams[0].golfers.forEach(gid => {
-    if (teams.every(t => t.golfers.includes(gid))) sharedSet.add(gid);
+  // Unique golfers per team — build team-level breakdown
+  const teamUniqueEarnings = teams.map(t => {
+    const uIds = t.golfers.filter(gid => unique.includes(gid));
+    const earn = uIds.reduce((s, gid) => {
+      const g = golferData[gid];
+      return s + (g && !g.wd && !g.cut ? g.earnings : 0);
+    }, 0);
+    return { team: t, golferIds: uIds, earn };
   });
 
-  // ── Build column HTML ──
-  const cols = teams.map((team, ti) => {
-    const isWinner = team.id === winnerId && teams.length > 1;
-    const myTotal = teamTotals.find(x => x.team.id === team.id).total;
-    const gap = winnerTotal - myTotal;
+  // Sort by unique earnings desc to find who's winning
+  const sorted = [...teamUniqueEarnings].sort((a,b) => b.earn - a.earn);
+  const leaderId = sorted[0]?.team.id;
+  const leaderEarn = sorted[0]?.earn || 0;
 
-    // Sort golfers: best earnings first, shared golfers dimmed
-    const sortedGolfers = [...team.golfers].sort((a, b) => {
-      const ea = golferData[a]?.earnings || 0;
-      const eb = golferData[b]?.earnings || 0;
-      return eb - ea;
-    });
+  let html = '';
 
-    const rows = sortedGolfers.map(gid => {
-      const g = golferData[gid];
-      if (!g) return '';
-      const isShared = sharedSet.has(gid);
-      const earnStr = hasLive ? (g.earnings > 0 ? '$'+Math.round(g.earnings).toLocaleString() : '$0') : '–';
-      const posColor = g.wd || g.cut ? 'rgba(255,255,255,0.25)' : 'var(--gold)';
-      const thruStr = (!g.wd && !g.cut && g.thru && g.thru !== '–' && g.thru !== '-') ? g.thru : '';
-      return `<div class="h2h-col-row${isShared ? ' h2h-shared' : ''}">
-        <span class="h2h-col-pos" style="color:${posColor}">${g.pos !== '–' ? g.pos : ''}</span>
-        <span class="h2h-col-name">${short(g.name)}${isShared ? '<span class="h2h-shared-dot" title="Shared">·</span>' : ''}</span>
-        <span class="h2h-col-thru">${thruStr}</span>
-        <span class="h2h-col-earn${g.earnings > 0 ? '' : ' dim'}">${earnStr}</span>
-      </div>`;
-    }).join('');
-
-    return `<div class="h2h-col${isWinner ? ' h2h-col-winner' : ''}">
-      <div class="h2h-col-header">
-        <span class="h2h-col-teamname">${team.name}</span>
-        ${isWinner ? '<span class="h2h-winner-crown">🏆</span>' : ''}
-      </div>
-      <div class="h2h-col-golfers">${rows}</div>
-      <div class="h2h-col-footer">
-        <div class="h2h-col-total">${hasLive ? '$'+Math.round(myTotal).toLocaleString() : '–'}</div>
-        ${!isWinner && gap > 0 && hasLive ? `<div class="h2h-col-gap">–$${gap.toLocaleString()} back</div>` : ''}
+  // ── SHARED BY ALL (cancel out) ──
+  if (sharedAll.length) {
+    html += `<div style="margin-bottom:16px;">
+      <div class="h2h-section-label">🤝 Shared by all — cancel out</div>
+      <div style="opacity:0.45;">
+        ${sharedAll.map(gid => golferRow(gid, null)).join('')}
       </div>
     </div>`;
-  });
-
-  // ── Shared golfer note ──
-  let sharedNote = '';
-  if (sharedSet.size > 0) {
-    const names = [...sharedSet].map(gid => short(golferData[gid]?.name || '')).filter(Boolean).join(', ');
-    sharedNote = `<div class="h2h-shared-note">· shared by all: ${names}</div>`;
   }
 
-  container.innerHTML = `
-    <div class="h2h-cols" style="grid-template-columns:repeat(${teams.length},1fr)">
-      ${cols.join('')}
-    </div>
-    ${sharedNote}
-  `;
+  // ── SHARED BY SOME ──
+  if (sharedSome.length) {
+    html += `<div style="margin-bottom:16px;">
+      <div class="h2h-section-label">⚖️ Partial overlap</div>
+      ${sharedSome.map(gid => {
+        const owners = teams.filter(t => t.golfers.includes(gid));
+        return golferRow(gid, owners);
+      }).join('')}
+    </div>`;
+  }
+
+  // ── UNIQUE — THE REAL BATTLE ──
+  if (unique.length) {
+    html += `<div style="margin-bottom:14px;">
+      <div class="h2h-section-label">⚡ Pure differentiators</div>
+      <div style="display:grid; grid-template-columns:repeat(${teams.length}, 1fr); gap:10px; align-items:start;">
+        ${teams.map(team => {
+          const uIds = team.golfers.filter(gid => unique.includes(gid));
+          return `<div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px; text-transform:uppercase;">${team.name}</div>
+            ${uIds.length ? uIds.map(gid => {
+              const g = golferData[gid];
+              if (!g) return '';
+              const pos = g.wd ? 'WD' : g.cut ? 'MC' : g.pos;
+              const earn = g.wd || g.cut ? 0 : g.earnings;
+              const earnStr = hasLive ? (earn > 0 ? `$${Math.round(earn).toLocaleString()}` : '$0') : '–';
+              return `<div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.78rem;">
+                <span style="font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--gold); margin-right:5px;">${pos !== '–' ? pos : ''}</span>
+                <span style="color:var(--cream);">${short(g.name)}</span>
+                <span style="float:right; font-family:'DM Mono',monospace; font-size:0.72rem; color:${earn>0?'#7ee8a2':'rgba(255,255,255,0.3)'};">${earnStr}</span>
+              </div>`;
+            }).join('') : `<div style="font-size:0.72rem; color:rgba(255,255,255,0.2); font-style:italic;">No unique players</div>`}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+
+    // ── TOTALS (unique only) ──
+    html += `<div style="display:grid; grid-template-columns:repeat(${teams.length}, 1fr); gap:10px; margin-top:4px;">
+      ${sorted.map((item, idx) => {
+        const isLeader = item.team.id === leaderId;
+        const gap = isLeader ? '' : (leaderEarn - item.earn > 0 ? ` <span style="font-size:0.65rem; color:rgba(255,255,255,0.35);">−$${(leaderEarn-item.earn).toLocaleString()}</span>` : '');
+        return `<div class="h2h-total-bar${isLeader && teams.length>1 ? ' winner' : ''}">
+          <div>
+            <div class="label">${item.team.name}</div>
+            <div class="amount">$${Math.round(item.earn).toLocaleString()}${gap}</div>
+          </div>
+          ${isLeader && teams.length>1 ? '<span style="font-size:1rem;">🏆</span>' : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  } else if (teams.length >= 2) {
+    html += `<div style="text-align:center; padding:10px 0; font-family:'DM Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.3); letter-spacing:1px;">ALL GOLFERS ARE SHARED — PERFECTLY MATCHED</div>`;
+  }
+
+  content.innerHTML = html;
 }
 
 </script>
