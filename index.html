@@ -448,7 +448,7 @@
     transition: all 0.2s;
   }
   .team-slot.filled { border-style: solid; border-color: var(--gold); color: white; background: rgba(255,255,255,0.1); font-style: normal; font-weight: 600; }
-  .slot-remove { background: none; border: none; color: rgba(255,100,100,0.8); cursor: pointer; font-size: 1rem; line-height: 1; padding: 2px 4px; border-radius: 3px; }
+  .slot-remove { background: none; border: none; color: rgba(206,170,120,0.8); cursor: pointer; font-size: 1rem; line-height: 1; padding: 2px 4px; border-radius: 3px; }
   .slot-remove:hover { background: #ffeaea; }
   .team-name-input { width: 100%; padding: 9px 12px; border: 1.5px solid #d4d0c8; border-radius: 4px; font-family: 'Libre Baskerville', serif; font-size: 0.9rem; background: var(--cream); margin-bottom: 16px; }
   .team-name-input:focus { outline: none; border-color: var(--green-light); }
@@ -470,7 +470,7 @@
   }
   .leaderboard-table td { padding: 11px 14px; border-bottom: 1px solid #ece8df; font-size: 0.9rem; vertical-align: middle; }
   #page-leaderboard .leaderboard-table tr:nth-child(even) td { background: #f8f5ee; }
-  .leaderboard-table tr:hover td { background: #eef8f3; }
+  .leaderboard-table tr:hover td { background: #e8f0f8; }
   .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.9rem; }
   .rank-1 { background: var(--gold); color: var(--dark); }
   .rank-2 { background: #c0c0c0; color: var(--dark); }
@@ -479,7 +479,7 @@
   .team-golfers-mini { font-size: 0.75rem; color: #888; font-family: 'DM Mono', monospace; margin-top: 2px; }
   .earnings-display { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--green); }
   .owner-tag { font-size: 0.75rem; color: #999; }
-  .my-team-row td { background: rgba(110,70,180,0.13) !important; }
+  .my-team-row td { background: rgba(0,51,98,0.09) !important; }
 
   /* ─── MY TEAMS ─── */
   .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 8px; }
@@ -508,21 +508,21 @@
   .tournament-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 700px) { .tournament-grid { grid-template-columns: 1fr; } }
   .tourn-table-wrap { overflow-x: auto; }
-  .live-badge { display: inline-flex; align-items: center; gap: 6px; background: #e8fff2; border: 1px solid #4caf7d; color: #1a5c35; font-family: 'DM Mono', monospace; font-size: 0.72rem; padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; }
-  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #2ecc71; animation: pulse 1.5s infinite; }
+  .live-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(206,170,120,0.15); border: 1px solid var(--gold); color: var(--green); font-family: 'DM Mono', monospace; font-size: 0.72rem; padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .score-under { color: #c0392b; font-weight: 700; }
-  .score-over { color: #666; }
+  .score-under { color: var(--green); font-weight: 700; }
+  .score-over { color: #888; }
   .score-even { color: #444; }
   .highlight-row { background: rgba(201,168,76,0.12) !important; }
   .highlight-row td { font-weight: 600; }
 
   /* ─── LIVE CHANGE ANIMATIONS ─── */
   @keyframes earningsFlash {
-    0%   { background: rgba(90,58,138,0.0); }
-    15%  { background: rgba(90,58,138,0.45); }
-    50%  { background: rgba(90,58,138,0.28); }
-    100% { background: rgba(90,58,138,0.0); }
+    0%   { background: rgba(0,51,98,0.0); }
+    15%  { background: rgba(206,170,120,0.45); }
+    50%  { background: rgba(206,170,120,0.25); }
+    100% { background: rgba(0,51,98,0.0); }
   }
   @keyframes firstPlacePulse {
     0%   { box-shadow: 0 0 0 0 rgba(206,170,120,0.0); }
@@ -552,8 +552,8 @@
     animation: possBadgeIn 3.5s ease forwards;
     pointer-events: none;
   }
-  .pos-change-badge.up   { background: rgba(46,180,100,0.18); color: #1a7a42; }
-  .pos-change-badge.down { background: rgba(200,60,60,0.15);  color: #a02020; }
+  .pos-change-badge.up   { background: rgba(206,170,120,0.2); color: var(--green); }
+  .pos-change-badge.down { background: rgba(0,51,98,0.12);    color: var(--green-mid); }
   .golfer-pos-arrow {
     display: inline-block;
     font-family: 'DM Mono', monospace;
@@ -563,8 +563,8 @@
     vertical-align: middle;
     pointer-events: none;
   }
-  .golfer-pos-arrow.up   { color: #2eb464; }
-  .golfer-pos-arrow.down { color: #c03c3c; }
+  .golfer-pos-arrow.up   { color: var(--gold); }
+  .golfer-pos-arrow.down { color: var(--green-mid); }
   .golfer-pos-arrow.animating { animation: possBadgeIn 3.5s ease forwards; }
 
   /* ─── HEAD TO HEAD ─── */
@@ -591,7 +591,7 @@
   .h2h-golfer-row:last-child { border-bottom: none; }
   .h2h-name { font-family: 'Libre Baskerville', serif; color: var(--cream); }
   .h2h-pos  { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--gold); }
-  .h2h-earn { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: #7ee8a2; }
+  .h2h-earn { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--gold); }
   .h2h-earn.zero { color: rgba(255,255,255,0.3); }
   .h2h-owner-tag { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: rgba(255,255,255,0.4); }
   .h2h-btn-active {
@@ -608,7 +608,7 @@
     font-family: 'DM Mono', monospace;
   }
   .h2h-total-bar .label { font-size: 0.65rem; letter-spacing: 1px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
-  .h2h-total-bar .amount { font-size: 0.92rem; font-weight: 700; color: #7ee8a2; }
+  .h2h-total-bar .amount { font-size: 0.92rem; font-weight: 700; color: var(--gold); }
   .h2h-total-bar.winner { background: rgba(206,170,120,0.15); border: 1px solid rgba(206,170,120,0.3); }
   .h2h-total-bar.winner .amount { color: var(--gold); }
   #btn-h2h-add-hint-label { font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(255,255,255,0.3); }
@@ -667,8 +667,8 @@
     max-width: 320px;
   }
   #toast.show { transform: translateY(0); opacity: 1; }
-  #toast.success { border-left-color: #2ecc71; }
-  #toast.error { border-left-color: #e74c3c; }
+  #toast.success { border-left-color: var(--gold); }
+  #toast.error { border-left-color: var(--green); }
 
   /* ─── SCROLLBAR ─── */
   ::-webkit-scrollbar { width: 6px; }
@@ -794,7 +794,7 @@
       <button id="nav-enter" onclick="requireAuth(() => showPage('builder'))">Enter a Team</button>
       <button onclick="showPage('leaderboard')" id="nav-leaderboard">Pool Standings</button>
       <button onclick="showPage('tournament')" id="nav-tournament">Live Scores</button>
-      <button onclick="showPage('stats')" id="nav-stats">Player Stats</button>
+      <button onclick="showPage('stats')" id="nav-stats" style="display:none;">Player Stats</button>
       <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(206,170,120,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
       <button onclick="showPage('history')" id="nav-history">History</button>
       <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem;">⚙ Admin</button>
@@ -946,7 +946,7 @@
         <!-- Left: Build your team -->
         <div class="team-panel" style="flex:1; min-width:0; display:flex; flex-direction:column;">
           <h3>Your Team</h3>
-          <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team..." maxlength="40" style="margin-bottom:4px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(255,255,255,0.9); color:#2a1f5e; border-radius:6px; padding:10px 12px; font-size:0.95rem; width:100%; box-sizing:border-box;" oninput="updateMobileTracker(); clearNameError()" />
+          <input class="team-name-input" id="team-name-input" type="text" placeholder="Name your team..." maxlength="40" style="margin-bottom:4px; background:rgba(255,255,255,0.92); border:1.5px solid rgba(255,255,255,0.9); color:#003362; border-radius:6px; padding:10px 12px; font-size:0.95rem; width:100%; box-sizing:border-box;" oninput="updateMobileTracker(); clearNameError()" />
           <div id="panel-name-error" style="display:none; color:#ff6b6b; font-size:0.75rem; font-family:'DM Mono',monospace; margin-bottom:10px; padding:6px 10px; background:rgba(255,100,100,0.15); border-left:3px solid #ff6b6b; border-radius:0 4px 4px 0;"></div>
           <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
             <div id="team-slots" style="display:flex; flex-direction:column; gap:8px;"></div>
@@ -1147,7 +1147,7 @@
       <!-- Header -->
       <div style="margin-bottom:20px;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
-          <div style="width:10px; height:10px; background:#4caf50; border-radius:50%; box-shadow:0 0 6px #4caf50; animation:pulse-dot 2s infinite;"></div>
+          <div style="width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 6px var(--gold); animation:pulse-dot 2s infinite;"></div>
           <h2 style="font-family:'Libre Baskerville',serif; color:#fff; font-size:1.4rem; margin:0;">Live Chat</h2>
         </div>
         <p style="color:rgba(255,255,255,0.45); font-size:0.82rem; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-left:20px;">TALK TRASH · CELEBRATE · COMMISERATE</p>
@@ -2236,11 +2236,11 @@ function updateFetchStatus(status) {
     el.style.color = '#888';
   } else if (status === 'success') {
     el.textContent = '● Live';
-    el.style.color = '#2ecc71';
+    el.style.color = '#ceaa78';
     if (timeEl && lastFetchTime) timeEl.textContent = 'Updated ' + lastFetchTime.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   } else {
     el.textContent = '○ Offline';
-    el.style.color = '#e74c3c';
+    el.style.color = '#1a5490';
   }
 }
 
@@ -2625,6 +2625,7 @@ function updateNav() {
   const homeBtn = document.getElementById('home-team-btn');
   if (homeBtn) homeBtn.textContent = adminSettings.registrationOpen ? 'Build Your Team →' : 'View Your Team →';
   document.getElementById('nav-tournament').style.display = TOURNAMENT_ACTIVE ? '' : 'none';
+  document.getElementById('nav-stats').style.display = TOURNAMENT_ACTIVE ? '' : 'none';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4376,9 +4377,9 @@ async function lockTournamentResults() {
 
   if (errorCount === 0) {
     btn.textContent = '✓ LOCKED';
-    btn.style.background = '#4caf50';
+    btn.style.background = 'var(--green)';
     status.textContent = `✅ Results locked for ${successCount} teams. Profile history will now show final standings.`;
-    status.style.color = '#2e7d32';
+    status.style.color = 'var(--green)';
   } else {
     btn.disabled = false;
     btn.textContent = 'RETRY';
@@ -4810,7 +4811,7 @@ function renderH2H() {
               return `<div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.78rem;">
                 <span style="font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--gold); margin-right:5px;">${pos !== '–' ? pos : ''}</span>
                 <span style="color:var(--cream);">${short(g.name)}</span>
-                <span style="float:right; font-family:'DM Mono',monospace; font-size:0.72rem; color:${earn>0?'#7ee8a2':'rgba(255,255,255,0.3)'};">${earnStr}</span>
+                <span style="float:right; font-family:'DM Mono',monospace; font-size:0.72rem; color:${earn>0?'#ceaa78':'rgba(255,255,255,0.3)'};">${earnStr}</span>
               </div>`;
             }).join('') : `<div style="font-size:0.72rem; color:rgba(255,255,255,0.2); font-style:italic;">No unique players</div>`}
           </div>`;
