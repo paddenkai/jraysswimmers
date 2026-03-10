@@ -3043,7 +3043,7 @@ function openVenmo() {
   const noteEl = document.getElementById('payment-note-display');
   const note = noteEl ? encodeURIComponent(noteEl.textContent) : '';
   const teamCount = allTeams.filter(t => t.owner === currentUser.email && !t.paid).length;
-  const amount = teamCount * 10;
+  const amount = teamCount * 15;
   const appUrl = `venmo://paycharge?txn=pay&recipients=JRaysPool&amount=${amount}&note=${note}`;
   const webUrl = `https://venmo.com/u/JRaysPool`;
   window.location.href = appUrl;
