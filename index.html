@@ -2885,9 +2885,9 @@ async function proceedToPayment() {
   if (cart.length === 0) { showToast('Add at least one team to your cart.', 'error'); return; }
   if (!currentUser) { openAuthModal(); return; }
 
-  // Check all cart team names for duplicates against existing DB teams
-  const { data: allExisting } = await sb.from('teams').select('name');
-  const existingNames = (allExisting || []).map(t => t.name.toLowerCase().trim());
+  // Check all cart team names for duplicates against existing DB teams (current tournament only)
+  const { data: allExisting } = await sb.from('teams').select('name, tournament');
+  const existingNames = (allExisting || []).filter(t => (t.tournament || '') === TOURNAMENT_NAME).map(t => t.name.toLowerCase().trim());
   for (const t of cart) {
     const n = t.name.toLowerCase().trim();
     if (existingNames.includes(n)) {
