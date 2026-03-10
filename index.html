@@ -3042,7 +3042,7 @@ function openVenmo() {
   // Teams already saved on checkout — just open Venmo
   const noteEl = document.getElementById('payment-note-display');
   const note = noteEl ? encodeURIComponent(noteEl.textContent) : '';
-  const teamCount = allTeams.filter(t => t.owner === currentUser.email && !t.paid).length;
+  const teamCount = cart.length || 1;
   const amount = teamCount * 15;
   const appUrl = `venmo://paycharge?txn=pay&recipients=JRaysPool&amount=${amount}&note=${note}`;
   const webUrl = `https://venmo.com/u/JRaysPool`;
