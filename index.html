@@ -4427,9 +4427,10 @@ function renderAdminPanel() {
   if (!adminLoggedIn) return;
   if (!document.getElementById('page-admin').classList.contains('active')) return;
   console.log('renderAdminPanel called, allTeams length:', allTeams.length);
-  const paid = allTeams.filter(t => t.paid);
-  const unpaid = allTeams.filter(t => !t.paid);
-  document.getElementById('admin-stat-total').textContent = allTeams.length;
+  const currentTeams = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME);
+  const paid = currentTeams.filter(t => t.paid);
+  const unpaid = currentTeams.filter(t => !t.paid);
+  document.getElementById('admin-stat-total').textContent = currentTeams.length;
   document.getElementById('admin-stat-paid').textContent = paid.length;
   document.getElementById('admin-stat-unpaid').textContent = unpaid.length;
   document.getElementById('admin-stat-collected').textContent = '$' + (paid.length * CONFIG.ENTRY_FEE).toLocaleString();
