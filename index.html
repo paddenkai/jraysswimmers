@@ -193,6 +193,7 @@
     #page-chat.active { margin: -20px -14px; }
   }
   #page-home { background: var(--dark); margin: -40px -24px; padding: 0; min-height: calc(100vh - 120px); }
+  main:has(#page-home.active) { background: var(--dark); }
 
   /* ─── MODAL ─── */
   .modal-overlay {
@@ -827,14 +828,18 @@
       <!-- Background -->
       <div style="position:absolute; inset:0; background: #001428;"></div>
       <div style="position:absolute; inset:0; overflow:hidden;">
-        <!-- Aurora band 1 - gold/amber -->
-        <div style="position:absolute; width:140%; height:320px; top:10%; left:-20%; background: linear-gradient(180deg, transparent 0%, rgba(206,170,120,0.13) 40%, rgba(206,170,120,0.18) 55%, transparent 100%); border-radius:50%; filter:blur(40px); animation: aurora1 12s ease-in-out infinite;"></div>
-        <!-- Aurora band 2 - deep teal/blue -->
-        <div style="position:absolute; width:120%; height:260px; top:25%; left:-10%; background: linear-gradient(180deg, transparent 0%, rgba(26,84,144,0.35) 40%, rgba(0,80,160,0.3) 55%, transparent 100%); border-radius:50%; filter:blur(50px); animation: aurora2 17s ease-in-out infinite reverse;"></div>
-        <!-- Aurora band 3 - lighter gold streak -->
-        <div style="position:absolute; width:80%; height:180px; top:15%; right:-5%; background: linear-gradient(180deg, transparent 0%, rgba(206,170,120,0.09) 50%, transparent 100%); border-radius:50%; filter:blur(35px); animation: aurora3 22s ease-in-out infinite;"></div>
-        <!-- Aurora band 4 - deep navy fill -->
-        <div style="position:absolute; width:100%; height:400px; bottom:0; left:0; background: linear-gradient(180deg, transparent 0%, rgba(0,20,40,0.7) 100%);"></div>
+        <!-- Aurora band 1 - strong gold sweep -->
+        <div style="position:absolute; width:140%; height:340px; top:8%; left:-20%; background: linear-gradient(180deg, transparent 0%, rgba(206,170,120,0.22) 35%, rgba(206,170,120,0.32) 55%, transparent 100%); border-radius:50%; filter:blur(38px); animation: aurora1 12s ease-in-out infinite;"></div>
+        <!-- Aurora band 2 - deep blue underpinning -->
+        <div style="position:absolute; width:120%; height:260px; top:25%; left:-10%; background: linear-gradient(180deg, transparent 0%, rgba(26,84,144,0.3) 40%, rgba(0,80,160,0.25) 55%, transparent 100%); border-radius:50%; filter:blur(50px); animation: aurora2 17s ease-in-out infinite reverse;"></div>
+        <!-- Aurora band 3 - bright gold streak right side -->
+        <div style="position:absolute; width:90%; height:220px; top:12%; right:-10%; background: linear-gradient(180deg, transparent 0%, rgba(206,170,120,0.2) 45%, rgba(222,192,144,0.15) 60%, transparent 100%); border-radius:50%; filter:blur(32px); animation: aurora3 22s ease-in-out infinite;"></div>
+        <!-- Aurora band 4 - warm gold low glow -->
+        <div style="position:absolute; width:70%; height:200px; bottom:10%; left:10%; background: linear-gradient(180deg, transparent 0%, rgba(206,170,120,0.1) 50%, transparent 100%); border-radius:50%; filter:blur(45px); animation: aurora1 18s ease-in-out infinite reverse;"></div>
+        <!-- Aurora band 5 - deep navy fill -->
+        <div style="position:absolute; width:100%; height:400px; bottom:0; left:0; background: linear-gradient(180deg, transparent 0%, rgba(0,20,40,0.6) 100%);"></div>
+        <!-- Bottom fade to page background -->
+        <div style="position:absolute; width:100%; height:120px; bottom:0; left:0; background: linear-gradient(180deg, transparent 0%, #001428 100%);"></div>
       </div>
 
       <div style="position:relative; z-index:2; padding: 50px 40px 56px; max-width:900px; margin:0 auto; box-sizing:border-box; width:100%;">
@@ -874,24 +879,24 @@
         <!-- Cards -->
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:1px; background:rgba(206,170,120,0.35); border:1px solid rgba(206,170,120,0.35); border-radius:8px; overflow:hidden;">
 
-          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center;">
+          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Draft Your Teams</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Pick 5 golfers from the The Players Championship field. Enter as many teams as you want — more teams, more chances to win.</div>
+            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Pick 5 golfers from the The Players Championship field. Enter as many teams as you want — more teams, more chances to win.</div>
           </div>
 
-          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center;">
+          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Pay via Venmo</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Send $15 per team to <span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.78rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</div>
+            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $15 per team to <span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.78rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
           </div>
 
-          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center;">
+          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Most Earnings Wins</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Your score is the total prize money earned by your 5 golfers at TPC Sawgrass. Highest total takes the pot.</div>
+            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at TPC Sawgrass. Highest total takes the pot.</div>
           </div>
 
-          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center;">
+          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Follow Live</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7;">Live scores update throughout the tournament. Track your team against the field from anywhere.</div>
+            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update throughout the tournament. Track your team against the field from anywhere.</div>
           </div>
 
         </div>
