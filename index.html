@@ -807,6 +807,7 @@
 <!-- STATS BAR -->
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><div class="stat-val" id="stat-entries">0</div><div class="stat-label">Teams Entered</div></div>
+  <div class="stat"><div class="stat-val" id="stat-pot">$0</div><div class="stat-label">Total Pot</div></div>
   <div class="stat" id="stat-cut-wrap" style="display:none;"><div class="stat-val" id="stat-countdown">–</div><div class="stat-label">Current Cut Line</div></div>
   <div class="stat" id="stat-leader-wrap" style="display:none;">
     <div class="stat-val" id="stat-leader">–</div>
@@ -2331,6 +2332,7 @@ function getTournamentTheme(tName) {
       accent: '#e87722',
       cardBg: 'rgba(184,115,51,0.06)',
       hover: 'rgba(184,115,51,0.1)',
+      poolPayout: 190,
     },
   };
   return themes[tName] || null;
@@ -2373,6 +2375,7 @@ function renderHistoryPage() {
     const totalPot = tTeams.reduce((sum, t) => sum + (t.results.teamEarnings || 0), 0);
     const lockedDate = tTeams[0].results?.dates || (tTeams[0].results?.lockedAt ? new Date(tTeams[0].results.lockedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '');
     const th = getTournamentTheme(tName);
+    const displayPot = th?.poolPayout != null ? '$' + th.poolPayout.toLocaleString() : '$' + Math.round(totalPot).toLocaleString();
     const cardBg = th ? th.bg : 'var(--cream)';
     const cardBorder = th ? th.border : 'rgba(0,51,98,0.12)';
     const titleColor = th ? th.title : 'var(--green)';
@@ -2391,8 +2394,8 @@ function renderHistoryPage() {
         <div style="font-size:0.8rem; color:${winnerNameColor}; margin-top:6px; font-family:'Libre Baskerville',serif;">🏆 <strong>${winnerName}</strong>${winnerOwner ? ` <span style="color:${winnerOwnerColor}; font-size:0.72rem;">(${winnerOwner})</span>` : ''}</div>
       </div>
       <div style="text-align:right; flex-shrink:0;">
-        <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:${accentColor};">$${Math.round(totalPot).toLocaleString()}</div>
-        <div style="font-size:0.62rem; font-family:'DM Mono',monospace; color:${subColor}; letter-spacing:1px; text-transform:uppercase;">Total Earnings</div>
+        <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:${accentColor};">${displayPot}</div>
+        <div style="font-size:0.62rem; font-family:'DM Mono',monospace; color:${subColor}; letter-spacing:1px; text-transform:uppercase;">Pool Payout</div>
         <div style="color:${subColor}; font-size:0.8rem; margin-top:6px;">View →</div>
       </div>
     </div>`;
@@ -4290,6 +4293,8 @@ async function saveSettings() {
 function updateStats() {
   const paidTeams = allTeams.filter(t => t.paid && (t.tournament || '') === TOURNAMENT_NAME);
   document.getElementById('stat-entries').textContent = paidTeams.length;
+  const potEl = document.getElementById('stat-pot');
+  if (potEl) potEl.textContent = '$' + (paidTeams.length * CONFIG.ENTRY_FEE).toLocaleString();
 
   const countdownEl = document.getElementById('stat-countdown');
   const cutStatEl = document.getElementById('stat-cut-wrap');
