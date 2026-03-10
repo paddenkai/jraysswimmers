@@ -2903,6 +2903,7 @@ async function proceedToPayment() {
     golfers: t.golfers,
     owner: currentUser.email,
     owner_name: currentUser.name,
+    tournament: TOURNAMENT_NAME,
     paid: false,
     submitted_at: new Date().toISOString(),
   }));
