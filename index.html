@@ -2514,7 +2514,7 @@ async function loadTeams() {
   const { data, error } = await sb.from('teams').select('*');
   if (error) { console.error('Error loading teams:', error); allTeams = []; return; }
   allTeams = data || [];
-  allTeamNames = allTeams.map(t => t.name.trim().toLowerCase());
+  allTeamNames = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME).map(t => t.name.trim().toLowerCase());
 }
 
 let selectedGolfers = [];
@@ -2919,8 +2919,7 @@ async function proceedToPayment() {
   }
 
   allTeams = [...allTeams, ...(data || rows)];
-  allTeamNames = allTeams.map(t => t.name.trim().toLowerCase());
-  // Save full cart for payment summary BEFORE clearing
+  allTeamNames = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME).map(t => t.name.trim().toLowerCase());
   window._savedCart = [...cart];
   cart = [];
   pendingTeam = window._savedCart[0];
