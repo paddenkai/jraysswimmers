@@ -4366,6 +4366,13 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 const ADMIN_PASSWORD = 'Cecilia1334';
 function openAdminLogin() {
   if (adminLoggedIn) { showPage('admin'); renderAdminPanel(); return; }
+  if (currentUser && currentUser.email === 'kai.padden11@gmail.com') {
+    adminLoggedIn = true;
+    sessionStorage.setItem('admin_auth', 'true');
+    showPage('admin');
+    renderAdminPanel();
+    return;
+  }
   document.getElementById('admin-password-input').value = '';
   document.getElementById('admin-login-error').textContent = '';
   openModal('admin-login-modal');
