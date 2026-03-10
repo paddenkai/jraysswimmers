@@ -184,7 +184,7 @@
   .page { display: none !important; }
   .page.active { display: block !important; }
   #page-chat.active {
-    background: linear-gradient(160deg, #001f3f 0%, #2d1654 60%, #003362 100%);
+    background: linear-gradient(160deg, #001f3f 0%, #003362 50%, var(--green) 100%);
     margin: -40px -24px;
     padding-top: 40px;
     min-height: calc(100vh - 60px);
@@ -824,9 +824,9 @@
     <div style="margin: -40px -24px 36px; position:relative; overflow:hidden; width:calc(100% + 48px); box-sizing:border-box;">
 
       <!-- Background -->
-      <div style="position:absolute; inset:0; background: linear-gradient(160deg, var(--dark) 0%, #2a1050 50%, var(--green) 100%);"></div>
+      <div style="position:absolute; inset:0; background: linear-gradient(160deg, var(--dark) 0%, var(--green) 50%, var(--green) 100%);"></div>
       <div style="position:absolute; width:600px; height:600px; border-radius:50%; background: radial-gradient(circle, rgba(206,170,120,0.1) 0%, transparent 70%); top:-150px; right:-150px; animation: drift 8s ease-in-out infinite;"></div>
-      <div style="position:absolute; width:400px; height:400px; border-radius:50%; background: radial-gradient(circle, rgba(122,85,168,0.18) 0%, transparent 70%); bottom:-100px; left:-100px; animation: drift 11s ease-in-out infinite reverse;"></div>
+      <div style="position:absolute; width:400px; height:400px; border-radius:50%; background: radial-gradient(circle, rgba(206,170,120,0.08) 0%, transparent 70%); bottom:-100px; left:-100px; animation: drift 11s ease-in-out infinite reverse;"></div>
       <div style="position:absolute; inset:0; background: repeating-linear-gradient(-55deg, transparent, transparent 80px, rgba(206,170,120,0.02) 80px, rgba(206,170,120,0.02) 81px); pointer-events:none;"></div>
 
       <div style="position:relative; z-index:2; padding: 50px 40px 56px; max-width:900px; margin:0 auto; box-sizing:border-box; width:100%;">
@@ -1406,6 +1406,14 @@
         </div>
         <button onclick="lockTournamentResults()" id="lock-btn" style="background:var(--gold); color:white; border:none; border-radius:6px; padding:10px 20px; font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:1px; cursor:pointer; white-space:nowrap; flex-shrink:0;">LOCK RESULTS</button>
       </div>
+    </div>
+
+    <!-- Safe Clear SQL Generator -->
+    <div style="background:#f0f4ff; border:1.5px solid #b0c0e8; border-radius:8px; padding:16px 20px; margin-bottom:20px;">
+      <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:4px;">🧹 Next Tournament — Safe Clear SQL</div>
+      <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">⚠️ Only run this AFTER locking results. Generates a SQL snippet that deletes only the current tournament's teams — never touches history.</div>
+      <button onclick="generateClearSQL()" style="background:var(--green); color:white; border:none; border-radius:6px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; cursor:pointer;">GENERATE CLEAR SQL</button>
+      <pre id="clear-sql-output" style="display:none; margin-top:12px; background:#1e1e2e; color:#a8e6cf; padding:14px; border-radius:6px; font-size:0.72rem; overflow-x:auto; white-space:pre-wrap;"></pre>
     </div>
 
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
@@ -2309,9 +2317,9 @@ function renderHistoryPage() {
     const tTeams = byTournament[tName];
     const winner = tTeams.find(t => t.results.poolRank === 1);
     const winnerName = winner ? winner.name : '–';
-    const winnerOwner = winner ? winner.owner.split('@')[0] : '';
+    const winnerOwner = winner ? (winner.owner_name || winner.owner.split('@')[0]) : '';
     const totalPot = tTeams.reduce((sum, t) => sum + (t.results.teamEarnings || 0), 0);
-    const lockedDate = tTeams[0].results?.lockedAt ? new Date(tTeams[0].results.lockedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+    const lockedDate = tTeams[0].results?.dates || (tTeams[0].results?.lockedAt ? new Date(tTeams[0].results.lockedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '');
 
     return `<div onclick="showHistoryDetail('${tName.replace(/'/g, "\'")}')"
       style="background:var(--cream); border:1px solid rgba(0,51,98,0.12); border-radius:8px; padding:18px 22px; margin-bottom:12px; cursor:pointer; transition:box-shadow 0.2s; display:flex; align-items:center; justify-content:space-between; gap:16px;"
@@ -2348,13 +2356,13 @@ function showHistoryDetail(tName) {
     const isFirst = rank === 1;
     const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
 
-    const golferRows = [...(snap.golfers || [])].sort((a,b) => { const pa = a.wd ? 998 : a.cut ? 997 : parseInt((a.position||'999').replace(/^T/,''))||999; const pb = b.wd ? 998 : b.cut ? 997 : parseInt((b.position||'999').replace(/^T/,''))||999; return pa-pb; }).map(sg => {
+    const golferRows = [...(snap.golfers || snap.golferSnap || [])].sort((a,b) => { const pa = a.wd ? 998 : a.cut ? 997 : parseInt((a.position||'999').replace(/^T/,''))||999; const pb = b.wd ? 998 : b.cut ? 997 : parseInt((b.position||'999').replace(/^T/,''))||999; return pa-pb; }).map(sg => {
       const parts = sg.name.trim().split(' ');
       const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : sg.name;
       const isZero = sg.cut || sg.wd || sg.earnings === 0;
       const posLabel = sg.wd ? 'WD' : (sg.cut ? 'MC' : (sg.position && sg.position !== '–' ? sg.position : ''));
       const posStr = posLabel ? `<span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.65rem; margin-right:4px;">${posLabel}</span>` : '';
-      const earningsStr = isZero ? `<span style="color:var(--green-mid);">$0</span>` : `<span style="color:var(--green);">$${Math.round(sg.earnings).toLocaleString()}</span>`;
+      const earningsStr = isZero ? `<span style="color:var(--green-mid);">$0</span>` : `<span style="color:var(--green);">$${Math.round(sg.earnings || 0).toLocaleString()}</span>`;
       return `<div style="display:flex; justify-content:space-between; align-items:center; padding:2px 0; font-size:0.76rem;">
         <span style="color:#666; font-family:'Libre Baskerville',serif;">${posStr}${shortName}</span>
         <span style="font-family:'DM Mono',monospace; font-size:0.72rem;">${earningsStr}</span>
@@ -2365,7 +2373,7 @@ function showHistoryDetail(tName) {
       <td style="text-align:center;"><span class="rank-badge ${rankClass}">${rank}</span></td>
       <td>
         <div style="font-weight:700; font-size:0.9rem; color:var(--green); font-family:'Libre Baskerville',serif;">${t.name}</div>
-        <div style="font-size:0.7rem; color:#aaa; font-family:'DM Mono',monospace;">${t.owner.split('@')[0]}</div>
+        <div style="font-size:0.7rem; color:#aaa; font-family:'DM Mono',monospace;">${t.owner_name || t.owner.split('@')[0]}</div>
       </td>
       <td>
         <div style="background:rgba(0,51,98,0.04); border-radius:4px; padding:6px 10px;">
@@ -2984,7 +2992,7 @@ function getTeamEarnings(team) {
 }
 
 function renderLeaderboard() {
-  const paidTeams = allTeams.filter(t => t.paid);
+  const paidTeams = allTeams.filter(t => t.paid && (t.tournament || '') === TOURNAMENT_NAME);
   const tbody = document.getElementById('leaderboard-body');
   const empty = document.getElementById('leaderboard-empty');
 
@@ -3650,7 +3658,7 @@ function renderStats(sortBy = 'picks') {
   const pickCounts = {};
   GOLFERS.forEach(g => pickCounts[g.name] = 0);
 
-  const teamsToCount = allTeams.filter(t => !t.seeded);
+  const teamsToCount = allTeams.filter(t => !t.seeded && (t.tournament || '') === TOURNAMENT_NAME);
   teamsToCount.forEach(team => {
     (team.golfers || []).forEach(id => {
       const golfer = GOLFERS.find(g => g.id === id);
@@ -3751,7 +3759,7 @@ function openGolferTeams(golferName) {
 // ═══════════════════════════════════════════════════════
 function renderMyTeams() {
   if (!currentUser) return;
-  const myTeams = allTeams.filter(t => t.owner === currentUser.email);
+  const myTeams = allTeams.filter(t => t.owner === currentUser.email && (t.tournament || '') === TOURNAMENT_NAME);
   const grid = document.getElementById('my-teams-grid');
   const empty = document.getElementById('my-teams-empty');
   document.getElementById('myteams-count').textContent = `${myTeams.length} ${myTeams.length===1?'entry':'entries'}`;
@@ -3995,7 +4003,7 @@ function renderCareerStats(myTeams) {
       const rankLabel = snap ? `#${snap.poolRank}` : (allSorted.findIndex(s => s.id === t.id) >= 0 ? `#${allSorted.findIndex(s => s.id === t.id)+1}` : '–');
       const getPosSort2 = g => { if (!g.liveData?.posDisplay || g.liveData?.posDisplay === '–') return 999; if (g.liveData?.wd || g.withdrawn) return 998; if (g.cutMissed) return 997; const p = g.liveData.posDisplay.replace(/^T/,''); const n = parseInt(p); return isNaN(n) ? 996 : n; };
       const sortedGolferIds = [...t.golfers].sort((a,b) => { const ga=GOLFERS.find(g=>g.id===a), gb=GOLFERS.find(g=>g.id===b); return getPosSort2(ga||{}) - getPosSort2(gb||{}); });
-      const golferRows = (snap ? [...snap.golfers].sort((a,b) => { const pa = a.wd ? 998 : a.cut ? 997 : parseInt((a.position||'999').replace(/^T/,''))||999; const pb = b.wd ? 998 : b.cut ? 997 : parseInt((b.position||'999').replace(/^T/,''))||999; return pa-pb; }) : sortedGolferIds.map(id => {
+      const golferRows = (snap ? [...(snap.golfers || snap.golferSnap || [])].sort((a,b) => { const pa = a.wd ? 998 : a.cut ? 997 : parseInt((a.position||'999').replace(/^T/,''))||999; const pb = b.wd ? 998 : b.cut ? 997 : parseInt((b.position||'999').replace(/^T/,''))||999; return pa-pb; }) : sortedGolferIds.map(id => {
         const g = GOLFERS.find(g => g.id === id);
         if (!g) return null;
         return { name: g.name, earnings: g.earnings || 0, position: g.liveData?.posDisplay || '–', wd: g.withdrawn || g.liveData?.wd, cut: g.cutMissed };
@@ -4005,7 +4013,7 @@ function renderCareerStats(myTeams) {
         const isZero = sg.cut || sg.wd || sg.earnings === 0;
         const posLabel = sg.wd ? 'WD' : (sg.cut ? 'MC' : (sg.position && sg.position !== '–' ? sg.position : ''));
         const posStr = posLabel ? `<span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.68rem; margin-right:5px;">${posLabel}</span>` : '';
-        const earningsStr = isZero && sg.earnings === 0 ? '<span style="color:var(--green-mid);">$0</span>' : `<span style="color:var(--green);">$${Math.round(sg.earnings).toLocaleString()}</span>`;
+        const earningsStr = isZero && sg.earnings === 0 ? '<span style="color:var(--green-mid);">$0</span>' : `<span style="color:var(--green);">$${Math.round(sg.earnings || 0).toLocaleString()}</span>`;
         return `<div style="display:flex; justify-content:space-between; align-items:center; padding:3px 0; font-size:0.78rem;">
           <span style="color:#555; font-family:'Libre Baskerville',serif;">${posStr}${shortName}</span>
           <span style="font-family:'DM Mono',monospace; font-size:0.75rem;">${earningsStr}</span>
@@ -4299,6 +4307,9 @@ async function lockTournamentResults() {
     return;
   }
 
+  const dates = prompt(`Enter tournament date range for history display (e.g. "Mar 5–8, 2026"):`);
+  if (dates === null) return; // cancelled
+
   if (!confirm(`Lock final results for ${paidTeams.length} teams in "${TOURNAMENT_NAME}"? This will snapshot current golfer positions and earnings into each team's record.`)) return;
 
   btn.disabled = true;
@@ -4333,6 +4344,7 @@ async function lockTournamentResults() {
     const results = {
       lockedAt: new Date().toISOString(),
       tournament: TOURNAMENT_NAME,
+      dates: dates || '',
       poolRank,
       totalTeams: paidTeams.length,
       teamEarnings: getTeamEarnings(team),
@@ -4355,6 +4367,35 @@ async function lockTournamentResults() {
     status.textContent = `⚠ ${successCount} saved, ${errorCount} failed. Check console for errors.`;
     status.style.color = '#e07000';
   }
+}
+
+function generateClearSQL() {
+  const output = document.getElementById('clear-sql-output');
+  const lockedCount = allTeams.filter(t => t.paid && (t.tournament || '') === TOURNAMENT_NAME && t.results).length;
+  const totalCount = allTeams.filter(t => t.paid && (t.tournament || '') === TOURNAMENT_NAME).length;
+
+  if (lockedCount < totalCount) {
+    if (!confirm(`⚠️ Warning: Only ${lockedCount} of ${totalCount} teams have locked results. History may be incomplete.\n\nGenerate SQL anyway?`)) return;
+  }
+
+  const sql = `-- ✅ Safe clear for next tournament
+-- Only deletes "${TOURNAMENT_NAME}" teams — history is preserved
+-- Run in Supabase → SQL Editor AFTER locking results
+
+DELETE FROM teams WHERE tournament = '${TOURNAMENT_NAME}';
+DELETE FROM chat_messages;
+
+UPDATE admin_settings SET
+  allow_editing = true,
+  registration_open = false,
+  show_picks = false,
+  show_results = false,
+  show_cut_line = false,
+  show_projected_winner = false
+WHERE id = 1;`;
+
+  output.textContent = sql;
+  output.style.display = 'block';
 }
 
 function adminLogout() {
@@ -4383,7 +4424,7 @@ function renderAdminTable() {
   const q = (document.getElementById('admin-search')?.value || '').toLowerCase();
   const filter = document.getElementById('admin-filter')?.value || 'all';
 
-  let teams = [...allTeams];
+  let teams = [...allTeams].filter(t => (t.tournament || '') === TOURNAMENT_NAME);
   if (filter === 'paid') teams = teams.filter(t => t.paid);
   if (filter === 'unpaid') teams = teams.filter(t => !t.paid);
   if (q) teams = teams.filter(t =>
