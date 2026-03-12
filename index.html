@@ -2075,7 +2075,7 @@ function parseESPNAPI(data) {
 
       // Tee time — available before play starts
       const statusName = comp.status?.type?.name || '';
-      const isScheduled = statusName === 'STATUS_SCHEDULED' || holes.length === 0;
+      const isScheduled = statusName === 'STATUS_SCHEDULED' || (holes.length === 0 && statusName !== 'STATUS_IN_PROGRESS' && statusName !== 'STATUS_PLAY_COMPLETE' && statusName !== 'STATUS_FINAL');
       const teeTimeRaw = comp.teeTime || comp.status?.type?.shortDetail || null;
       let teeTimeDisplay = null;
       if (isScheduled && teeTimeRaw) {
@@ -2088,7 +2088,8 @@ function parseESPNAPI(data) {
       }
 
       // We'll finalize cut detection after we know maxRounds below
-      players.push({ name, scoreStr, scoreNum, cut: espnCut, wd: espnWD, thru, today, teeTimeDisplay, roundsPlayed: linescores.filter(r => (r.linescores || []).length > 0).length, roundsData });
+      const inProgress = statusName === 'STATUS_IN_PROGRESS';
+      players.push({ name, scoreStr, scoreNum, cut: espnCut, wd: espnWD, thru, today, teeTimeDisplay, inProgress, roundsPlayed: linescores.filter(r => (r.linescores || []).length > 0).length, roundsData });
     });
 
     // Sort non-cut players — will be re-sorted after cut finalization below
@@ -2165,18 +2166,19 @@ function parseESPNAPI(data) {
     });
     const missedCutPlayers = players.filter(p => p.cut);
 
-    // Assign positions only among players who made the cut
+    // Assign positions only among started players who made the cut
+    const startedMadecut = madecut.filter(p => p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-'));
     let i = 0;
-    while (i < madecut.length) {
-      const score = madecut[i].scoreNum;
+    while (i < startedMadecut.length) {
+      const score = startedMadecut[i].scoreNum;
       let j = i;
-      while (j < madecut.length && madecut[j].scoreNum === score) j++;
+      while (j < startedMadecut.length && startedMadecut[j].scoreNum === score) j++;
       const tiedCount = j - i;
       const pos = i + 1;
       for (let k = i; k < j; k++) {
-        madecut[k].pos = pos;
-        madecut[k].tiedCount = tiedCount;
-        madecut[k].posDisplay = tiedCount > 1 ? `T${pos}` : `${pos}`;
+        startedMadecut[k].pos = pos;
+        startedMadecut[k].tiedCount = tiedCount;
+        startedMadecut[k].posDisplay = tiedCount > 1 ? `T${pos}` : `${pos}`;
       }
       i = j;
     }
@@ -2200,7 +2202,7 @@ function parseESPNAPI(data) {
       const pos = p.pos || 999;
       const tiedCount = p.tiedCount || 1;
       const missedCut = p.cut || (!isPostCut && cutScore !== null && p.scoreNum > cutScore);
-      const hasStarted = p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
+      const hasStarted = p.inProgress || p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
       const earnings = (!hasStarted) ? 0 : p.wd ? 0 : missedCut ? 0 : getPayoutForPosition(pos, tiedCount);
       const posDisplay = p.wd ? 'WD' : (missedCut && isPostCut) ? 'MC' : !hasStarted ? '–' : (p.posDisplay || '–');
 
@@ -2225,6 +2227,7 @@ function parseESPNAPI(data) {
     });
 
     console.log('ESPN API: parsed', Object.keys(liveScores).length, 'players');
+
   } catch(e) {
     console.warn('ESPN parse failed:', e);
   }
@@ -3574,12 +3577,16 @@ function renderTournament() {
       return g ? normalizeName(g.name) : null;
     }).filter(Boolean) : []
   );
-  console.log('highlighted names:', [...highlightedNames]);
 
-  // Sort by position
+  // Sort: any player with a real position rank first, dash (-) players at bottom
   const sorted = Object.entries(liveScores)
-    .filter(([,d]) => !d.cut && d.pos > 0)
-    .sort((a,b) => a[1].pos - b[1].pos);
+    .filter(([,d]) => !d.cut)
+    .sort((a,b) => {
+      const aPos = a[1].posDisplay === '–' || a[1].posDisplay === '-' || !a[1].posDisplay ? 99999 : a[1].pos;
+      const bPos = b[1].posDisplay === '–' || b[1].posDisplay === '-' || !b[1].posDisplay ? 99999 : b[1].pos;
+      return aPos - bPos;
+    });
+
   const cutPlayers = Object.entries(liveScores).filter(([,d]) => d.cut);
 
   const renderRow = ([key, d]) => {
@@ -3604,31 +3611,29 @@ function renderTournament() {
 
   // Build projected cut divider row among active players (R1/R2 only, when showCutLine is on)
   let activeRows = '';
-  if (!window._isPostCut && adminSettings.showCutLine && sorted.length >= 50) {
-    const leader = sorted.find(([,d]) => d.hasStarted);
-    const started = sorted.filter(([,d]) => d.hasStarted);
-    if (started.length >= 50) {
-      const leadScore = parseInt(started[0][1].score) || 0;
-      const top50Score = parseInt(started[49][1].score) || 0;
-      const projCut = Math.max(top50Score, leadScore + 10);
-      let cutInserted = false;
-      const cutRowHtml = `<tr><td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${projCut === 0 ? 'E' : projCut > 0 ? '+'+projCut : projCut} —</td></tr>`;
-      activeRows = sorted.map(entry => {
-        const [,d] = entry;
-        const scoreNum = parseInt(d.score) || 0;
-        let row = renderRow(entry);
-        if (!cutInserted && d.hasStarted && scoreNum > projCut) {
-          cutInserted = true;
-          row = cutRowHtml + row;
-        }
-        return row;
-      }).join('');
-      if (!cutInserted) activeRows += cutRowHtml; // append at end if everyone made cut
-    } else {
-      activeRows = sorted.map(renderRow).join('');
-    }
+  // Split started vs unstarted — unstarted always render last
+  const sortedStarted   = sorted.filter(([,d]) => d.posDisplay && d.posDisplay !== '–' && d.posDisplay !== '-');
+  const sortedUnstarted = sorted.filter(([,d]) => !d.posDisplay || d.posDisplay === '–' || d.posDisplay === '-');
+  if (!window._isPostCut && adminSettings.showCutLine && sortedStarted.length >= 50) {
+    const leadScore  = parseInt(sortedStarted[0][1].score) || 0;
+    const top65Score = parseInt(sortedStarted[Math.min(64, sortedStarted.length-1)][1].score) || 0;
+    const projCut    = top65Score;
+    let cutInserted  = false;
+    const cutRowHtml = `<tr><td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${projCut === 0 ? 'E' : projCut > 0 ? '+'+projCut : projCut} —</td></tr>`;
+    let startedRows = sortedStarted.map(entry => {
+      const [,d] = entry;
+      const scoreNum = parseInt(d.score) || 0;
+      let row = renderRow(entry);
+      if (!cutInserted && scoreNum > projCut) {
+        cutInserted = true;
+        row = cutRowHtml + row;
+      }
+      return row;
+    }).join('');
+    if (!cutInserted) startedRows += cutRowHtml;
+    activeRows = startedRows + sortedUnstarted.map(renderRow).join('');
   } else {
-    activeRows = sorted.map(renderRow).join('');
+    activeRows = sortedStarted.map(renderRow).join('') + sortedUnstarted.map(renderRow).join('');
   }
 
   const cutDivider = (cutPlayers.length && window._isPostCut)
