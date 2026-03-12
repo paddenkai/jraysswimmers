@@ -538,8 +538,8 @@
     80%  { opacity: 1; }
     100% { opacity: 0; }
   }
-  .golfer-earnings-changed { animation: earningsFlash 2.2s ease forwards; border-radius: 4px; }
-  tr.took-first-place .rank-badge { animation: firstPlacePulse 2.2s ease forwards; }
+  .golfer-earnings-changed { animation: earningsFlash 3.5s ease forwards; border-radius: 4px; }
+  tr.took-first-place .rank-badge { animation: firstPlacePulse 3.5s ease forwards; }
   .pos-change-badge {
     display: inline-block;
     font-family: 'DM Mono', monospace;
@@ -550,7 +550,7 @@
     border-radius: 8px;
     margin-left: 5px;
     vertical-align: middle;
-    animation: possBadgeIn 3.5s ease forwards;
+    animation: possBadgeIn 5s ease forwards;
     pointer-events: none;
   }
   .pos-change-badge.up   { background: rgba(206,170,120,0.2); color: var(--green); }
@@ -566,7 +566,7 @@
   }
   .golfer-pos-arrow.up   { color: var(--gold); }
   .golfer-pos-arrow.down { color: var(--green-mid); }
-  .golfer-pos-arrow.animating { animation: possBadgeIn 3.5s ease forwards; }
+  .golfer-pos-arrow.animating { animation: possBadgeIn 5s ease forwards; }
 
   /* ─── HEAD TO HEAD ─── */
   .h2h-chip {
@@ -3183,17 +3183,17 @@ function renderLeaderboard() {
           ? `<span style="color:var(--green-mid); margin-left:6px;">$0</span>`
           : (hasLiveData ? earned : '');
         const border = i < arr.length - 1 ? 'border-bottom:1px solid rgba(0,0,0,0.07); padding-bottom:3px; margin-bottom:3px;' : '';
-        return `<div id="gf-${team.id}-${g.id}" style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}<span class="golfer-pos-arrow" id="gfa-${team.id}-${g.id}"></span></div>`;
+        return `<div id="gf-${team.id}-${g.id}" style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}<span class="golfer-earn-arrow" id="gea-${team.id}-${g.id}" style="font-size:0.65rem; margin-left:3px; vertical-align:middle;"></span><span class="golfer-pos-arrow" id="gfa-${team.id}-${g.id}"></span></div>`;
       }).filter(Boolean).join('') : '<span style="color:#bbb;font-style:italic;font-size:0.78rem;">Hidden until tournament starts</span>'}</div></td>
       <td style="text-align:center">${earningsDisplay}</td>
       <td style="text-align:center; padding:4px;">
         <button
-          onclick="toggleH2HTeam(${team.id})"
+          onclick="toggleH2HTeam('${team.id}')"
           id="h2h-btn-${team.id}"
           title="Add to comparison"
           style="width:28px; height:28px; border-radius:50%; border:2px solid #d0c8e0; background:transparent; cursor:pointer; font-size:0.8rem; color:#bbb; transition:all 0.15s; display:flex; align-items:center; justify-content:center; margin:auto;"
-          onmouseover="if(!h2hTeams.has(${team.id}))this.style.cssText=this.style.cssText+'border-color:var(--green-mid);color:var(--green-mid);'"
-          onmouseout="if(!h2hTeams.has(${team.id}))this.style.cssText='width:28px;height:28px;border-radius:50%;border:2px solid #d0c8e0;background:transparent;cursor:pointer;font-size:0.8rem;color:#bbb;transition:all 0.15s;display:flex;align-items:center;justify-content:center;margin:auto;'"
+          onmouseover="if(!h2hTeams.has('${team.id}'))this.style.cssText=this.style.cssText+'border-color:var(--green-mid);color:var(--green-mid);'"
+          onmouseout="if(!h2hTeams.has('${team.id}'))this.style.cssText='width:28px;height:28px;border-radius:50%;border:2px solid #d0c8e0;background:transparent;cursor:pointer;font-size:0.8rem;color:#bbb;transition:all 0.15s;display:flex;align-items:center;justify-content:center;margin:auto;'"
         >＋</button>
       </td>
     </tr>`;
@@ -3234,13 +3234,19 @@ function renderLeaderboard() {
         const prevGPos  = golferPosSnapshot[gid];
         const curPos    = g.liveData?.posDisplay;
 
-        // Earnings flash
+        // Earnings flash + persistent arrow
         if (prevGEarn !== undefined && prevGEarn !== g.earnings) {
           const div = document.getElementById(`gf-${team.id}-${gid}`);
           if (div) {
             div.classList.remove('golfer-earnings-changed');
             void div.offsetWidth;
             div.classList.add('golfer-earnings-changed');
+          }
+          const earnArrow = document.getElementById(`gea-${team.id}-${gid}`);
+          if (earnArrow) {
+            const delta = g.earnings - prevGEarn;
+            earnArrow.textContent = delta > 0 ? '\u2191' : '\u2193';
+            earnArrow.style.color = delta > 0 ? 'var(--gold)' : 'var(--green-mid)';
           }
         }
 
@@ -3256,7 +3262,7 @@ function renderLeaderboard() {
               arrow.textContent = (delta > 0 ? '▲' : '▼') + Math.abs(delta);
               void arrow.offsetWidth;
               arrow.classList.add('animating');
-              setTimeout(() => { arrow.textContent = ''; arrow.className = 'golfer-pos-arrow'; }, 3600);
+              setTimeout(() => { arrow.textContent = ''; arrow.className = 'golfer-pos-arrow'; }, 5000);
             }
           }
         }
@@ -3289,7 +3295,7 @@ function renderLeaderboard() {
             badge.className = 'pos-change-badge ' + (delta > 0 ? 'up' : 'down');
             badge.textContent = (delta > 0 ? '▲' : '▼') + Math.abs(delta);
             nameTd.appendChild(badge);
-            setTimeout(() => badge.remove(), 3600);
+            setTimeout(() => badge.remove(), 5000);
           }
         }
       }
@@ -4774,7 +4780,7 @@ function closeH2H() {
 function updateH2HButtons() {
   // Update all compare buttons in the table
   document.querySelectorAll('[id^="h2h-btn-"]').forEach(btn => {
-    const id = parseInt(btn.id.replace('h2h-btn-', ''));
+    const id = btn.id.replace('h2h-btn-', '');
     if (h2hTeams.has(id)) {
       btn.className = 'h2h-btn-active';
       btn.textContent = '✓';
@@ -4794,7 +4800,7 @@ function updateH2HButtons() {
   chipsEl.innerHTML = [...h2hTeams].map(id => {
     const t = allTeams.find(t => t.id === id);
     if (!t) return '';
-    return `<span class="h2h-chip">${t.name}<button onclick="toggleH2HTeam(${id})" title="Remove">✕</button></span>`;
+    return `<span class="h2h-chip">${t.name}<button onclick="toggleH2HTeam('${id}')" title="Remove">✕</button></span>`;
   }).join('');
   if (hint) hint.style.display = h2hTeams.size >= 5 ? 'none' : 'inline';
 }
