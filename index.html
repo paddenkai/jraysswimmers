@@ -2953,7 +2953,7 @@ function proceedToPayment() {
       <span style="font-family:'DM Mono',monospace; font-size:0.75rem; color:#aaa; min-width:18px;">${i + 1}.</span>
       <div>
         <div style="font-weight:700; font-size:0.92rem; color:var(--green);">${t.name}</div>
-        <div style="font-size:0.75rem; color:#888; font-family:'DM Mono',monospace;">${(t.golfers || []).join(', ')}</div>
+        <div style="font-size:0.75rem; color:#888; font-family:'DM Mono',monospace;">${(t.golfers || []).map(id => GOLFERS.find(g => g.id === id)?.name).filter(Boolean).join(', ')}</div>
       </div>
     </div>`
   ).join('');
