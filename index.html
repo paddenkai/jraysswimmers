@@ -2182,17 +2182,12 @@ function parseESPNAPI(data) {
     }
 
     // Projected cut line — only used during round 2, not after cut is official
-    // Arnold Palmer rule: top 50 + ties + anyone within 10 shots of lead
+    // Players Championship rule: top 65 + ties
     let cutScore = null;
-    if (!isPostCut && madecut.length >= 50) {
-      // Use started players only to calculate projected cut (ignore unstarted who are at E)
+    if (!isPostCut && madecut.length >= 65) {
       const startedPlayers = madecut.filter(p => p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-'));
       if (startedPlayers.length >= 10) { // need enough data to project meaningfully
-        const top50Score = madecut[49].scoreNum;
-        const leadScore = madecut[0].scoreNum;
-        const within10Score = leadScore + 10;
-        // Cut is the WORSE of: top 50 score OR within 10 of lead (whichever lets more players through)
-        cutScore = Math.max(top50Score, within10Score);
+        cutScore = madecut[64].scoreNum;
       }
     }
 
@@ -4355,14 +4350,10 @@ function updateStats() {
 
   if (showCut) {
     const sorted = [...activePlayers].sort((a, b) => a.pos - b.pos);
-    const player50 = sorted[49];
-    const leader = sorted[0];
-    if (player50 && leader) {
-      const top50Score = parseInt(player50.score) || 0;
-      const leadScore = parseInt(leader.score) || 0;
-      const within10Score = leadScore + 10;
-      const effectiveCut = Math.max(top50Score, within10Score);
-      const display = effectiveCut === 0 ? 'E' : effectiveCut > 0 ? `+${effectiveCut}` : `${effectiveCut}`;
+    const player65 = sorted[64];
+    if (player65) {
+      const cutScore = parseInt(player65.score) || 0;
+      const display = cutScore === 0 ? 'E' : cutScore > 0 ? `+${cutScore}` : `${cutScore}`;
       countdownEl.textContent = display;
     } else {
       countdownEl.textContent = '–';
