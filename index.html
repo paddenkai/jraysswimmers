@@ -1902,7 +1902,7 @@ const GOLFERS = [
   { id: 31, name: "Adam Schenk", earnings: 0, teeTime: "5:40 AM" },
   { id: 32, name: "Garrick Higgo", earnings: 0, teeTime: "5:40 AM" },
   { id: 33, name: "Matt McCarty", earnings: 0, teeTime: "5:40 AM" },
-  { id: 34, name: "Collin Morikawa", earnings: 0, teeTime: "5:40 AM", withdrawn: true },
+  { id: 34, name: "Collin Morikawa", earnings: 0, withdrawn: true },
   { id: 35, name: "Ludvig Aberg", earnings: 0, teeTime: "5:40 AM" },
   { id: 36, name: "Si Woo Kim", earnings: 0, teeTime: "5:40 AM" },
   { id: 37, name: "Brian Harman", earnings: 0, teeTime: "5:52 AM" },
@@ -1934,7 +1934,7 @@ const GOLFERS = [
   { id: 63, name: "Sam Stevens", earnings: 0, teeTime: "9:30 AM" },
   { id: 64, name: "Tom Hoge", earnings: 0, teeTime: "9:30 AM" },
   { id: 65, name: "Denny McCarthy", earnings: 0, teeTime: "9:30 AM" },
-  { id: 66, name: "Nicolai Hojgaard", earnings: 0, teeTime: "10:00 AM" },
+  { id: 66, name: "Nicolai Hojgaard", earnings: 0, teeTime: "10:00 AM*" }, // manually set
   { id: 67, name: "Erik van Rooyen", earnings: 0, teeTime: "9:42 AM" },
   { id: 68, name: "Keith Mitchell", earnings: 0, teeTime: "9:42 AM" },
   { id: 69, name: "Michael Kim", earnings: 0, teeTime: "9:42 AM" },
@@ -2233,6 +2233,20 @@ function parseESPNAPI(data) {
       ...[...madecut].filter(p => p.pos).sort((a,b) => (a.pos||999)-(b.pos||999)).map(p => normalizeName(p.name)),
       ...[...madecut].filter(p => !p.pos).map(p => normalizeName(p.name)),
     ];
+    // Add any GOLFERS with teeTime not yet in ESPN feed
+    GOLFERS.forEach(g => {
+      if (!g.teeTime || g.withdrawn) return;
+      const key = normalizeName(g.name);
+      if (!liveScores[key]) {
+        liveScores[key] = {
+          pos: 999, posDisplay: '–', hasStarted: false,
+          score: '–', today: '–', thru: '–',
+          teeTime: g.teeTime + ' PST',
+          cut: false, wd: false, earnings: 0, name: g.name, roundsData: []
+        };
+        g.liveData = liveScores[key];
+      }
+    });
     console.log('ESPN API: parsed', Object.keys(liveScores).length, 'players');
 
   } catch(e) {
@@ -2324,9 +2338,12 @@ let allTeamNames = []; // lowercase names for duplicate checking
 // Normalize team names — converts iOS curly apostrophes to straight ones
 function normalizeName(s) {
   return (s || '').trim().toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // strip diacritics (å→a, ø→o, etc.)
-    .replace(/[‘’‚‛′‵]/g, "'")
-    .replace(/[“”„‟″‶]/g, '"');
+    .replace(/ø/g, 'o').replace(/Ø/g, 'o')
+    .replace(/å/g, 'a').replace(/Å/g, 'a')
+    .replace(/æ/g, 'ae').replace(/Æ/g, 'ae')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[''‚‛′‵]/g, "'")
+    .replace(/[""„‟″‶]/g, '"');
 }
 
 // Load session on startup
