@@ -2048,9 +2048,11 @@ function parseESPNAPI(data) {
       const holes = activeRound?.linescores || [];
       const activeRoundNum = linescores.indexOf(activeRound) + 1;
       const totalRounds = linescores.length;
-      const thru = holes.length === 18
+      const startedBackNine = holes.length > 0 && (holes[0].period ?? holes[0].number ?? 1) >= 10;
+      const thruNum = holes.length === 18
         ? `F/R${activeRoundNum}`
-        : holes.length > 0 ? `${holes.length}` : '–';
+        : holes.length > 0 ? `${holes.length}${startedBackNine ? '*' : ''}` : '–';
+      const thru = thruNum;
 
       // Store all rounds' hole data for scorecard
       const roundsData = linescores.map((r, i) => ({
@@ -3512,7 +3514,7 @@ function updateTeamHighlightSelector() {
   const select = document.getElementById('team-highlight-select');
   if (!wrap || !select) return;
   if (!currentUser) { wrap.style.display = 'none'; return; }
-  const myTeams = allTeams.filter(t => t.owner === currentUser.email && t.paid);
+  const myTeams = allTeams.filter(t => t.owner === currentUser.email && t.paid && (t.tournament || '') === TOURNAMENT_NAME);
   if (myTeams.length === 0) { wrap.style.display = 'none'; return; }
   wrap.style.display = 'flex';
   const current = select.value;
