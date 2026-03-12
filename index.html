@@ -2203,9 +2203,9 @@ function parseESPNAPI(data) {
       const pos = p.pos || 999;
       const tiedCount = p.tiedCount || 1;
       const projectedMissedCut = !isPostCut && cutScore !== null && p.scoreNum > cutScore;
-      const missedCut = p.cut || projectedMissedCut;
+      const missedCut = p.cut; // only official cut matters for filtering; projectedMissedCut is visual only
       const hasStarted = p.inProgress || p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
-      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : (isPostCut && missedCut) ? 0 : getPayoutForPosition(pos, tiedCount);
+      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : (isPostCut && missedCut) ? 0 : projectedMissedCut ? 0 : getPayoutForPosition(pos, tiedCount);
       const posDisplay = p.wd ? 'WD' : (missedCut && isPostCut) ? 'MC' : (p.posDisplay || (!hasStarted ? '–' : '–'));
 
       liveScores[key] = {
@@ -3633,27 +3633,7 @@ function renderTournament() {
   // Split started vs unstarted — unstarted always render last
   const sortedStarted   = ranked;
   const sortedUnstarted = unranked;
-  if (!window._isPostCut && adminSettings.showCutLine && sortedStarted.length >= 50) {
-    const leadScore  = parseInt(sortedStarted[0][1].score) || 0;
-    const top65Score = parseInt(sortedStarted[Math.min(64, sortedStarted.length-1)][1].score) || 0;
-    const projCut    = top65Score;
-    let cutInserted  = false;
-    const cutRowHtml = `<tr><td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${projCut === 0 ? 'E' : projCut > 0 ? '+'+projCut : projCut} —</td></tr>`;
-    let startedRows = sortedStarted.map(entry => {
-      const [,d] = entry;
-      const scoreNum = parseInt(d.score) || 0;
-      let row = renderRow(entry);
-      if (!cutInserted && scoreNum > projCut) {
-        cutInserted = true;
-        row = cutRowHtml + row;
-      }
-      return row;
-    }).join('');
-    if (!cutInserted) startedRows += cutRowHtml;
-    activeRows = startedRows + sortedUnstarted.map(renderRow).join('');
-  } else {
-    activeRows = sortedStarted.map(renderRow).join('') + sortedUnstarted.map(renderRow).join('');
-  }
+  activeRows = sortedStarted.map(renderRow).join('') + sortedUnstarted.map(renderRow).join('');
 
   const cutDivider = (cutPlayers.length && window._isPostCut)
     ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>`
@@ -3675,6 +3655,24 @@ function renderTournament() {
     return (isNaN(aNum) ? 99999 : aNum) - (isNaN(bNum) ? 99999 : bNum);
   });
   pairs.forEach(p => { if (p.main) tbody.appendChild(p.main); if (p.expand) tbody.appendChild(p.expand); });
+
+  // Insert projected cut line AFTER sort — find last player row with pos <= 65, insert cut row after it
+  if (!window._isPostCut && adminSettings.showCutLine) {
+    const playerRows = Array.from(tbody.querySelectorAll('tr:not(.scorecard-expand-row)'));
+    let lastInRow = null;
+    for (const row of playerRows) {
+      const posText = row.cells[0]?.innerText?.trim() || '';
+      const posNum = parseInt(posText.replace(/^T/, ''));
+      if (!isNaN(posNum) && posNum <= 65) lastInRow = row;
+    }
+    if (lastInRow) {
+      const cutScore = parseInt(sortedStarted[Math.min(64, sortedStarted.length-1)]?.[1]?.score) || 0;
+      const cutLabel = cutScore === 0 ? 'E' : cutScore > 0 ? '+'+cutScore : ''+cutScore;
+      const cutTr = document.createElement('tr');
+      cutTr.innerHTML = `<td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${cutLabel} —</td>`;
+      lastInRow.insertAdjacentElement('afterend', cutTr);
+    }
+  }
 }
 
 
