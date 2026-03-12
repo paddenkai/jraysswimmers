@@ -2202,7 +2202,7 @@ function parseESPNAPI(data) {
       const key = normalizeName(p.name);
       const pos = p.pos || 999;
       const tiedCount = p.tiedCount || 1;
-      const projectedMissedCut = !isPostCut && cutScore !== null && p.scoreNum > cutScore;
+      const projectedMissedCut = !isPostCut && cutScore !== null && p.scoreNum > cutScore && !p.inProgress && p.roundsPlayed >= 1;
       const missedCut = p.cut; // only official cut matters for filtering; projectedMissedCut is visual only
       const hasStarted = p.inProgress || p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
       const earnings = (!hasStarted) ? 0 : p.wd ? 0 : (isPostCut && missedCut) ? 0 : projectedMissedCut ? 0 : getPayoutForPosition(pos, tiedCount);
@@ -2219,7 +2219,7 @@ function parseESPNAPI(data) {
       const golfer = GOLFERS.find(g => normalizeName(g.name) === key);
       if (golfer) {
         golfer.liveData = liveScores[key];
-        golfer.cutMissed = missedCut;
+        golfer.cutMissed = missedCut || projectedMissedCut;
         if (!golfer.name.includes('(Amateur)')) golfer.earnings = earnings;
         // Stamp static tee time onto liveScores entry so renderer always has it
         if (!liveScores[key].teeTime && golfer.teeTime) {
