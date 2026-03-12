@@ -2201,10 +2201,11 @@ function parseESPNAPI(data) {
       const key = normalizeName(p.name);
       const pos = p.pos || 999;
       const tiedCount = p.tiedCount || 1;
-      const missedCut = p.cut || (!isPostCut && cutScore !== null && p.scoreNum > cutScore);
+      const projectedMissedCut = !isPostCut && cutScore !== null && p.scoreNum > cutScore;
+      const missedCut = p.cut || projectedMissedCut;
       const hasStarted = p.inProgress || p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
-      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : missedCut ? 0 : getPayoutForPosition(pos, tiedCount);
-      const posDisplay = p.wd ? 'WD' : (missedCut && isPostCut) ? 'MC' : !hasStarted ? '–' : (p.posDisplay || '–');
+      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : (isPostCut && missedCut) ? 0 : getPayoutForPosition(pos, tiedCount);
+      const posDisplay = p.wd ? 'WD' : (missedCut && isPostCut) ? 'MC' : (p.posDisplay || (!hasStarted ? '–' : '–'));
 
       liveScores[key] = {
         pos, posDisplay, hasStarted,
@@ -2226,6 +2227,11 @@ function parseESPNAPI(data) {
       }
     });
 
+    // Store sorted key order: ranked first (by pos), unranked last
+    window._liveScoreOrder = [
+      ...[...madecut].filter(p => p.pos).sort((a,b) => (a.pos||999)-(b.pos||999)).map(p => normalizeName(p.name)),
+      ...[...madecut].filter(p => !p.pos).map(p => normalizeName(p.name)),
+    ];
     console.log('ESPN API: parsed', Object.keys(liveScores).length, 'players');
 
   } catch(e) {
@@ -3578,14 +3584,9 @@ function renderTournament() {
     }).filter(Boolean) : []
   );
 
-  // Sort: any player with a real position rank first, dash (-) players at bottom
-  const sorted = Object.entries(liveScores)
-    .filter(([,d]) => !d.cut)
-    .sort((a,b) => {
-      const aPos = a[1].posDisplay === '–' || a[1].posDisplay === '-' || !a[1].posDisplay ? 99999 : a[1].pos;
-      const bPos = b[1].posDisplay === '–' || b[1].posDisplay === '-' || !b[1].posDisplay ? 99999 : b[1].pos;
-      return aPos - bPos;
-    });
+  const ranked   = Object.entries(liveScores).filter(([,d]) => !d.cut && d.pos && d.pos < 999).sort((a,b) => Number(a[1].pos) - Number(b[1].pos));
+  const unranked = Object.entries(liveScores).filter(([,d]) => !d.cut && (!d.pos || d.pos >= 999));
+  const sorted   = [...ranked, ...unranked];
 
   const cutPlayers = Object.entries(liveScores).filter(([,d]) => d.cut);
 
@@ -3612,8 +3613,8 @@ function renderTournament() {
   // Build projected cut divider row among active players (R1/R2 only, when showCutLine is on)
   let activeRows = '';
   // Split started vs unstarted — unstarted always render last
-  const sortedStarted   = sorted.filter(([,d]) => d.posDisplay && d.posDisplay !== '–' && d.posDisplay !== '-');
-  const sortedUnstarted = sorted.filter(([,d]) => !d.posDisplay || d.posDisplay === '–' || d.posDisplay === '-');
+  const sortedStarted   = ranked;
+  const sortedUnstarted = unranked;
   if (!window._isPostCut && adminSettings.showCutLine && sortedStarted.length >= 50) {
     const leadScore  = parseInt(sortedStarted[0][1].score) || 0;
     const top65Score = parseInt(sortedStarted[Math.min(64, sortedStarted.length-1)][1].score) || 0;
@@ -3641,6 +3642,21 @@ function renderTournament() {
     : '';
 
   tbody.innerHTML = activeRows + cutDivider + cutPlayers.map(renderRow).join('');
+
+  // Safety sort: re-order DOM rows so any ranked player never appears below a dash player
+  const allRows = Array.from(tbody.querySelectorAll('tr'));
+  const pairs = [];
+  for (let i = 0; i < allRows.length; i++) {
+    if (!allRows[i].classList.contains('scorecard-expand-row')) {
+      pairs.push({ main: allRows[i], expand: allRows[i+1] });
+    }
+  }
+  pairs.sort((a, b) => {
+    const aNum = parseInt((a.main.cells[0]?.innerText.trim() || '').replace(/^T/,''));
+    const bNum = parseInt((b.main.cells[0]?.innerText.trim() || '').replace(/^T/,''));
+    return (isNaN(aNum) ? 99999 : aNum) - (isNaN(bNum) ? 99999 : bNum);
+  });
+  pairs.forEach(p => { if (p.main) tbody.appendChild(p.main); if (p.expand) tbody.appendChild(p.expand); });
 }
 
 
