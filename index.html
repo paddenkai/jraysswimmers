@@ -1681,8 +1681,12 @@ async function loadAdminSettings() {
 function toggleOfficialCut(checkbox) {
   adminSettings.officialCut = checkbox.checked;
   localStorage.setItem('officialCut', checkbox.checked ? '1' : '0');
+  if (!checkbox.checked) {
+    // Clear locked MC list when switch is turned off
+    localStorage.removeItem('officialCutMissed');
+  }
   updateToggleUI('toggle-official-cut', checkbox.checked);
-  fetchLiveScores(); // refresh leaderboard immediately
+  fetchLiveScores();
 }
 
 async function saveAdminSettings() {
@@ -2097,61 +2101,32 @@ function parseESPNAPI(data) {
 
     // Detect current round from the data
     const maxRounds = Math.max(...competitors.map(c => (c.linescores || []).filter(r => (r.linescores || []).length > 0).length), 0);
-    const isPostCut = maxRounds >= 3 || adminSettings.officialCut; // Round 3+ OR admin manually triggered
+    const isPostCut = maxRounds >= 3 || adminSettings.officialCut;
 
-    // Finalize cut/WD status
     if (isPostCut) {
-      if (maxRounds >= 3) {
-        // R3+ has started: trust ESPN's cut status. Only fall back to roundsPlayed check
-        // for players ESPN hasn't explicitly flagged — and only if they have NO R3 data at all
-        // and the field is well into R3 (maxRounds >= 3 means at least someone finished R3)
-        // Use score-based cut rule — most reliable regardless of tee times or ESPN flags
-        const completedTwo = players.filter(p => p.roundsPlayed >= 2 && !p.wd);
-        // Use R1+R2 score only — never let R3 scores shift the cut line
+      // Load or build the locked MC list
+      let missedCutNames = JSON.parse(localStorage.getItem('officialCutMissed') || 'null');
+
+      if (!missedCutNames) {
+        // First time: calculate who missed the cut from current scores and lock it
         function getTwoRoundScore(p) {
           if (p.roundsData && p.roundsData.length >= 2) {
-            return p.roundsData.slice(0, 2).reduce((sum, r) => {
-              return sum + (r.score === 'E' ? 0 : parseInt(r.score) || 0);
-            }, 0);
+            return p.roundsData.slice(0, 2).reduce((sum, r) => sum + (r.score === 'E' ? 0 : parseInt(r.score) || 0), 0);
           }
           return p.scoreNum;
         }
-        const sorted2 = [...completedTwo].sort((a, b) => getTwoRoundScore(a) - getTwoRoundScore(b));
-        let cutScore2 = null;
-        if (sorted2.length >= 65) {
-          cutScore2 = sorted2[64] ? getTwoRoundScore(sorted2[64]) : null;
-        }
-        players.forEach(p => {
-          if (p.wd) { p.cut = true; }
-          else if (p.roundsPlayed < 2) { p.wd = true; p.cut = true; }
-          else if (p.roundsPlayed >= 3) { p.cut = false; } // started R3 = made cut, always
-          else if (p.roundsPlayed === 2 && cutScore2 !== null && getTwoRoundScore(p) > cutScore2) {
-            p.cut = true;
-          }
-        });
-      } else {
-        // officialCut toggled manually after R2: apply the actual cut rule
-        // Sort by score to find cut line
         const completedTwo = players.filter(p => p.roundsPlayed >= 2 && !p.wd);
-        const sorted = [...completedTwo].sort((a, b) => a.scoreNum - b.scoreNum);
-        // Find top 65 + ties cutoff score
-        let cutScore = null;
-        if (sorted.length >= 65) {
-          const sixtyFifthScore = sorted[64].scoreNum;
-          cutScore = sixtyFifthScore;
-        } else {
-          cutScore = sorted.length ? sorted[sorted.length - 1].scoreNum : 0;
-        }
-
-        players.forEach(p => {
-          if (p.roundsPlayed < 2) { p.wd = true; p.cut = true; }
-          else if (!p.wd && p.scoreNum > cutScore) { p.cut = true; }
-        });
+        const sorted = [...completedTwo].sort((a, b) => getTwoRoundScore(a) - getTwoRoundScore(b));
+        const cutScore = sorted.length >= 65 ? getTwoRoundScore(sorted[64]) : null;
+        missedCutNames = players
+          .filter(p => p.wd || p.roundsPlayed < 2 || (cutScore !== null && getTwoRoundScore(p) > cutScore))
+          .map(p => normalizeName(p.name));
+        localStorage.setItem('officialCutMissed', JSON.stringify(missedCutNames));
       }
-    } else if (maxRounds >= 2) {
-      // During round 2, WD = only has R1 data
+
+      // Apply the locked list — never changes again until switch is toggled off
       players.forEach(p => {
-        if (p.roundsPlayed < 1) { p.wd = true; p.cut = true; }
+        p.cut = missedCutNames.includes(normalizeName(p.name));
       });
     }
 
