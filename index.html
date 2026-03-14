@@ -3805,7 +3805,7 @@ function highlightTeamAndStar() {
 // ═══════════════════════════════════════════════════════
 // SCORE NOTIFICATIONS
 // ═══════════════════════════════════════════════════════
-let _prevScores = {}; // normalizeName -> scoreNum
+let _prevScores = JSON.parse(localStorage.getItem('prevScores') || '{}'); // normalizeName -> scoreNum, persisted to avoid duplicate alerts on reload
 let _scoreNotifEnabled = localStorage.getItem('scoreNotifEnabled') === '1';
 let _scoreNotifTeamId = localStorage.getItem('scoreNotifTeamId') || '';
 let _scoreNotifLog = []; // loaded from Supabase
@@ -3920,6 +3920,7 @@ function checkTeamScoreChanges(teamIdStr) {
     const diff = currentScore - _prevScores[key];
     if (diff === 0 || !currentThru || currentThru === '–' || currentThru.startsWith('F/')) {
       _prevScores[key] = currentScore;
+      localStorage.setItem('prevScores', JSON.stringify(_prevScores));
       return;
     }
 
@@ -3950,6 +3951,7 @@ function checkTeamScoreChanges(teamIdStr) {
       }).then(() => {});
     }
     _prevScores[key] = currentScore;
+    localStorage.setItem('prevScores', JSON.stringify(_prevScores));
     newAlerts = true;
   });
 
