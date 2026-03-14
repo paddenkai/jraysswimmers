@@ -5140,7 +5140,13 @@ function renderH2H() {
       <div class="h2h-section-label">⚡ Pure differentiators</div>
       <div style="display:grid; grid-template-columns:repeat(${teams.length}, 1fr); gap:10px; align-items:start;">
         ${teams.map(team => {
-          const uIds = team.golfers.filter(gid => unique.includes(gid));
+          const uIds = team.golfers.filter(gid => unique.includes(gid))
+            .sort((a, b) => {
+              const ga = golferData[a], gb = golferData[b];
+              const ea = (ga && !ga.wd && !ga.cut) ? ga.earnings : 0;
+              const eb = (gb && !gb.wd && !gb.cut) ? gb.earnings : 0;
+              return eb - ea;
+            });
           return `<div>
             <div style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px; text-transform:uppercase;">${team.name}</div>
             ${uIds.length ? uIds.map(gid => {
