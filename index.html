@@ -3853,10 +3853,11 @@ function renderAllAlertFeeds() {
     } else {
       feedInner.innerHTML = [...entries].reverse().map(e => {
         const color = e.type === 'eagle' ? 'var(--gold)' : e.type === 'birdie' ? 'var(--green)' : e.type === 'bogey' ? '#c0392b' : '#888';
-        const icon = e.type === 'eagle' ? '🦅' : e.type === 'birdie' ? '🐦' : e.type === 'bogey' ? '😬' : '⛳';
-        return `<div style="padding:6px 0; border-bottom:1px solid #ece8df; font-family:'DM Mono',monospace; font-size:0.75rem; display:flex; justify-content:space-between;">
-          <span><span style="color:${color}; font-weight:700;">${icon} ${e.label}</span> <span style="color:#888;">${e.name}</span></span>
-          <span style="color:#ccc;">${e.time}</span>
+        const holeStr = e.hole ? ` hole ${e.hole}` : '';
+        const scoreStr = e.score ? ` to move to ${e.score}` : '';
+        return `<div style="padding:6px 0; border-bottom:1px solid #ece8df; font-family:'DM Mono',monospace; font-size:0.75rem; display:flex; justify-content:space-between; align-items:center;">
+          <span><span style="color:${color}; font-weight:700;">${e.name}</span> <span style="color:#888;">${e.label.toLowerCase()}d${holeStr}${scoreStr}</span></span>
+          <span style="color:#ccc; margin-left:8px; flex-shrink:0;">${e.time}</span>
         </div>`;
       }).join('');
     }
@@ -3904,7 +3905,8 @@ function checkTeamScoreChanges(teamIdStr) {
 
     const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     const scoreStr = currentScore === 0 ? 'E' : currentScore > 0 ? `+${currentScore}` : `${currentScore}`;
-    _scoreNotifLog.push({ type, label, name: g.name, score: scoreStr, thru: currentThru, time: now, teamId: teamIdStr });
+    const holeNum = parseInt(currentThru) || null;
+    _scoreNotifLog.push({ type, label, name: g.name, score: scoreStr, hole: holeNum, thru: currentThru, time: now, teamId: teamIdStr });
     if (_scoreNotifLog.length > 50) _scoreNotifLog.shift();
     localStorage.setItem('scoreNotifLog', JSON.stringify(_scoreNotifLog));
     _prevScores[key] = currentScore;
