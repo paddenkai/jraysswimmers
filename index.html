@@ -1109,7 +1109,7 @@
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
         <div id="team-highlight-wrap" style="display:none; align-items:center; gap:8px;">
           <span style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#888; letter-spacing:1px;">HIGHLIGHT:</span>
-          <select id="team-highlight-select" onchange="renderTournament()"
+          <select id="team-highlight-select" onchange="highlightTeamAndStar()"
             style="padding:6px 10px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; background:var(--cream); color:var(--dark); cursor:pointer;">
             <option value="">None</option>
           </select>
@@ -2028,6 +2028,7 @@ function parseESPNAPI(data) {
   liveScores = {};
   // Reset all golfer earnings first — anyone not found in ESPN data (e.g. withdrawn) stays $0
   GOLFERS.forEach(g => { g.earnings = 0; g.liveData = null; g.cutMissed = false; });
+  window._watchList = new Set(JSON.parse(localStorage.getItem('watchList') || '[]'));
   try {
     const events = data.events || [];
     if (!events.length) { console.warn('No events in ESPN API response'); return; }
@@ -3580,6 +3581,7 @@ function renderTournament() {
   const ranked   = Object.entries(liveScores).filter(([,d]) => !d.cut && d.pos && d.pos < 999).sort((a,b) => Number(a[1].pos) - Number(b[1].pos));
   const unranked = Object.entries(liveScores).filter(([,d]) => !d.cut && (!d.pos || d.pos >= 999));
   const sorted   = [...ranked, ...unranked];
+  const watched  = [...ranked, ...unranked].filter(([key]) => window._watchList?.has(key));
 
   const cutPlayers = Object.entries(liveScores).filter(([,d]) => d.cut);
 
@@ -3592,7 +3594,9 @@ function renderTournament() {
     const safeKey = key.replace(/'/g, "\\'");
     return `<tr class="${rowClass}" onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer;">
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.posDisplay || '–'}</td>
-      <td><strong>${d.name || key}</strong></td>
+      <td style="white-space:nowrap;">
+        <span onclick="event.stopPropagation(); toggleWatch('${safeKey}')" id="star-${safeKey}" style="cursor:pointer; margin-right:6px; font-size:1rem; color:${window._watchList?.has(safeKey) ? 'var(--gold)' : '#ccc'};">★</span><strong>${d.name || key}</strong>
+      </td>
       ${(() => { const golfer = GOLFERS.find(g => normalizeName(g.name) === key); const tee = golfer?.teeTime ? golfer.teeTime + ' PST' : null; const notStartedYet = !d.thru || d.thru === '–' || d.thru === '-' || d.thru === 'F/R2'; const todayCell = (tee && notStartedYet) ? `<td style="font-family:'DM Mono',monospace; color:#aaa; font-size:0.78rem; letter-spacing:0.5px;">${tee}</td>` : `<td style="font-family:'DM Mono',monospace; color:#888; font-size:0.85rem;">${d.today || '–'}</td>`; return `<td><span class="${scoreClass}" style="font-family:'DM Mono',monospace; font-weight:700;">${d.score || '–'}</span></td>${todayCell}<td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.thru || '–'}</td>`; })()}
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--green-mid); font-weight:600;">${d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '$0'}</td>
     </tr>
@@ -3614,9 +3618,14 @@ function renderTournament() {
     ? `<tr><td colspan="6" style="background:#f8f5ee; padding:8px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px;">${cutLabel}</td></tr>`
     : '';
 
-  tbody.innerHTML = activeRows + cutDivider + cutPlayers.map(renderRow).join('');
+  // Exclude watched from main list to avoid duplicates
+  const activeRowsFiltered = sortedStarted.filter(([k]) => !window._watchList?.has(k)).map(renderRow).join('')
+    + sortedUnstarted.filter(([k]) => !window._watchList?.has(k)).map(renderRow).join('');
+  const cutPlayersFiltered = cutPlayers.filter(([k]) => !window._watchList?.has(k));
+  tbody.innerHTML = activeRowsFiltered + cutDivider + cutPlayersFiltered.map(renderRow).join('');
 
-  // Safety sort: re-order DOM rows so any ranked player never appears below a dash player
+  // Safety sort: re-order non-watched DOM rows so ranked players never appear below dash players
+  // Watched rows are already excluded from activeRowsFiltered so won't be in tbody yet when sort runs
   const allRows = Array.from(tbody.querySelectorAll('tr'));
   const pairs = [];
   for (let i = 0; i < allRows.length; i++) {
@@ -3647,6 +3656,18 @@ function renderTournament() {
       cutTr.innerHTML = `<td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${cutLabel} —</td>`;
       lastInRow.insertAdjacentElement('afterend', cutTr);
     }
+  }
+
+  // Prepend watched rows at the very top, after sort
+  if (watched.length > 0) {
+    const divider = document.createElement('tr');
+    divider.innerHTML = `<td colspan="6" style="padding:0; border-bottom:2px solid var(--gold);"></td>`;
+    tbody.insertBefore(divider, tbody.firstChild);
+    [...watched].reverse().forEach(entry => {
+      const tmp = document.createElement('tbody');
+      tmp.innerHTML = renderRow(entry);
+      Array.from(tmp.children).reverse().forEach(row => tbody.insertBefore(row, tbody.firstChild));
+    });
   }
 }
 
@@ -3764,6 +3785,33 @@ function escapeHtml(str) {
 // ═══════════════════════════════════════════════════════
 // PICK STATS
 // ═══════════════════════════════════════════════════════
+function highlightTeamAndStar() {
+  const selectedTeamId = document.getElementById('team-highlight-select')?.value;
+  const selectedTeam = (selectedTeamId && selectedTeamId !== '') ? allTeams.find(t => String(t.id) === String(selectedTeamId)) : null;
+  // Clear existing watch list
+  window._watchList = new Set();
+  if (selectedTeam) {
+    // Star all golfers on the selected team
+    selectedTeam.golfers.forEach(id => {
+      const g = GOLFERS.find(g => Number(g.id) === Number(id));
+      if (g) window._watchList.add(normalizeName(g.name));
+    });
+  }
+  localStorage.setItem('watchList', JSON.stringify([...window._watchList]));
+  renderTournament();
+}
+
+function toggleWatch(key) {
+  window._watchList = window._watchList || new Set();
+  if (window._watchList.has(key)) {
+    window._watchList.delete(key);
+  } else {
+    window._watchList.add(key);
+  }
+  localStorage.setItem('watchList', JSON.stringify([...window._watchList]));
+  renderTournament();
+}
+
 function renderStats(sortBy = 'picks') {
   const wrap = document.getElementById('stats-table-wrap');
   if (!wrap) return;
