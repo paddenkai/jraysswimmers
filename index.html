@@ -3809,6 +3809,11 @@ let _prevScores = {}; // normalizeName -> scoreNum
 let _scoreNotifEnabled = localStorage.getItem('scoreNotifEnabled') === '1';
 let _scoreNotifTeamId = localStorage.getItem('scoreNotifTeamId') || '';
 let _scoreNotifLog = JSON.parse(localStorage.getItem('scoreNotifLog') || '[]');
+// Clear old log entries that don't have hole data
+if (_scoreNotifLog.length && _scoreNotifLog[0].hole === undefined) {
+  _scoreNotifLog = [];
+  localStorage.removeItem('scoreNotifLog');
+}
 
 function toggleTeamAlert(teamId) {
   // Store watched team IDs as a set
@@ -3905,7 +3910,7 @@ function checkTeamScoreChanges(teamIdStr) {
 
     const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     const scoreStr = currentScore === 0 ? 'E' : currentScore > 0 ? `+${currentScore}` : `${currentScore}`;
-    const holeNum = parseInt(currentThru) || null;
+    const holeNum = parseInt((currentThru || '').replace('*', '')) || null;
     _scoreNotifLog.push({ type, label, name: g.name, score: scoreStr, hole: holeNum, thru: currentThru, time: now, teamId: teamIdStr });
     if (_scoreNotifLog.length > 50) _scoreNotifLog.shift();
     localStorage.setItem('scoreNotifLog', JSON.stringify(_scoreNotifLog));
