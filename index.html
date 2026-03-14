@@ -2662,7 +2662,7 @@ async function showPage(name) {
   window.scrollTo(0, 0);
   if (name === 'leaderboard') renderLeaderboard();
   if (name === 'admin') renderAdminPanel();
-  if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); renderAllAlertFeeds(); clearProfileBadge(); }
+  if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); await loadScoreAlertsFromSupabase(); clearProfileBadge(); }
   if (name === 'tournament') renderTournament();
   if (name === 'stats') { await loadTeams(); renderStats('picks'); }
   if (name === 'history') { renderHistoryPage(); }
@@ -3808,12 +3808,7 @@ function highlightTeamAndStar() {
 let _prevScores = {}; // normalizeName -> scoreNum
 let _scoreNotifEnabled = localStorage.getItem('scoreNotifEnabled') === '1';
 let _scoreNotifTeamId = localStorage.getItem('scoreNotifTeamId') || '';
-let _scoreNotifLog = JSON.parse(localStorage.getItem('scoreNotifLog') || '[]');
-// Clear old log entries that don't have hole data
-if (_scoreNotifLog.length && _scoreNotifLog[0].hole === undefined) {
-  _scoreNotifLog = [];
-  localStorage.removeItem('scoreNotifLog');
-}
+let _scoreNotifLog = []; // loaded from Supabase
 
 function toggleTeamAlert(teamId) {
   // Store watched team IDs as a set
@@ -3842,6 +3837,23 @@ function initScoreNotifUI() {
   renderAllAlertFeeds();
 }
 
+async function loadScoreAlertsFromSupabase() {
+  if (!currentUser) return;
+  const { data, error } = await sb.from('score_alerts')
+    .select('*')
+    .eq('user_email', currentUser.email)
+    .order('created_at', { ascending: true })
+    .limit(50);
+  if (!error && data) {
+    _scoreNotifLog = data.map(r => ({
+      type: r.type, label: r.label, name: r.name,
+      hole: r.hole, score: r.score, thru: r.thru,
+      time: r.time, teamId: r.team_id
+    }));
+    renderAllAlertFeeds();
+  }
+}
+
 function renderAllAlertFeeds() {
   const watchedTeams = new Set(JSON.parse(localStorage.getItem('alertTeams') || '[]'));
   const myTeams = allTeams.filter(t => currentUser && t.owner === currentUser.email && (t.tournament || '') === TOURNAMENT_NAME);
@@ -3856,7 +3868,8 @@ function renderAllAlertFeeds() {
     if (entries.length === 0) {
       feedInner.innerHTML = `<div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#bbb; text-align:center; padding:8px;">No alerts yet</div>`;
     } else {
-      feedInner.innerHTML = [...entries].reverse().map(e => {
+      feedInner.innerHTML = `<div style="text-align:right; padding-bottom:4px;"><span onclick="clearTeamAlerts('${team.id}')" style="font-family:'DM Mono',monospace; font-size:0.68rem; color:#bbb; cursor:pointer; letter-spacing:0.5px;">CLEAR</span></div>`
+        + [...entries].reverse().map(e => {
         const color = e.type === 'eagle' ? 'var(--gold)' : e.type === 'birdie' ? 'var(--green)' : e.type === 'bogey' ? '#c0392b' : '#888';
         const holeStr = e.hole ? ` hole ${e.hole}` : '';
         const scoreStr = e.score ? ` to move to ${e.score}` : '';
@@ -3867,6 +3880,15 @@ function renderAllAlertFeeds() {
       }).join('');
     }
   });
+}
+
+async function clearTeamAlerts(teamId) {
+  if (!currentUser) return;
+  _scoreNotifLog = _scoreNotifLog.filter(e => String(e.teamId) !== String(teamId));
+  await sb.from('score_alerts').delete()
+    .eq('user_email', currentUser.email)
+    .eq('team_id', String(teamId));
+  renderAllAlertFeeds();
 }
 
 function checkScoreChanges() {
@@ -3911,9 +3933,22 @@ function checkTeamScoreChanges(teamIdStr) {
     const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     const scoreStr = currentScore === 0 ? 'E' : currentScore > 0 ? `+${currentScore}` : `${currentScore}`;
     const holeNum = parseInt((currentThru || '').replace('*', '')) || null;
-    _scoreNotifLog.push({ type, label, name: g.name, score: scoreStr, hole: holeNum, thru: currentThru, time: now, teamId: teamIdStr });
+    const alertEntry = { type, label, name: g.name, score: scoreStr, hole: holeNum, thru: currentThru, time: now, teamId: teamIdStr };
+    _scoreNotifLog.push(alertEntry);
     if (_scoreNotifLog.length > 50) _scoreNotifLog.shift();
-    localStorage.setItem('scoreNotifLog', JSON.stringify(_scoreNotifLog));
+    // Save to Supabase for cross-device sync
+    if (currentUser) {
+      sb.from('score_alerts').insert({
+        user_email: currentUser.email,
+        team_id: teamIdStr,
+        type, label,
+        name: g.name,
+        hole: holeNum,
+        score: scoreStr,
+        thru: currentThru,
+        time: now
+      }).then(() => {});
+    }
     _prevScores[key] = currentScore;
     newAlerts = true;
   });
