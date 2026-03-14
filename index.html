@@ -3810,14 +3810,26 @@ let _scoreNotifEnabled = localStorage.getItem('scoreNotifEnabled') === '1';
 let _scoreNotifTeamId = localStorage.getItem('scoreNotifTeamId') || '';
 let _scoreNotifLog = JSON.parse(localStorage.getItem('scoreNotifLog') || '[]');
 
-function toggleTeamAlert(teamId, enabled) {
-  // Only one team can have alerts at a time
-  _scoreNotifEnabled = enabled;
-  _scoreNotifTeamId = enabled ? String(teamId) : '';
-  localStorage.setItem('scoreNotifEnabled', enabled ? '1' : '0');
+function toggleTeamAlert(teamId) {
+  // Store watched team IDs as a set
+  let watched = new Set(JSON.parse(localStorage.getItem('alertTeams') || '[]'));
+  const enabled = !watched.has(String(teamId));
+  if (enabled) watched.add(String(teamId));
+  else watched.delete(String(teamId));
+  localStorage.setItem('alertTeams', JSON.stringify([...watched]));
+  // Update _scoreNotifEnabled/_scoreNotifTeamId for checkScoreChanges compat
+  _scoreNotifEnabled = watched.size > 0;
+  _scoreNotifTeamId = [...watched].join(',');
+  localStorage.setItem('scoreNotifEnabled', _scoreNotifEnabled ? '1' : '0');
   localStorage.setItem('scoreNotifTeamId', _scoreNotifTeamId);
-  // Re-render so toggles on other cards reset
-  renderMyTeams();
+  // Just show/hide the feed for this card — no full re-render
+  const track = document.getElementById(`alert-toggle-${teamId}-track`);
+  const thumb = document.getElementById(`alert-toggle-${teamId}-thumb`);
+  if (track) track.style.background = enabled ? 'var(--green)' : '#ccc';
+  if (thumb) thumb.style.left = enabled ? '18px' : '3px';
+  const feed = document.getElementById(`alert-feed-${teamId}`);
+  if (feed) feed.style.display = enabled ? 'block' : 'none';
+  renderAllAlertFeeds();
 }
 
 function initScoreNotifUI() {
@@ -3826,12 +3838,13 @@ function initScoreNotifUI() {
 }
 
 function renderAllAlertFeeds() {
+  const watchedTeams = new Set(JSON.parse(localStorage.getItem('alertTeams') || '[]'));
   const myTeams = allTeams.filter(t => currentUser && t.owner === currentUser.email && (t.tournament || '') === TOURNAMENT_NAME);
   myTeams.forEach(team => {
     const feedWrap = document.getElementById(`alert-feed-${team.id}`);
     const feedInner = document.getElementById(`alert-feed-inner-${team.id}`);
     if (!feedWrap || !feedInner) return;
-    const isActive = _scoreNotifEnabled && String(team.id) === String(_scoreNotifTeamId);
+    const isActive = watchedTeams.has(String(team.id));
     feedWrap.style.display = isActive ? 'block' : 'none';
     if (!isActive) return;
     const entries = _scoreNotifLog.filter(e => String(e.teamId) === String(team.id));
@@ -3851,8 +3864,16 @@ function renderAllAlertFeeds() {
 }
 
 function checkScoreChanges() {
-  if (!_scoreNotifEnabled || !_scoreNotifTeamId) return;
-  const team = allTeams.find(t => String(t.id) === String(_scoreNotifTeamId));
+  const watchedTeams = new Set(JSON.parse(localStorage.getItem('alertTeams') || '[]'));
+  if (watchedTeams.size === 0) return;
+  for (const teamId of watchedTeams) {
+    _scoreNotifTeamId = teamId;
+    checkTeamScoreChanges(teamId);
+  }
+}
+
+function checkTeamScoreChanges(teamIdStr) {
+  const team = allTeams.find(t => String(t.id) === String(teamIdStr));
   if (!team) return;
 
   let newAlerts = false;
@@ -3883,7 +3904,7 @@ function checkScoreChanges() {
 
     const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     const scoreStr = currentScore === 0 ? 'E' : currentScore > 0 ? `+${currentScore}` : `${currentScore}`;
-    _scoreNotifLog.push({ type, label, name: g.name, score: scoreStr, thru: currentThru, time: now, teamId: _scoreNotifTeamId });
+    _scoreNotifLog.push({ type, label, name: g.name, score: scoreStr, thru: currentThru, time: now, teamId: teamIdStr });
     if (_scoreNotifLog.length > 50) _scoreNotifLog.shift();
     localStorage.setItem('scoreNotifLog', JSON.stringify(_scoreNotifLog));
     _prevScores[key] = currentScore;
@@ -4095,16 +4116,16 @@ function renderMyTeams() {
       <div class="team-card-footer" style="flex-direction:column; gap:0; padding:0;">
         <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
           <div><div class="team-total-label">TEAM TOTAL</div><div class="team-total">$${total.toLocaleString()}</div></div>
-          <label title="Score alerts" style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <div style="display:flex; align-items:center; gap:6px;">
             <span style="font-family:'DM Mono',monospace; font-size:0.68rem; color:#aaa; letter-spacing:1px;">🔔 ALERTS</span>
-            <div style="position:relative; width:36px; height:20px;">
-              <input type="checkbox" id="alert-toggle-${team.id}" onchange="toggleTeamAlert('${team.id}', this.checked)" ${_scoreNotifTeamId === String(team.id) && _scoreNotifEnabled ? 'checked' : ''} style="opacity:0; width:0; height:0;">
-              <span id="alert-toggle-${team.id}-track" style="position:absolute; inset:0; background:${_scoreNotifTeamId === String(team.id) && _scoreNotifEnabled ? 'var(--green)' : '#ccc'}; border-radius:28px; transition:0.3s; cursor:pointer;" onclick="document.getElementById('alert-toggle-${team.id}').click()"></span>
-              <span id="alert-toggle-${team.id}-thumb" style="position:absolute; left:${_scoreNotifTeamId === String(team.id) && _scoreNotifEnabled ? '18px' : '3px'}; top:3px; width:14px; height:14px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2); pointer-events:none;"></span>
+            <div style="position:relative; width:36px; height:20px;" onclick="toggleTeamAlert('${team.id}')">
+              <input type="checkbox" id="alert-toggle-${team.id}" style="opacity:0; width:0; height:0; pointer-events:none;">
+              <span id="alert-toggle-${team.id}-track" style="position:absolute; inset:0; background:${new Set(JSON.parse(localStorage.getItem('alertTeams')||'[]')).has(String(team.id)) ? 'var(--green)' : '#ccc'}; border-radius:28px; transition:0.3s; cursor:pointer;"></span>
+              <span id="alert-toggle-${team.id}-thumb" style="position:absolute; left:${new Set(JSON.parse(localStorage.getItem('alertTeams')||'[]')).has(String(team.id)) ? '18px' : '3px'}; top:3px; width:14px; height:14px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2); pointer-events:none;"></span>
             </div>
-          </label>
+          </div>
         </div>
-        <div id="alert-feed-${team.id}" style="display:${_scoreNotifTeamId === String(team.id) && _scoreNotifEnabled ? 'block' : 'none'}; border-top:1px solid #ece8df; padding:10px 18px; max-height:180px; overflow-y:auto; background:#faf8f3;">
+        <div id="alert-feed-${team.id}" style="display:${new Set(JSON.parse(localStorage.getItem('alertTeams')||'[]')).has(String(team.id)) ? 'block' : 'none'}; border-top:1px solid #ece8df; padding:10px 18px; max-height:180px; overflow-y:auto; background:#faf8f3;">
           <div id="alert-feed-inner-${team.id}"></div>
         </div>
       </div>
