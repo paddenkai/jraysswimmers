@@ -4738,11 +4738,11 @@ function generateClearSQL() {
     if (!confirm(`⚠️ Warning: Only ${lockedCount} of ${totalCount} teams have locked results. History may be incomplete.\n\nGenerate SQL anyway?`)) return;
   }
 
-  const sql = `-- ✅ Safe clear for next tournament
--- Only deletes "${TOURNAMENT_NAME}" teams — history is preserved
+  const sql = `-- ✅ Safe reset for next tournament
+-- Team rows are LEFT INTACT to preserve history
+-- The new tournament's teams will be new rows scoped by the new TOURNAMENT_NAME
 -- Run in Supabase → SQL Editor AFTER locking results
 
-DELETE FROM teams WHERE tournament = '${TOURNAMENT_NAME}';
 DELETE FROM chat_messages;
 
 UPDATE admin_settings SET
@@ -4752,7 +4752,10 @@ UPDATE admin_settings SET
   show_results = false,
   show_cut_line = false,
   show_projected_winner = false
-WHERE id = 1;`;
+WHERE id = 1;
+
+-- ℹ️ Before the next tournament, update TOURNAMENT_NAME in index.html
+-- ℹ️ Remove any withdrawn:true flags from golfers in the GOLFERS array`;
 
   output.textContent = sql;
   output.style.display = 'block';
