@@ -4739,9 +4739,14 @@ function generateClearSQL() {
   }
 
   const sql = `-- ✅ Safe reset for next tournament
--- Team rows are LEFT INTACT to preserve history
--- The new tournament's teams will be new rows scoped by the new TOURNAMENT_NAME
+-- Clears golfers + tournament from current rows so they vanish from pool/admin
+-- but KEEPS results column intact so history page still works
 -- Run in Supabase → SQL Editor AFTER locking results
+
+UPDATE teams SET
+  golfers = NULL,
+  tournament = NULL
+WHERE tournament = '${TOURNAMENT_NAME}';
 
 DELETE FROM chat_messages;
 
