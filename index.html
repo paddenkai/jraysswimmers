@@ -1742,7 +1742,7 @@ function initAdminToggles() {
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
 const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
-const TOURNAMENT_NAME = 'The Players Championship 2026'; // must match tournament column in DB
+const TOURNAMENT_NAME = 'Valspar Championship 2026'; // must match tournament column in DB
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
@@ -4744,7 +4744,7 @@ function generateClearSQL() {
 -- Run in Supabase → SQL Editor AFTER locking results
 
 UPDATE teams SET
-  golfers = NULL,
+  golfers = ARRAY[]::integer[],
   tournament = NULL
 WHERE tournament = '${TOURNAMENT_NAME}';
 
