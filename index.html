@@ -7,21 +7,21 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>J.Ray's Swimmers Pool</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Raleway:wght@300;400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
   :root {
-    --green: #001428;
-    --green-mid: #1a5490;
-    --green-light: #3a74b0;
-    --gold: #ceaa78;
-    --gold-light: #dfc090;
-    --gold-pale: #f8f3ea;
-    --cream: #f5f8fc;
-    --dark: #001428;
+    --green: #1a4731;
+    --green-mid: #2d6a4f;
+    --green-light: #52b788;
+    --gold: #c9a84c;
+    --gold-light: #e0c068;
+    --gold-pale: #fdf8ee;
+    --cream: #faf6ee;
+    --dark: #1a4731;
     --white: #ffffff;
-    --shadow: rgba(0,33,62,0.3);
+    --shadow: rgba(26,71,49,0.25);
   }
 
   @keyframes pulse-dot {
@@ -33,22 +33,24 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Libre Baskerville', Georgia, serif;
-    background: var(--dark);
-    color: var(--dark);
+    font-family: 'EB Garamond', 'Libre Baskerville', Georgia, serif;
+    background: var(--cream);
+    color: #1a4731;
     min-height: 100vh;
+    position: relative;
   }
+  main { position: relative; }
 
   /* ─── HEADER ─── */
   header {
-    background: var(--green);
+    background: #1a4731;
     color: var(--cream);
     padding: 0;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 20px var(--shadow);
-    border-bottom: 3px solid var(--gold);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    border-bottom: 2px solid var(--gold);
     width: 100%;
     left: 0;
     right: 0;
@@ -62,33 +64,47 @@
     padding: 14px 24px;
   }
   .logo {
-    font-family: 'Raleway', sans-serif;
-    font-size: 1.35rem;
-    font-weight: 400;
-    letter-spacing: 3px;
-    color: var(--gold-light);
+    font-family: 'EB Garamond', 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--gold);
     cursor: pointer;
     text-transform: uppercase;
+    -webkit-text-fill-color: var(--gold);
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
   }
   .logo span { color: var(--cream); font-style: italic; font-weight: 400; font-size: 1rem; display: block; line-height: 1; }
   nav { display: flex; gap: 6px; align-items: center; }
   nav button {
     background: none;
     border: none;
-    color: var(--cream);
-    font-family: 'Libre Baskerville', serif;
-    font-size: 0.85rem;
+    color: rgba(250,246,238,0.75);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
     padding: 8px 14px;
     cursor: pointer;
     border-radius: 4px;
     transition: background 0.2s, color 0.2s;
-    opacity: 0.85;
   }
-  nav button:hover, nav button.active { background: rgba(201,168,76,0.2); color: var(--gold-light); opacity: 1; border-bottom: 2px solid var(--gold); }
+  nav button:hover { color: var(--gold); background: rgba(201,168,76,0.1); }
+  nav button.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+  #nav-home        { color: rgba(250,246,238,0.75); } #nav-home.active        { color: var(--gold); }
+  #nav-myteams     { color: rgba(250,246,238,0.75); } #nav-myteams.active     { color: var(--gold); }
+  #nav-leaderboard { color: rgba(250,246,238,0.75); } #nav-leaderboard.active { color: var(--gold); }
+  #nav-chat        { color: rgba(250,246,238,0.75); } #nav-chat.active        { color: var(--gold); }
+  #nav-history     { color: rgba(250,246,238,0.75); } #nav-history.active     { color: var(--gold); }
+  #nav-tournament  { color: rgba(250,246,238,0.75); } #nav-tournament.active  { color: var(--gold); }
+  #nav-stats       { color: rgba(250,246,238,0.75); } #nav-stats.active       { color: var(--gold); }
+  #nav-enter       { color: rgba(250,246,238,0.75); } #nav-enter.active       { color: var(--gold); }
+  #nav-login       { color: rgba(250,246,238,0.75); }
+  #nav-admin       { color: var(--gold-light) !important; }
 
   /* ─── HERO ─── */
   .hero {
-    background: linear-gradient(160deg, var(--green) 0%, var(--green-mid) 60%, var(--dark) 100%);
+    background: linear-gradient(160deg, #1a4731 0%, #2d6a4f 60%, #1a4731 100%);
     color: var(--cream);
     padding: 80px 24px 70px;
     text-align: center;
@@ -99,8 +115,8 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(circle at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 20%, rgba(201,168,76,0.06) 0%, transparent 40%);
+    background-image: radial-gradient(circle at 20% 50%, rgba(201,168,76,0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(201,168,76,0.08) 0%, transparent 40%);
     pointer-events: none;
   }
   .hero-badge {
@@ -116,14 +132,14 @@
     margin-bottom: 20px;
   }
   .hero h1 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'EB Garamond', 'Playfair Display', serif;
     font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 900;
+    font-weight: 600;
     line-height: 1.05;
     margin-bottom: 16px;
-    color: var(--white);
+    color: var(--cream);
   }
-  .hero h1 em { color: var(--gold-light); font-style: italic; }
+  .hero h1 em { color: var(--gold); -webkit-text-fill-color: var(--gold); background: none; -webkit-background-clip: unset; font-style: italic; }
   .hero p {
     font-size: 1.1rem;
     opacity: 0.8;
@@ -132,17 +148,17 @@
     line-height: 1.7;
   }
   .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 2; }
-  .btn { display: inline-block; padding: 14px 28px; border-radius: 4px; font-family: 'Libre Baskerville', serif; font-size: 0.95rem; cursor: pointer; border: none; transition: all 0.2s; font-weight: 700; }
-  .btn-gold { background: var(--gold); color: var(--dark); box-shadow: 0 4px 14px rgba(201,168,76,0.5); }
-  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,168,76,0.6); }
+  .btn { display: inline-block; padding: 14px 28px; border-radius: 2px; font-family: 'EB Garamond', serif; font-size: 1rem; cursor: pointer; border: none; transition: all 0.2s; font-weight: 600; letter-spacing: 0.5px; }
+  .btn-gold { background: var(--gold); color: #1a4731; box-shadow: 0 4px 14px rgba(201,168,76,0.4); }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,168,76,0.5); }
   .btn-gold:active { transform: translateY(0); }
-  .btn-outline { background: transparent; color: var(--cream); border: 2px solid rgba(255,255,255,0.6); }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px); }
+  .btn-outline { background: transparent; color: var(--cream); border: 1.5px solid rgba(250,246,238,0.6); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
   .btn-outline:active { transform: translateY(0); }
 
   .stats-bar {
-    background: var(--dark);
-    border-bottom: 1px solid rgba(201,168,76,0.2);
+    background: #1a4731;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
     padding: 14px 24px;
     display: flex;
     justify-content: center;
@@ -156,13 +172,16 @@
     right: 0;
   }
   .stat { text-align: center; }
-  .stat-val { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--gold); }
+  .stat-val { font-family: 'EB Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--gold); }
   #stat-leader { font-size: 1.5rem; }
   .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(250,246,238,0.5); font-family: 'DM Mono', monospace; }
 
   /* ─── MAIN ─── */
-  main { max-width: 1200px; margin: 0 auto; padding: 40px 24px; background: var(--cream); }
-  main:has(#page-home.active) { background: var(--dark); }
+  main { max-width: none; margin: 0; padding: 0 24px;
+    background: var(--cream);
+    min-height: 100vh;
+  }
+  main:has(#page-home.active) { background: #1a4731; }
 
   .section-header {
     display: flex;
@@ -173,9 +192,9 @@
     padding-bottom: 12px;
   }
   .section-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'EB Garamond', 'Playfair Display', serif;
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--green);
   }
   .section-sub { font-size: 0.85rem; color: #666; font-family: 'DM Mono', monospace; }
@@ -184,16 +203,16 @@
   .page { display: none !important; }
   .page.active { display: block !important; }
   #page-chat.active {
-    background: linear-gradient(160deg, #001428 0%, #001e3d 60%, #001428 100%);
+    background: #1a4731;
     margin: -40px -24px;
     padding-top: 40px;
     min-height: calc(100vh - 60px);
+    position: relative;
   }
   @media (max-width: 768px) {
     #page-chat.active { margin: -20px -14px; }
   }
-  #page-home { background: var(--dark); margin: -40px -24px; padding: 0; min-height: calc(100vh - 120px); }
-  main:has(#page-home.active) { background: var(--dark); }
+  #page-home { background: transparent; margin: -40px -24px; padding: 0; min-height: calc(100vh - 120px); }
 
   /* ─── MODAL ─── */
   .modal-overlay {
@@ -233,7 +252,7 @@
   label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--green); margin-bottom: 6px; font-family: 'DM Mono', monospace; }
   input[type=text], input[type=email], input[type=password] {
     width: 100%; padding: 11px 14px; border: 1.5px solid #d4d0c8; border-radius: 4px;
-    font-family: 'Libre Baskerville', serif; font-size: 0.95rem; background: var(--cream);
+    font-family: 'Libre Baskerville', serif; font-size: 0.95rem; background: #ffffff;
     transition: border-color 0.2s;
   }
   input:focus { outline: none; border-color: var(--green-light); }
@@ -245,7 +264,7 @@
   .form-panel { display: none; }
   .form-panel.active { display: block; }
   .btn-full { width: 100%; padding: 13px; font-size: 1rem; border-radius: 4px; cursor: pointer; font-family: 'Libre Baskerville', serif; font-weight: 700; }
-  .btn-green { background: var(--green); color: var(--cream); border: none; transition: background 0.2s; }
+  .btn-green { background: #ffffff; color: #001428; border: none; transition: background 0.2s; }
   .btn-green:hover { background: var(--green-mid); }
   .divider { text-align: center; color: #bbb; margin: 16px 0; font-size: 0.85rem; position: relative; }
   .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: #e8e4da; }
@@ -274,7 +293,7 @@
     width: 100%; padding: 10px 14px;
     border: 1.5px solid #d4d0c8; border-radius: 4px;
     font-family: 'Libre Baskerville', serif; font-size: 0.9rem;
-    background: var(--cream);
+    background: #ffffff;
   }
   .golfer-search input:focus { outline: none; border-color: var(--green-light); }
 
@@ -307,19 +326,19 @@
   .golfer-earnings { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--green-mid); margin-top: 2px; font-weight: 500; }
 
   .team-panel {
-    background: var(--green);
-    border: none;
-    border-radius: 8px;
+    background: #1a4731;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 4px;
     padding: 20px;
     position: sticky;
     top: 90px;
     max-height: calc(100vh - 110px);
     overflow-y: auto;
-    color: white;
+    color: var(--cream);
     box-shadow: 0 2px 12px rgba(0,0,0,0.2);
   }
   .team-name-input::placeholder { color: #999; }
-  .team-panel h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold-light); margin-bottom: 12px; letter-spacing: 0.5px; }
+  .team-panel h3 { font-family: 'EB Garamond', serif; font-size: 1.2rem; color: var(--gold); margin-bottom: 12px; letter-spacing: 0.5px; }
   /* Sticky mini team tracker - mobile only */
   #mobile-team-tracker {
     display: none;
@@ -330,12 +349,13 @@
       position: sticky;
       top: 58px;
       z-index: 98;
-      background: var(--green);
-      color: white;
+      background: #1a4731;
+      color: var(--cream);
       padding: 14px 16px;
-      border-radius: 8px;
+      border-radius: 4px;
       margin-bottom: 14px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      border: 1px solid rgba(201,168,76,0.3);
     }
     #mobile-team-tracker .tracker-row1 {
       display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
@@ -397,7 +417,7 @@
     .team-builder-grid .golfer-col { grid-column: 1 !important; grid-row: 1 !important; }
     .team-builder-grid .team-panel { display: none !important; }
   }
-  .team-panel-sub { font-size: 0.78rem; color: rgba(255,255,255,0.6); font-family: 'DM Mono', monospace; margin-bottom: 16px; }
+  .team-panel-sub { font-size: 0.78rem; color: rgba(250,246,238,0.55); font-family: 'DM Mono', monospace; margin-bottom: 16px; }
   /* Desktop panel pills */
   .panel-pill {
     display: inline-flex;
@@ -449,26 +469,28 @@
     transition: all 0.2s;
   }
   .team-slot.filled { border-style: solid; border-color: var(--gold); color: white; background: rgba(255,255,255,0.1); font-style: normal; font-weight: 600; }
-  .slot-remove { background: none; border: none; color: rgba(206,170,120,0.8); cursor: pointer; font-size: 1rem; line-height: 1; padding: 2px 4px; border-radius: 3px; }
+  .slot-remove { background: none; border: none; color: #0077b6; cursor: pointer; font-size: 1rem; line-height: 1; padding: 2px 4px; border-radius: 3px; }
   .slot-remove:hover { background: #ffeaea; }
-  .team-name-input { width: 100%; padding: 9px 12px; border: 1.5px solid #d4d0c8; border-radius: 4px; font-family: 'Libre Baskerville', serif; font-size: 0.9rem; background: var(--cream); margin-bottom: 16px; }
+  .team-name-input { width: 100%; padding: 9px 12px; border: 1.5px solid #d4d0c8; border-radius: 4px; font-family: 'Libre Baskerville', serif; font-size: 0.9rem; background: #ffffff; margin-bottom: 16px; }
   .team-name-input:focus { outline: none; border-color: var(--green-light); }
-  .price-tag { background: var(--gold-pale); border: 1px solid var(--gold); border-radius: 4px; padding: 10px 12px; text-align: center; margin: 12px 0; }
+  .price-tag { background: #f5f5f5; border: 1px solid var(--gold); border-radius: 4px; padding: 10px 12px; text-align: center; margin: 12px 0; }
   .price-tag .price { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--green); }
   .price-tag .price-sub { font-size: 0.72rem; color: #888; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
 
   /* ─── LEADERBOARD ─── */
   .leaderboard-table { width: 100%; border-collapse: collapse; }
   .leaderboard-table th {
-    background: var(--green);
-    color: var(--gold-light);
+    background: #1a4731;
+    color: var(--gold);
     padding: 10px 14px;
     text-align: left;
     font-family: 'DM Mono', monospace;
     font-size: 0.72rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
+    border-bottom: none;
   }
+  .leaderboard-table th:nth-child(1), .leaderboard-table th:nth-child(2), .leaderboard-table th:nth-child(3), .leaderboard-table th:nth-child(4), .leaderboard-table th:nth-child(5) { background: #1a4731; color: var(--gold); -webkit-text-fill-color: var(--gold); -webkit-background-clip: unset; background-clip: unset; }
   .leaderboard-table td { padding: 11px 14px; border-bottom: 1px solid #ece8df; font-size: 0.9rem; vertical-align: middle; }
   #page-leaderboard .leaderboard-table tr:nth-child(even) td { background: #f8f5ee; }
   .leaderboard-table tr:hover td { background: #e8f0f8; }
@@ -492,7 +514,7 @@
     transition: box-shadow 0.2s;
   }
   .team-card:hover { box-shadow: 0 4px 20px rgba(26,74,46,0.12); }
-  .team-card-header { background: var(--green); color: var(--cream); padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
+  .team-card-header { background: #ffffff; color: #001428; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
   .team-card-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; }
   .team-card-status { font-family: 'DM Mono', monospace; font-size: 0.68rem; padding: 3px 8px; border-radius: 20px; letter-spacing: 1px; }
   .status-paid { background: rgba(201,168,76,0.3); color: var(--gold-light); }
@@ -625,20 +647,20 @@
     border-radius: 8px;
     overflow: hidden;
   }
-  .payment-header { background: var(--green); color: var(--cream); padding: 20px 24px; }
+  .payment-header { background: #ffffff; color: #001428; padding: 20px 24px; }
   .payment-header h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
   .payment-header p { font-size: 0.82rem; opacity: 0.7; margin-top: 4px; }
   .payment-body { padding: 24px; }
   .order-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ece8df; font-size: 0.9rem; }
   .order-total { display: flex; justify-content: space-between; padding: 12px 0 0; font-weight: 700; font-size: 1.05rem; color: var(--green); font-family: 'Playfair Display', serif; }
-  #stripe-card-element { border: 1.5px solid #d4d0c8; border-radius: 4px; padding: 12px; background: var(--cream); margin: 16px 0; }
+  #stripe-card-element { border: 1.5px solid #d4d0c8; border-radius: 4px; padding: 12px; background: #ffffff; margin: 16px 0; }
   #stripe-card-element.focused { border-color: var(--green-light); }
   #payment-errors { color: #c0392b; font-size: 0.82rem; margin-top: 6px; min-height: 20px; }
   .stripe-notice { font-size: 0.72rem; color: #aaa; text-align: center; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
   /* ─── PROFILE ─── */
   .profile-header {
-    background: var(--green);
+    background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820);
     border-radius: 8px;
     padding: 28px;
     display: flex;
@@ -705,7 +727,7 @@
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--green);
+      background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820);
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -826,20 +848,8 @@
     <div style="margin: -40px -24px 36px; position:relative; overflow:hidden; width:calc(100% + 48px); box-sizing:border-box;">
 
       <!-- Background -->
-      <div style="position:absolute; inset:0; background: #001428;"></div>
       <div style="position:absolute; inset:0; overflow:hidden;">
-        <!-- Aurora band 1 - strong gold sweep -->
-        <div style="position:absolute; width:140%; height:340px; top:8%; left:-20%; background: linear-gradient(180deg, transparent 0%, rgba(206,170,120,0.22) 35%, rgba(206,170,120,0.32) 55%, transparent 100%); border-radius:50%; filter:blur(38px); animation: aurora1 12s ease-in-out infinite;"></div>
-        <!-- Aurora band 2 - deep blue underpinning -->
-        <div style="position:absolute; width:120%; height:260px; top:25%; left:-10%; background: linear-gradient(180deg, transparent 0%, rgba(26,84,144,0.3) 40%, rgba(0,80,160,0.25) 55%, transparent 100%); border-radius:50%; filter:blur(50px); animation: aurora2 17s ease-in-out infinite reverse;"></div>
-        <!-- Aurora band 3 - bright gold streak right side -->
-        <div style="position:absolute; width:90%; height:220px; top:12%; right:-10%; background: linear-gradient(180deg, transparent 0%, rgba(206,170,120,0.2) 45%, rgba(222,192,144,0.15) 60%, transparent 100%); border-radius:50%; filter:blur(32px); animation: aurora3 22s ease-in-out infinite;"></div>
-        <!-- Aurora band 4 - warm gold low glow -->
-        <div style="position:absolute; width:70%; height:200px; bottom:10%; left:10%; background: linear-gradient(180deg, transparent 0%, rgba(206,170,120,0.1) 50%, transparent 100%); border-radius:50%; filter:blur(45px); animation: aurora1 18s ease-in-out infinite reverse;"></div>
-        <!-- Aurora band 5 - deep navy fill -->
-        <div style="position:absolute; width:100%; height:400px; bottom:0; left:0; background: linear-gradient(180deg, transparent 0%, rgba(0,20,40,0.6) 100%);"></div>
-        <!-- Bottom fade to page background -->
-        <div style="position:absolute; width:100%; height:120px; bottom:0; left:0; background: linear-gradient(180deg, transparent 0%, #001428 100%);"></div>
+        <div style="position:absolute; width:100%; height:80px; bottom:0; left:0; background: linear-gradient(180deg, transparent 0%, #1a4731 100%);"></div>
       </div>
 
       <div style="position:relative; z-index:2; padding: 50px 40px 56px; max-width:900px; margin:0 auto; box-sizing:border-box; width:100%;">
@@ -848,17 +858,17 @@
         <div style="text-align:center; margin-bottom:44px;">
           <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:24px; max-width:100%; overflow:hidden;">
             <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
-            <div style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">The Players Championship · 2026</div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">The Masters · 2026</div>
             <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
           </div>
 
-          <h1 style="font-family:'Playfair Display',serif; font-size:clamp(2.2rem,7vw,5rem); font-weight:900; line-height:1.05; color:var(--white); margin-bottom:18px; letter-spacing:-1px; word-break:break-word;">
-            Pick Your <em style="color:var(--gold); font-style:italic;">Champions.</em><br>Win the Pot.
+          <h1 style="font-family:'EB Garamond','Playfair Display',serif; font-size:clamp(2.2rem,7vw,5rem); font-weight:600; line-height:1.05; color:var(--cream); margin-bottom:18px; letter-spacing:-0.5px; word-break:break-word;">
+            Pick Your <em style="color:var(--gold); -webkit-text-fill-color:var(--gold); font-style:italic;">Champions.</em><br>Win the Pot.
           </h1>
 
-          <p style="font-family:'Libre Baskerville',serif; font-size:0.95rem; color:rgba(206,170,120,0.7); font-style:italic; margin:0 auto 20px;">— It only takes one stroke —</p>
+          <p style="font-family:'EB Garamond',serif; font-size:1.1rem; color:var(--gold-light); font-style:italic; margin:0 auto 20px;">— It only takes one stroke —</p>
 
-          <p style="font-size:0.95rem; opacity:0.7; max-width:440px; margin: 0 auto 28px; line-height:1.8; color:var(--cream);">
+          <p style="font-family:'EB Garamond',serif; font-size:1.05rem; max-width:440px; margin: 0 auto 28px; line-height:1.8; color:rgba(250,246,238,0.75);">
             Build teams of 5 golfers from the current field. The team with the highest total team payout wins the pot.
           </p>
 
@@ -866,37 +876,37 @@
             <button class="btn btn-gold" id="home-team-btn" onclick="requireAuth(() => showPage(adminSettings.registrationOpen ? 'builder' : 'myteams'))" style="padding:15px 36px; font-size:1rem; width:100%; max-width:300px;">Build Your Team →</button>
             <button class="btn btn-outline" onclick="showPage('leaderboard')" style="padding:15px 28px; width:100%; max-width:300px;">View All Teams</button>
           </div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(206,170,120,0.6); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">TPC Sawgrass · March 12–15, 2026 · $15 per entry</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(250,246,238,0.45); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">Augusta National · April 9–12, 2026 · $25 per entry</div>
         </div>
 
         <!-- Divider -->
         <div style="display:flex; align-items:center; gap:16px; margin-bottom:36px;">
-          <div style="flex:1; height:1px; background:rgba(206,170,120,0.2);"></div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:4px; color:rgba(206,170,120,0.5); text-transform:uppercase; white-space:nowrap;">How It Works</div>
-          <div style="flex:1; height:1px; background:rgba(206,170,120,0.2);"></div>
+          <div style="flex:1; height:1px; background:rgba(201,168,76,0.3);"></div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:4px; color:rgba(201,168,76,0.7); text-transform:uppercase; white-space:nowrap;">How It Works</div>
+          <div style="flex:1; height:1px; background:rgba(201,168,76,0.3);"></div>
         </div>
 
         <!-- Cards -->
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:1px; background:rgba(206,170,120,0.35); border:1px solid rgba(206,170,120,0.35); border-radius:8px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:1px; background:rgba(201,168,76,0.2); border:1px solid rgba(201,168,76,0.25); border-radius:4px; overflow:hidden;">
 
-          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Draft Your Teams</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Pick 5 golfers from the The Players Championship field. Enter as many teams as you want — more teams, more chances to win.</div>
+          <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
+            <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Draft Your Teams</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Pick 5 golfers from the The Masters 2026 field. Enter as many teams as you want — more teams, more chances to win.</div>
           </div>
 
-          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Pay via Venmo</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $15 per team to <span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.78rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
+          <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
+            <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Pay via Venmo</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $25 per team to <span style="color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.82rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
           </div>
 
-          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Most Earnings Wins</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at TPC Sawgrass. Highest total takes the pot.</div>
+          <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
+            <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Most Earnings Wins</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at Augusta National. Highest total takes the pot.</div>
           </div>
 
-          <div style="background:rgba(0,31,63,0.6); padding:28px 24px; backdrop-filter:blur(4px); text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Follow Live</div>
-            <div style="font-size:0.82rem; color:rgba(250,246,238,0.5); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update throughout the tournament. Track your team against the field from anywhere.</div>
+          <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
+            <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Follow Live</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update throughout the tournament. Track your team against the field from anywhere.</div>
           </div>
 
         </div>
@@ -936,7 +946,7 @@
   <div id="page-builder" class="page">
     <div class="section-header">
       <div class="section-title">Build Your Team</div>
-      <div class="section-sub">Select 5 golfers · $15 per entry</div>
+      <div class="section-sub">Select 5 golfers · $25 per entry</div>
     </div>
     <!-- Mobile sticky team tracker -->
     <div id="mobile-team-tracker">
@@ -1025,11 +1035,11 @@
     <div class="payment-box">
       <div class="payment-header">
         <h3 id="payment-team-name">Your Entry</h3>
-        <p>J.Ray's Swimmers Pool · $15 per team</p>
+        <p>J.Ray's Swimmers Pool · $25 per team</p>
       </div>
       <div class="payment-body">
         <div id="order-lines"></div>
-        <div class="order-total"><span>Total</span><span id="order-total-val">$15.00</span></div>
+        <div class="order-total"><span>Total</span><span id="order-total-val">$25.00</span></div>
 
         <!-- Venmo payment -->
         <div style="margin:24px 0 0; background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:8px; padding:20px;">
@@ -1038,7 +1048,7 @@
 
           <div style="position:relative; margin-bottom:14px;">
             <div id="payment-note-display" style="font-family:'DM Mono',monospace; font-size:0.82rem; background:white; border:1.5px dashed #c8e0c8; border-radius:6px; padding:10px 44px 10px 10px; text-align:center; color:var(--green); font-weight:600;"></div>
-            <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background:var(--green); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
+            <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
           </div>
 
           <button onclick="openVenmo()" style="width:100%; background:#008CFF; color:white; border:none; border-radius:8px; padding:16px; font-size:1.05rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px;">
@@ -1065,9 +1075,9 @@
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <input type="text" id="leaderboard-search" placeholder="Search team or owner name..."
         oninput="renderLeaderboard()"
-        style="padding:9px 14px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:var(--cream); flex:1; min-width:200px;" />
+        style="padding:9px 14px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:#ffffff; flex:1; min-width:200px;" />
       <select id="leaderboard-sort" onchange="renderLeaderboard()"
-        style="padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; background:var(--cream); color:var(--dark);">
+        style="padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; background:#ffffff; color:var(--dark);">
         <option value="rank">Sort by Rank</option>
         <option value="team">Sort by Team Name</option>
         <option value="owner">Sort by Owner</option>
@@ -1099,7 +1109,7 @@
   <div id="page-tournament" class="page">
     <div class="section-header">
       <div class="section-title">Live Scores</div>
-      <div class="section-sub">Live The Players Championship scores</div>
+      <div class="section-sub">Live The Masters 2026 scores</div>
     </div>
     <div style="margin-bottom:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1110,11 +1120,11 @@
         <div id="team-highlight-wrap" style="display:none; align-items:center; gap:8px;">
           <span style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#888; letter-spacing:1px;">HIGHLIGHT:</span>
           <select id="team-highlight-select" onchange="highlightTeamAndStar()"
-            style="padding:6px 10px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; background:var(--cream); color:var(--dark); cursor:pointer;">
+            style="padding:6px 10px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; background:#ffffff; color:var(--dark); cursor:pointer;">
             <option value="">None</option>
           </select>
         </div>
-        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background:var(--green); color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default; pointer-events:none;" id="refresh-btn">↻ REFRESH NOW</button>
+        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default; pointer-events:none;" id="refresh-btn">↻ REFRESH NOW</button>
       </div>
     </div>
     <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
@@ -1177,31 +1187,31 @@
       <div style="margin-bottom:20px;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
           <div style="width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 6px var(--gold); animation:pulse-dot 2s infinite;"></div>
-          <h2 style="font-family:'Libre Baskerville',serif; color:#fff; font-size:1.4rem; margin:0;">Live Chat</h2>
+          <h2 style="font-family:'EB Garamond',serif; color:var(--cream); font-size:1.4rem; margin:0;">Live Chat</h2>
         </div>
-        <p style="color:rgba(255,255,255,0.45); font-size:0.82rem; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-left:20px;">TALK TRASH · CELEBRATE · COMMISERATE</p>
+        <p style="color:rgba(250,246,238,0.45); font-size:0.82rem; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-left:20px;">TALK TRASH · CELEBRATE · COMMISERATE</p>
       </div>
 
       <!-- Messages -->
-      <div id="chat-messages" style="height:420px; max-height:420px; overflow-y:auto; padding:16px; background:rgba(255,255,255,0.06); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.12); border-radius:12px; margin-bottom:14px; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.2) transparent;">
+      <div id="chat-messages" style="height:420px; max-height:420px; overflow-y:auto; padding:16px; background:rgba(0,0,0,0.15); backdrop-filter:blur(8px); border:1px solid rgba(201,168,76,0.2); border-radius:4px; margin-bottom:14px; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; scrollbar-color:rgba(201,168,76,0.3) transparent;">
         <!-- messages injected here -->
       </div>
 
       <!-- Login prompt -->
-      <div id="chat-login-prompt" style="display:none; text-align:center; padding:10px; color:rgba(255,255,255,0.5); font-size:0.85rem; font-family:'DM Mono',monospace;">
+      <div id="chat-login-prompt" style="display:none; text-align:center; padding:10px; color:rgba(250,246,238,0.5); font-size:0.85rem; font-family:'DM Mono',monospace;">
         <a href="#" onclick="openModal('auth-modal'); return false;" style="color:var(--gold); text-decoration:none;">Sign in</a> to send messages
       </div>
 
       <!-- Input row -->
       <div id="chat-input-row" style="display:flex; gap:10px; align-items:center;">
         <input id="chat-input" type="text" placeholder="Say something..." maxlength="300"
-          style="flex:1; padding:12px 16px; border:1.5px solid rgba(255,255,255,0.2); border-radius:24px; font-family:'Libre Baskerville',serif; font-size:0.9rem; outline:none; background:rgba(255,255,255,0.1); color:#fff; transition:border-color 0.2s;"
-          onfocus="this.style.borderColor='rgba(206,170,120,0.7)'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'"
+          style="flex:1; padding:12px 16px; border:1.5px solid rgba(201,168,76,0.3); border-radius:24px; font-family:'EB Garamond',serif; font-size:0.95rem; outline:none; background:rgba(0,0,0,0.2); color:var(--cream); transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='rgba(201,168,76,0.7)'" onblur="this.style.borderColor='rgba(201,168,76,0.3)'"
           onkeydown="if(event.key==='Enter') sendChatMessage()" />
         <button onclick="sendChatMessage()"
-          style="background:var(--gold); color:#fff; border:none; border-radius:24px; padding:12px 22px; font-family:'DM Mono',monospace; font-size:0.8rem; cursor:pointer; letter-spacing:1px; font-weight:600; box-shadow:0 4px 14px rgba(206,170,120,0.4); transition:transform 0.15s, box-shadow 0.15s; white-space:nowrap;"
-          onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(206,170,120,0.5)'"
-          onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px rgba(206,170,120,0.4)'">
+          style="background:var(--gold); color:#1a4731; border:none; border-radius:24px; padding:12px 22px; font-family:'DM Mono',monospace; font-size:0.8rem; cursor:pointer; letter-spacing:1px; font-weight:600; box-shadow:0 4px 14px rgba(201,168,76,0.3); transition:transform 0.15s, box-shadow 0.15s; white-space:nowrap;"
+          onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(201,168,76,0.4)'"
+          onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px rgba(201,168,76,0.3)'">
           SEND ↑
         </button>
       </div>
@@ -1262,7 +1272,7 @@
     </div>
 
     <!-- Career Stats -->
-    <div id="career-stats-bar" style="display:none; background:var(--cream); border:1px solid rgba(0,51,98,0.12); border-radius:8px; padding:16px 20px; margin-top:32px; margin-bottom:24px;">
+    <div id="career-stats-bar" style="display:none; background:#ffffff; border:1px solid rgba(0,51,98,0.12); border-radius:8px; padding:16px 20px; margin-top:32px; margin-bottom:24px;">
       <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:2px; color:var(--green-mid); text-transform:uppercase; margin-bottom:12px;">Career Stats</div>
       <div style="display:flex; gap:28px; flex-wrap:wrap;">
         <div style="text-align:center;">
@@ -1296,7 +1306,12 @@
           <label>Display Name</label>
           <input type="text" id="settings-name" />
         </div>
-        <div style="display:flex;gap:10px;margin-top:4px;">
+        <div class="form-group" style="margin-top:16px;">
+          <label style="display:block; font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:1px; color:#888; margin-bottom:10px;">YOUR COLOR</label>
+          <div id="color-picker-swatches" style="display:flex; flex-wrap:wrap; gap:8px;">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
           <button class="btn btn-green" onclick="saveSettings()">Save Changes</button>
           <button onclick="toggleEditProfile()" style="background:none;border:none;cursor:pointer;font-size:0.85rem;color:#888;font-family:'Libre Baskerville',serif;">Cancel</button>
         </div>
@@ -1313,19 +1328,19 @@
 
     <!-- Summary Stats -->
     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:24px;">
-      <div style="background:var(--green); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--gold);" id="admin-stat-total">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">TOTAL ENTRIES</div>
       </div>
-      <div style="background:var(--green); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:#2ecc71;" id="admin-stat-paid">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">PAID</div>
       </div>
-      <div style="background:var(--green); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:#e74c3c;" id="admin-stat-unpaid">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">UNPAID</div>
       </div>
-      <div style="background:var(--green); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--gold);" id="admin-stat-collected">$0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">COLLECTED</div>
       </div>
@@ -1441,15 +1456,15 @@
     <div style="background:#f0f4ff; border:1.5px solid #b0c0e8; border-radius:8px; padding:16px 20px; margin-bottom:20px;">
       <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:4px;">🧹 Next Tournament — Safe Clear SQL</div>
       <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">⚠️ Only run this AFTER locking results. Generates a SQL snippet that deletes only the current tournament's teams — never touches history.</div>
-      <button onclick="generateClearSQL()" style="background:var(--green); color:white; border:none; border-radius:6px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; cursor:pointer;">GENERATE CLEAR SQL</button>
+      <button onclick="generateClearSQL()" style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:white; border:none; border-radius:6px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; cursor:pointer;">GENERATE CLEAR SQL</button>
       <pre id="clear-sql-output" style="display:none; margin-top:12px; background:#1e1e2e; color:#a8e6cf; padding:14px; border-radius:6px; font-size:0.72rem; overflow-x:auto; white-space:pre-wrap;"></pre>
     </div>
 
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <input type="text" id="admin-search" placeholder="Search by name or email..." oninput="renderAdminTable()"
-        style="padding:9px 14px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:var(--cream); flex:1; min-width:200px;" />
+        style="padding:9px 14px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:#ffffff; flex:1; min-width:200px;" />
       <select id="admin-filter" onchange="renderAdminTable()"
-        style="padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; background:var(--cream); color:var(--dark);">
+        style="padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; background:#ffffff; color:var(--dark);">
         <option value="all">All Teams</option>
         <option value="paid">Paid Only</option>
         <option value="unpaid">Unpaid Only</option>
@@ -1498,11 +1513,11 @@
 <!-- MASTERS THEME AUDIO PLAYER -->
 <div id="music-player" style="position:fixed; bottom:20px; left:8px; z-index:999; display:none; align-items:center; gap:8px;">
   <button id="music-btn" onclick="toggleMusic()" title="Toggle Arnold Palmer theme music"
-    style="background:var(--green); border:1.5px solid var(--gold); color:var(--gold); width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.3); transition:all 0.2s; -webkit-tap-highlight-color:transparent;">
+    style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); border:1.5px solid var(--gold); color:var(--gold); width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.3); transition:all 0.2s; -webkit-tap-highlight-color:transparent;">
     🔇
   </button>
-  <div id="music-label" style="background:var(--green); border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-    ♪ TPC Sawgrass Theme
+  <div id="music-label" style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+    ♪ Masters Theme
   </div>
 </div>
 <div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
@@ -1579,7 +1594,7 @@
     <h2 style="color:var(--green);">Team Submitted!</h2>
     <p style="color:#666; margin: 12px 0 6px; line-height:1.6;">Your team has been registered. Once I receive your payment, your entry will be marked as paid and appear on the leaderboard.</p>
     <div style="background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:6px; padding:12px 16px; margin:14px 0 20px; font-size:0.82rem; color:#555; line-height:1.6;">
-      📱 Send <strong style="color:var(--green);">$15</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
+      📱 Send <strong style="color:var(--green);">$25</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
     </div>
     <button class="btn btn-gold" onclick="closeModal('success-modal'); showPage('myteams');">View My Teams →</button>
     <div style="margin-top:10px;">
@@ -1598,11 +1613,11 @@
     <div style="margin-bottom:16px;">
       <label style="display:block; font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:1px; color:#888; margin-bottom:6px;">TEAM NAME</label>
       <input type="text" id="edit-picks-name" maxlength="40"
-        style="width:100%; padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:var(--cream); box-sizing:border-box;" />
+        style="width:100%; padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:#ffffff; box-sizing:border-box;" />
     </div>
     <div style="position:relative; margin-bottom:12px;">
       <input type="text" id="edit-picks-search" placeholder="Search golfer..." oninput="renderEditPicksGrid()"
-        style="width:100%; padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:var(--cream); box-sizing:border-box;" />
+        style="width:100%; padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:#ffffff; box-sizing:border-box;" />
     </div>
     <div id="edit-picks-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; max-height:300px; overflow-y:auto; margin-bottom:16px;"></div>
     <div style="display:flex; gap:8px; justify-content:flex-end;">
@@ -1648,7 +1663,7 @@ const CONFIG = {
   STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/test_5kQ8wQcZB67v6Sg7YPe7m00',
   ORGANIZER_EMAIL: 'jray@example.com',
   POOL_NAME: "J.Ray's Swimmers Pool",
-  ENTRY_FEE: 15,
+  ENTRY_FEE: 25,
   TEAM_SIZE: 5,
 };
 
@@ -1741,8 +1756,8 @@ function initAdminToggles() {
 // ═══════════════════════════════════════════════════════
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
-const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
-const TOURNAMENT_NAME = 'Valspar Championship 2026'; // must match tournament column in DB
+const TOURNAMENT_ACTIVE = false; // true = show live scores tab & leaderboard earnings
+const TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
@@ -1873,130 +1888,94 @@ let fetchInterval = null;
 // Feb 26 – Mar 1, 2026 · Purse: $9,600,000
 // ═══════════════════════════════════════════════════════
 const GOLFERS = [
-  { id: 1, name: "Mark Hubbard", earnings: 0, teeTime: "4:40 AM" },
-  { id: 2, name: "Thorbjorn Olesen", earnings: 0, teeTime: "4:40 AM" },
-  { id: 3, name: "Mac Meissner", earnings: 0, teeTime: "4:40 AM" },
-  { id: 4, name: "Mackenzie Hughes", earnings: 0, teeTime: "4:40 AM" },
-  { id: 5, name: "Eric Cole", earnings: 0, teeTime: "4:40 AM" },
-  { id: 6, name: "Rico Hoey", earnings: 0, teeTime: "4:40 AM" },
-  { id: 7, name: "Bud Cauley", earnings: 0, teeTime: "4:52 AM" },
-  { id: 8, name: "Vince Whaley", earnings: 0, teeTime: "4:52 AM" },
-  { id: 9, name: "Chandler Phillips", earnings: 0, teeTime: "4:52 AM" },
-  { id: 10, name: "Max Homa", earnings: 0, teeTime: "4:52 AM" },
-  { id: 11, name: "Daniel Berger", earnings: 0, teeTime: "4:52 AM" },
-  { id: 12, name: "Michael Thorbjornsen", earnings: 0, teeTime: "10:40 AM" },
-  { id: 13, name: "Emiliano Grillo", earnings: 0, teeTime: "5:04 AM" },
-  { id: 14, name: "Christiaan Bezuidenhout", earnings: 0, teeTime: "5:04 AM" },
-  { id: 15, name: "Max Greyserman", earnings: 0, teeTime: "5:04 AM" },
-  { id: 16, name: "Rasmus Hojgaard", earnings: 0, teeTime: "5:04 AM" },
-  { id: 17, name: "Danny Walker", earnings: 0, teeTime: "5:04 AM" },
-  { id: 18, name: "Kristoffer Reitan", earnings: 0, teeTime: "5:04 AM" },
-  { id: 19, name: "Kevin Yu", earnings: 0, teeTime: "5:16 AM" },
-  { id: 20, name: "Cam Davis", earnings: 0, teeTime: "5:16 AM" },
-  { id: 21, name: "Gary Woodland", earnings: 0, teeTime: "5:16 AM" },
-  { id: 22, name: "Jhonattan Vegas", earnings: 0, teeTime: "5:16 AM" },
-  { id: 23, name: "Taylor Pendrith", earnings: 0, teeTime: "5:16 AM" },
-  { id: 24, name: "Alex Noren", earnings: 0, teeTime: "5:16 AM" },
-  { id: 25, name: "Ricky Castillo", earnings: 0, teeTime: "5:28 AM" },
-  { id: 26, name: "Ryan Gerard", earnings: 0, teeTime: "9:15 AM" },
-  { id: 27, name: "Patrick Cantlay", earnings: 0, teeTime: "5:28 AM" },
-  { id: 28, name: "Akshay Bhatia", earnings: 0, teeTime: "8:25 AM" },
-  { id: 29, name: "Brooks Koepka", earnings: 0, teeTime: "8:55 AM" },
-  { id: 30, name: "Tony Finau", earnings: 0, teeTime: "5:28 AM" },
-  { id: 31, name: "Adam Schenk", earnings: 0, teeTime: "5:40 AM" },
-  { id: 32, name: "Garrick Higgo", earnings: 0, teeTime: "5:40 AM" },
-  { id: 33, name: "Matt McCarty", earnings: 0, teeTime: "5:40 AM" },
-  { id: 34, name: "Collin Morikawa", earnings: 0, withdrawn: true },
-  { id: 35, name: "Ludvig Aberg", earnings: 0, teeTime: "10:40 AM" },
-  { id: 36, name: "Si Woo Kim", earnings: 0, teeTime: "5:40 AM" },
-  { id: 37, name: "Brian Harman", earnings: 0, teeTime: "10:20 AM" },
-  { id: 38, name: "Maverick McNealy", earnings: 0, teeTime: "8:35 AM" },
-  { id: 39, name: "Davis Riley", earnings: 0, teeTime: "5:52 AM" },
-  { id: 40, name: "Scottie Scheffler", earnings: 0, teeTime: "8:35 AM" },
-  { id: 41, name: "Tommy Fleetwood", earnings: 0, teeTime: "10:40 AM" },
-  { id: 42, name: "Justin Thomas", earnings: 0, teeTime: "10:10 AM" },
-  { id: 43, name: "Sami Valimaki", earnings: 0, teeTime: "6:04 AM" },
-  { id: 44, name: "Lucas Glover", earnings: 0, teeTime: "6:04 AM" },
-  { id: 45, name: "Matt Fitzpatrick", earnings: 0, teeTime: "10:30 AM" },
-  { id: 46, name: "Viktor Hovland", earnings: 0, teeTime: "10:20 AM" },
-  { id: 47, name: "Russell Henley", earnings: 0, teeTime: "9:15 AM" },
-  { id: 48, name: "Robert MacIntyre", earnings: 0, teeTime: "10:00 AM" },
-  { id: 49, name: "Michael Brennan", earnings: 0, teeTime: "6:16 AM" },
-  { id: 50, name: "Harris English", earnings: 0, teeTime: "6:16 AM" },
-  { id: 51, name: "J.T. Poston", earnings: 0, teeTime: "6:16 AM" },
-  { id: 52, name: "Aldrich Potgieter", earnings: 0, teeTime: "6:16 AM" },
-  { id: 53, name: "Jake Knapp", earnings: 0, teeTime: "6:16 AM" },
-  { id: 54, name: "Sungjae Im", earnings: 0, teeTime: "6:16 AM" },
-  { id: 55, name: "Haotong Li", earnings: 0, teeTime: "6:28 AM" },
-  { id: 56, name: "Zecheng Dou", earnings: 0, teeTime: "6:28 AM" },
-  { id: 57, name: "Jordan Smith", earnings: 0, teeTime: "6:28 AM" },
-  { id: 58, name: "Patton Kizzire", earnings: 0, teeTime: "6:28 AM" },
-  { id: 59, name: "Seamus Power", earnings: 0, teeTime: "6:28 AM" },
-  { id: 60, name: "Johnny Keefer", earnings: 0, teeTime: "6:28 AM" },
-  { id: 61, name: "Lee Hodges", earnings: 0, teeTime: "11:05 AM" },
-  { id: 62, name: "Andrew Putnam", earnings: 0, teeTime: "9:15 AM" },
-  { id: 63, name: "Sam Stevens", earnings: 0, teeTime: "9:30 AM" },
-  { id: 64, name: "Tom Hoge", earnings: 0, teeTime: "9:30 AM" },
-  { id: 65, name: "Denny McCarthy", earnings: 0, teeTime: "9:30 AM" },
-  { id: 66, name: "Nicolai Hojgaard", earnings: 0, teeTime: "10:00 AM*" }, // manually set
-  { id: 67, name: "Erik van Rooyen", earnings: 0, teeTime: "10:12 AM" },
-  { id: 68, name: "Keith Mitchell", earnings: 0, teeTime: "10:10 AM" },
-  { id: 69, name: "Michael Kim", earnings: 0, teeTime: "10:12 AM" },
-  { id: 70, name: "Patrick Rodgers", earnings: 0, teeTime: "8:45 AM" },
-  { id: 71, name: "Kevin Roy", earnings: 0, teeTime: "10:12 AM*" },
-  { id: 72, name: "Marco Penge", earnings: 0, teeTime: "10:12 AM*" },
-  { id: 73, name: "Taylor Moore", earnings: 0, teeTime: "10:24 AM" },
-  { id: 74, name: "Joel Dahmen", earnings: 0, teeTime: "10:24 AM" },
-  { id: 75, name: "Ryo Hisatsune", earnings: 0, teeTime: "9:15 AM" },
-  { id: 76, name: "Chad Ramey", earnings: 0, teeTime: "9:35 AM" },
-  { id: 77, name: "Alex Smalley", earnings: 0, teeTime: "8:45 AM" },
-  { id: 78, name: "Pierceson Coody", earnings: 0, teeTime: "10:24 AM*" },
-  { id: 79, name: "Jacob Bridgeman", earnings: 0, teeTime: "9:40 AM" },
-  { id: 80, name: "Ben Griffin", earnings: 0, teeTime: "10:36 AM" },
-  { id: 81, name: "Adam Scott", earnings: 0, teeTime: "10:36 AM" },
-  { id: 82, name: "Kurt Kitayama", earnings: 0, teeTime: "10:36 AM*" },
-  { id: 83, name: "Harry Hall", earnings: 0, teeTime: "10:36 AM*" },
-  { id: 84, name: "Stephan Jaeger", earnings: 0, teeTime: "10:36 AM*" },
-  { id: 85, name: "J.J. Spaun", earnings: 0, teeTime: "9:05 AM" },
-  { id: 86, name: "Sepp Straka", earnings: 0, teeTime: "9:40 AM" },
-  { id: 87, name: "Shane Lowry", earnings: 0, teeTime: "10:48 AM" },
-  { id: 88, name: "Keegan Bradley", earnings: 0, teeTime: "8:55 AM" },
-  { id: 89, name: "Ryan Fox", earnings: 0, withdrawn: true },
-  { id: 90, name: "Chris Kirk", earnings: 0, teeTime: "10:48 AM" },
-  { id: 91, name: "Sahith Theegala", earnings: 0, teeTime: "9:50 AM" },
-  { id: 92, name: "Rickie Fowler", earnings: 0, teeTime: "11:00 AM" },
-  { id: 93, name: "Jordan Spieth", earnings: 0, teeTime: "9:25 AM" },
-  { id: 94, name: "Andrew Novak", earnings: 0, teeTime: "11:00 AM" },
-  { id: 95, name: "Nick Taylor", earnings: 0, teeTime: "11:00 AM*" },
-  { id: 96, name: "Wyndham Clark", earnings: 0, teeTime: "11:00 AM*" },
-  { id: 97, name: "Xander Schauffele", earnings: 0, teeTime: "10:00 AM" },
-  { id: 98, name: "Rory McIlroy", earnings: 0, teeTime: "11:12 AM" },
-  { id: 99, name: "Hideki Matsuyama", earnings: 0, teeTime: "9:05 AM" },
-  { id: 100, name: "Steven Fisk", earnings: 0, teeTime: "11:12 AM*" },
-  { id: 101, name: "William Mouw", earnings: 0, teeTime: "9:25 AM" },
-  { id: 102, name: "Joe Highsmith", earnings: 0, teeTime: "11:12 AM*" },
-  { id: 103, name: "Chris Gotterup", earnings: 0, teeTime: "8:25 AM" },
-  { id: 104, name: "Justin Rose", earnings: 0, teeTime: "9:25 AM" },
-  { id: 105, name: "Min Woo Lee", earnings: 0, teeTime: "8:15 AM" },
-  { id: 106, name: "Cameron Young", earnings: 0, teeTime: "10:30 AM" },
-  { id: 107, name: "Davis Thompson", earnings: 0, teeTime: "11:24 AM" },
-  { id: 108, name: "Sam Burns", earnings: 0, teeTime: "11:24 AM*" },
-  { id: 109, name: "Brian Campbell", earnings: 0, teeTime: "11:36 AM" },
-  { id: 110, name: "Karl Vilips", earnings: 0, teeTime: "11:36 AM" },
-  { id: 111, name: "Aaron Rai", earnings: 0, teeTime: "11:36 AM*" },
-  { id: 112, name: "Nico Echavarria", earnings: 0, teeTime: "11:36 AM" },
-  { id: 113, name: "Jason Day", earnings: 0, teeTime: "9:50 AM" },
-  { id: 114, name: "Corey Conners", earnings: 0, teeTime: "10:10 AM" },
-  { id: 115, name: "Matti Schmid", earnings: 0, teeTime: "11:48 AM" },
-  { id: 116, name: "Max McGreevy", earnings: 0, teeTime: "11:48 AM" },
-  { id: 117, name: "Takumi Kanaya", earnings: 0, teeTime: "11:48 AM" },
-  { id: 118, name: "Matthieu Pavon", earnings: 0, teeTime: "11:48 AM*" },
-  { id: 119, name: "S.H. Kim", earnings: 0, teeTime: "11:48 AM" },
-  { id: 120, name: "Austin Smotherman", earnings: 0, teeTime: "9:50 AM" },
-  { id: 121, name: "Zach Bauchou", earnings: 0, teeTime: "12:00 PM" },
-  { id: 122, name: "Sudarshan Yellamaraju", earnings: 0, teeTime: "9:05 AM" },
-  { id: 123, name: "A.J. Ewart", earnings: 0, teeTime: "12:00 PM" },
-  { id: 124, name: "David Ford", earnings: 0, teeTime: "10:48 AM*" },
+  { id: 1,  name: "Scottie Scheffler", earnings: 0, teeTime: "" },
+  { id: 2,  name: "Jon Rahm", earnings: 0, teeTime: "" },
+  { id: 3,  name: "Rory McIlroy", earnings: 0, teeTime: "" },
+  { id: 4,  name: "Tommy Fleetwood", earnings: 0, teeTime: "" },
+  { id: 5,  name: "Cameron Young", earnings: 0, teeTime: "" },
+  { id: 6,  name: "Russell Henley", earnings: 0, teeTime: "" },
+  { id: 7,  name: "Xander Schauffele", earnings: 0, teeTime: "" },
+  { id: 8,  name: "Matt Fitzpatrick", earnings: 0, teeTime: "" },
+  { id: 9,  name: "Robert MacIntyre", earnings: 0, teeTime: "" },
+  { id: 10, name: "Ludvig Aberg", earnings: 0, teeTime: "" },
+  { id: 11, name: "Hideki Matsuyama", earnings: 0, teeTime: "" },
+  { id: 12, name: "Bryson DeChambeau", earnings: 0, teeTime: "" },
+  { id: 13, name: "Collin Morikawa", earnings: 0, teeTime: "" },
+  { id: 14, name: "Akshay Bhatia", earnings: 0, teeTime: "" },
+  { id: 15, name: "Si Woo Kim", earnings: 0, teeTime: "" },
+  { id: 16, name: "Viktor Hovland", earnings: 0, teeTime: "" },
+  { id: 17, name: "Jacob Bridgeman", earnings: 0, teeTime: "" },
+  { id: 18, name: "Maverick McNealy", earnings: 0, teeTime: "" },
+  { id: 19, name: "Sam Burns", earnings: 0, teeTime: "" },
+  { id: 20, name: "Min Woo Lee", earnings: 0, teeTime: "" },
+  { id: 21, name: "Alex Noren", earnings: 0, teeTime: "" },
+  { id: 22, name: "Patrick Cantlay", earnings: 0, teeTime: "" },
+  { id: 23, name: "Ben Griffin", earnings: 0, teeTime: "" },
+  { id: 24, name: "Sepp Straka", earnings: 0, teeTime: "" },
+  { id: 25, name: "J.J. Spaun", earnings: 0, teeTime: "" },
+  { id: 26, name: "Harris English", earnings: 0, teeTime: "" },
+  { id: 27, name: "Shane Lowry", earnings: 0, teeTime: "" },
+  { id: 28, name: "Harry Hall", earnings: 0, teeTime: "" },
+  { id: 29, name: "Adam Scott", earnings: 0, teeTime: "" },
+  { id: 30, name: "Ryan Gerard", earnings: 0, teeTime: "" },
+  { id: 31, name: "Chris Gotterup", earnings: 0, teeTime: "" },
+  { id: 32, name: "Jordan Spieth", earnings: 0, teeTime: "" },
+  { id: 33, name: "Kurt Kitayama", earnings: 0, teeTime: "" },
+  { id: 34, name: "Justin Rose", earnings: 0, teeTime: "" },
+  { id: 35, name: "Justin Thomas", earnings: 0, teeTime: "" },
+  { id: 36, name: "Nick Taylor", earnings: 0, teeTime: "" },
+  { id: 37, name: "Keegan Bradley", earnings: 0, teeTime: "" },
+  { id: 38, name: "Corey Conners", earnings: 0, teeTime: "" },
+  { id: 39, name: "Patrick Reed", earnings: 0, teeTime: "" },
+  { id: 40, name: "Rasmus Hojgaard", earnings: 0, teeTime: "" },
+  { id: 41, name: "Jason Day", earnings: 0, teeTime: "" },
+  { id: 42, name: "Ryan Fox", earnings: 0, teeTime: "" },
+  { id: 43, name: "Tyrrell Hatton", earnings: 0, teeTime: "" },
+  { id: 44, name: "Sam Stevens", earnings: 0, teeTime: "" },
+  { id: 45, name: "Aaron Rai", earnings: 0, teeTime: "" },
+  { id: 46, name: "Max Greyserman", earnings: 0, teeTime: "" },
+  { id: 47, name: "Nico Echavarria", earnings: 0, teeTime: "" },
+  { id: 48, name: "Casey Jarvis", earnings: 0, teeTime: "" },
+  { id: 49, name: "Wyndham Clark", earnings: 0, teeTime: "" },
+  { id: 50, name: "Max Homa", earnings: 0, teeTime: "" },
+  { id: 51, name: "Kristoffer Reitan", earnings: 0, teeTime: "" },
+  { id: 52, name: "Carlos Ortiz", earnings: 0, teeTime: "" },
+  { id: 53, name: "Haotong Li", earnings: 0, teeTime: "" },
+  { id: 54, name: "Brian Harman", earnings: 0, teeTime: "" },
+  { id: 55, name: "Tom McKibbin", earnings: 0, teeTime: "" },
+  { id: 56, name: "Brooks Koepka", earnings: 0, teeTime: "" },
+  { id: 57, name: "Cameron Smith", earnings: 0, teeTime: "" },
+  { id: 58, name: "Johnny Keefer", earnings: 0, teeTime: "" },
+  { id: 59, name: "Rasmus Neergaard-Petersen", earnings: 0, teeTime: "" },
+  { id: 60, name: "Marco Penge", earnings: 0, teeTime: "" },
+  { id: 61, name: "Andrew Novak", earnings: 0, teeTime: "" },
+  { id: 62, name: "Sami Valimaki", earnings: 0, teeTime: "" },
+  { id: 63, name: "Michael Kim", earnings: 0, teeTime: "" },
+  { id: 64, name: "Michael Brennan", earnings: 0, teeTime: "" },
+  { id: 65, name: "Sergio Garcia", earnings: 0, teeTime: "" },
+  { id: 66, name: "Sungjae Im", earnings: 0, teeTime: "" },
+  { id: 67, name: "Dustin Johnson", earnings: 0, teeTime: "" },
+  { id: 68, name: "Charl Schwartzel", earnings: 0, teeTime: "" },
+  { id: 69, name: "Zach Johnson", earnings: 0, teeTime: "" },
+  { id: 70, name: "Bubba Watson", earnings: 0, teeTime: "" },
+  { id: 71, name: "Aldrich Potgieter", earnings: 0, teeTime: "" },
+  { id: 72, name: "Brian Campbell", earnings: 0, teeTime: "" },
+  { id: 73, name: "Davis Riley", earnings: 0, teeTime: "" },
+  { id: 74, name: "Danny Willett", earnings: 0, teeTime: "" },
+  { id: 75, name: "Phil Mickelson", earnings: 0, teeTime: "" },
+  { id: 76, name: "Fred Couples", earnings: 0, teeTime: "" },
+  { id: 77, name: "Naoyuki Kataoka", earnings: 0, teeTime: "" },
+  { id: 78, name: "Angel Cabrera", earnings: 0, teeTime: "" },
+  { id: 79, name: "Jackson Herrington", earnings: 0, teeTime: "" },
+  { id: 80, name: "Vijay Singh", earnings: 0, teeTime: "" },
+  { id: 81, name: "Tiger Woods", earnings: 0, teeTime: "" },
+  { id: 82, name: "Ethan Fang", earnings: 0, teeTime: "" },
+  { id: 83, name: "Brandon Holtz", earnings: 0, teeTime: "" },
+  { id: 84, name: "Mike Weir", earnings: 0, teeTime: "" },
+  { id: 85, name: "Fifa Laopakdee", earnings: 0, teeTime: "" },
+  { id: 86, name: "Mateo Pulcini", earnings: 0, teeTime: "" },
+  { id: 87, name: "Jose Maria Olazabal", earnings: 0, teeTime: "" },
+  { id: 88, name: "Mason Howell", earnings: 0, teeTime: "" },
 ];
 
 // ═══════════════════════════════════════════════════════
@@ -2162,7 +2141,7 @@ function parseESPNAPI(data) {
     }
 
     // Projected cut line — only used during round 2, not after cut is official
-    // Players Championship rule: top 65 + ties
+    // The Masters 2026 rule: top 65 + ties
     let cutScore = null;
     if (!isPostCut && madecut.length >= 65) {
       const startedPlayers = madecut.filter(p => p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-'));
@@ -2340,6 +2319,24 @@ function getTournamentTheme(tName) {
       cardBg: 'rgba(184,115,51,0.06)',
       hover: 'rgba(184,115,51,0.1)',
       poolPayout: 190,
+      headerBg: '#1a0a2e',
+      headerColor: '#e87722',
+      rankBg: '#1a0a2e',
+      rankColor: '#e87722',
+    },
+    'The Players Championship 2026': {
+      bg: '#f0f4f8',
+      border: 'rgba(0,51,98,0.12)',
+      title: '#001e3d',
+      sub: '#1a5490',
+      accent: '#0077b6',
+      cardBg: 'rgba(0,51,98,0.04)',
+      hover: 'rgba(0,51,98,0.08)',
+      poolPayout: null,
+      headerBg: '#001e3d',
+      headerColor: '#48cae4',
+      rankBg: '#001e3d',
+      rankColor: '#48cae4',
     },
   };
   return themes[tName] || null;
@@ -2457,15 +2454,21 @@ function showHistoryDetail(tName) {
     </tr>`;
   }).join('');
 
+  const th2 = getTournamentTheme(tName);
+  const thHeaderBg = th2?.headerBg || '#1a4731';
+  const thHeaderColor = th2?.headerColor || 'var(--gold)';
+  const thRowBg = th2?.cardBg || 'rgba(201,168,76,0.06)';
+  const thGolferBg = th2?.cardBg || 'rgba(0,51,98,0.04)';
+
   document.getElementById('history-detail-table').innerHTML = `
     <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
       <table class="leaderboard-table" style="min-width:500px;">
         <thead>
           <tr>
-            <th style="width:40px;">#</th>
-            <th>Team</th>
-            <th>Golfers</th>
-            <th style="text-align:right;">Earnings</th>
+            <th style="width:40px; background:${thHeaderBg}; color:${thHeaderColor}; -webkit-text-fill-color:${thHeaderColor};">#</th>
+            <th style="background:${thHeaderBg}; color:${thHeaderColor}; -webkit-text-fill-color:${thHeaderColor};">Team</th>
+            <th style="background:${thHeaderBg}; color:${thHeaderColor}; -webkit-text-fill-color:${thHeaderColor};">Golfers</th>
+            <th style="text-align:right; background:${thHeaderBg}; color:${thHeaderColor}; -webkit-text-fill-color:${thHeaderColor};">Earnings</th>
           </tr>
         </thead>
         <tbody>${rowsHTML}</tbody>
@@ -2659,6 +2662,26 @@ async function showPage(name) {
   const navMap = { home: 'nav-home', leaderboard: 'nav-leaderboard', history: 'nav-history', tournament: 'nav-tournament', builder: 'nav-enter', myteams: 'nav-myteams', profile: 'nav-myteams', admin: 'nav-admin' };
   const activeBtn = document.getElementById(navMap[name]);
   if (activeBtn) activeBtn.classList.add('active');
+  // nav tab colors
+  const tabColors = {
+    'nav-home': 'var(--v-teal)',
+    'nav-leaderboard': 'var(--v-purple)',
+    'nav-tournament': 'var(--v-orange)',
+    'nav-myteams': 'var(--v-blue)',
+    'nav-chat': 'var(--v-red)',
+    'nav-history': 'var(--v-teal)',
+    'nav-stats': 'var(--v-orange)',
+    'nav-enter': 'var(--v-purple)',
+  };
+  document.querySelectorAll('nav button').forEach(b => {
+    b.style.borderBottomColor = '';
+    b.style.color = '';
+  });
+  if (activeBtn) {
+    const c = tabColors[activeBtn.id] || 'var(--gold)';
+    activeBtn.style.borderBottomColor = c;
+    activeBtn.style.color = c;
+  }
   window.scrollTo(0, 0);
   if (name === 'leaderboard') renderLeaderboard();
   if (name === 'admin') renderAdminPanel();
@@ -3314,7 +3337,7 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = [4,5,3,4,4,4,4,3,5, 4,5,4,3,4,4,5,3,4]; // TPC Sawgrass par 72
+const HOLE_PARS = [4,5,4,3,4,3,4,5,4, 4,4,3,5,4,5,3,4,4]; // Augusta National par 72 (Masters)
 
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
@@ -3475,7 +3498,7 @@ function toggleScorecard(playerKey, clickedRow) {
     <div style="padding:10px 12px 14px;">
       <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
         <select id="round-select-${safeKeyForSelect}" onchange="switchScorecardRound('${safeKeyForSelect}')"
-          style="padding:4px 10px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; background:var(--cream); color:var(--dark); cursor:pointer; letter-spacing:1px;">
+          style="padding:4px 10px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; background:#ffffff; color:var(--dark); cursor:pointer; letter-spacing:1px;">
           ${roundOptions}
         </select>
         <span style="font-family:'DM Mono',monospace; font-size:0.7rem; color:#888;">Thru ${d.thru}</span>
@@ -3725,6 +3748,28 @@ async function initChat() {
     .subscribe();
 }
 
+// ─── USER COLOR (seeded from email, always consistent) ───
+const USER_COLOR_PALETTE = [
+  '#e07b4a', '#d4a843', '#7ab648', '#3fa37c', '#4a9fd4',
+  '#7b6fd4', '#c45fa0', '#d45f5f', '#4abfbf', '#a07bd4',
+  '#d47b4a', '#6fa3d4', '#8fd458', '#d45fa0', '#5fd4a0',
+];
+
+function getUserColor(email) {
+  const saved = localStorage.getItem('userColor_' + email);
+  if (saved) return saved;
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  return USER_COLOR_PALETTE[Math.abs(hash) % USER_COLOR_PALETTE.length];
+}
+
+function getUserTextColor(bg) {
+  // Return dark or light text depending on bg luminance
+  const hex = bg.replace('#','');
+  const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
+  return (0.299*r + 0.587*g + 0.114*b) > 160 ? '#1a4731' : '#ffffff';
+}
+
 function appendChatMessage(msg) {
   const messagesEl = document.getElementById('chat-messages');
   if (!messagesEl) return;
@@ -3732,16 +3777,44 @@ function appendChatMessage(msg) {
   const msgDate = new Date(msg.created_at);
   const time = msgDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   const date = `${msgDate.getMonth()+1}/${msgDate.getDate()}`;
+  const userColor = getUserColor(msg.user_email || 'default');
+  const textColor = getUserTextColor(userColor);
+  const msgId = msg.id || msg._optimistic ? `msg-${Date.now()}-${Math.random().toString(36).slice(2)}` : `msg-${Date.now()}`;
+
   const div = document.createElement('div');
-  div.style.cssText = `display:flex; flex-direction:column; align-items:${isMe ? 'flex-end' : 'flex-start'};`;
+  div.style.cssText = `display:flex; flex-direction:column; align-items:${isMe ? 'flex-end' : 'flex-start'}; margin-bottom:2px;`;
   div.innerHTML = `
-    <div style="font-size:0.68rem; color:rgba(255,255,255,0.35); font-family:'DM Mono',monospace; margin-bottom:3px; letter-spacing:0.3px; ${isMe ? 'text-align:right;' : ''}">
-      ${isMe ? 'You' : escapeHtml(msg.user_name)} · ${date} · ${time}
+    <div style="font-size:0.68rem; color:rgba(250,246,238,0.4); font-family:'DM Mono',monospace; margin-bottom:3px; letter-spacing:0.3px; ${isMe ? 'text-align:right;' : ''}">
+      <span style="color:${userColor}; font-weight:600;">${isMe ? 'You' : escapeHtml(msg.user_name)}</span> · ${date} · ${time}
     </div>
-    <div style="background:${isMe ? 'var(--gold)' : 'rgba(255,255,255,0.12)'}; color:#fff; border:1px solid ${isMe ? 'transparent' : 'rgba(255,255,255,0.15)'}; border-radius:${isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px'}; padding:10px 14px; max-width:78%; font-family:'Libre Baskerville',serif; font-size:0.88rem; line-height:1.45; word-break:break-word; box-shadow:${isMe ? '0 2px 10px rgba(206,170,120,0.3)' : '0 1px 4px rgba(0,0,0,0.2)'};">
+    <div style="background:${isMe ? userColor : 'rgba(255,255,255,0.1)'}; color:${isMe ? textColor : 'var(--cream)'}; border:1px solid ${isMe ? 'transparent' : 'rgba(201,168,76,0.15)'}; border-radius:${isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px'}; padding:10px 14px; max-width:78%; font-family:'EB Garamond',serif; font-size:0.95rem; line-height:1.45; word-break:break-word; box-shadow:0 1px 4px rgba(0,0,0,0.2); position:relative;">
       ${escapeHtml(msg.message)}
+    </div>
+    <div class="chat-reactions" style="display:flex; gap:4px; margin-top:4px; ${isMe ? 'flex-direction:row-reverse;' : ''}">
+      ${['👍','🔥','💀'].map(emoji => `
+        <button onclick="toggleReaction(this,'${emoji}')" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:2px 7px; font-size:0.78rem; cursor:pointer; color:rgba(250,246,238,0.5); transition:all 0.15s; line-height:1.4;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="if(!this.dataset.active)this.style.background='rgba(255,255,255,0.08)'">${emoji} <span class="rxn-count">0</span></button>
+      `).join('')}
     </div>`;
   messagesEl.appendChild(div);
+}
+
+function toggleReaction(btn, emoji) {
+  const countEl = btn.querySelector('.rxn-count');
+  const active = btn.dataset.active === '1';
+  if (active) {
+    btn.dataset.active = '0';
+    btn.style.background = 'rgba(255,255,255,0.08)';
+    btn.style.borderColor = 'rgba(255,255,255,0.12)';
+    btn.style.color = 'rgba(250,246,238,0.5)';
+    countEl.textContent = Math.max(0, parseInt(countEl.textContent) - 1);
+    if (parseInt(countEl.textContent) === 0) btn.style.display = '';
+  } else {
+    btn.dataset.active = '1';
+    btn.style.background = 'rgba(201,168,76,0.25)';
+    btn.style.borderColor = 'rgba(201,168,76,0.5)';
+    btn.style.color = 'var(--gold)';
+    countEl.textContent = parseInt(countEl.textContent) + 1;
+  }
 }
 
 function scrollChatToBottom() {
@@ -4046,7 +4119,7 @@ function renderStats(sortBy = 'picks') {
             <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${pct}%</td>
             <td style="padding:10px 12px; min-width:120px;">
               <div style="background:#e8e4da; border-radius:3px; height:8px; overflow:hidden;">
-                <div style="background:var(--green); height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
+                <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
               </div>
             </td>
           </tr>`;
@@ -4272,10 +4345,18 @@ async function saveEditPicks() {
 
 // ═══════════════════════════════════════════════════════
 function renderProfile() {
-  if (!currentUser) return;
+  console.log('renderProfile called, currentUser:', currentUser);
+  if (!currentUser) {
+    console.log('no currentUser — showing dummy cards');
+    renderDummyHistoryPreview();
+    return;
+  }
   const avatarEl = document.getElementById('profile-avatar');
   if (!avatarEl) return;
+  const userColor = getUserColor(currentUser.email);
   avatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
+  avatarEl.style.background = userColor;
+  avatarEl.style.color = getUserTextColor(userColor);
   document.getElementById('profile-name').textContent = currentUser.name;
   document.getElementById('profile-email').textContent = currentUser.email;
 
@@ -4293,22 +4374,37 @@ function renderProfile() {
 }
 
 function renderCareerStats(myTeams) {
-  if (!myTeams || myTeams.length === 0) return;
+  console.log('renderCareerStats called, myTeams:', myTeams?.length, myTeams);
+  if (!myTeams || myTeams.length === 0) {
+    console.log('no myTeams — showing dummy');
+    renderDummyHistoryPreview();
+    return;
+  }
 
   // Only show career stats and history for tournaments with locked results
   const lockedTeams = myTeams.filter(t => t.results);
-  if (lockedTeams.length === 0) return;
+  console.log('lockedTeams:', lockedTeams.length);
+  if (lockedTeams.length === 0) {
+    console.log('no locked teams — showing dummy');
+    renderDummyHistoryPreview();
+    return;
+  }
 
-  // Group locked teams by tournament only
+  // Group by tournament — include locked results AND any past tournaments
   const byTournament = {};
-  lockedTeams.forEach(t => {
-    const tName = t.results.tournament || t.tournament || 'Unknown Tournament';
+  myTeams.forEach(t => {
+    const tName = t.results?.tournament || t.tournament || 'Unknown Tournament';
+    if (tName === TOURNAMENT_NAME && !t.results) return; // skip current tourney teams without results
+    if (tName === 'Valspar Championship 2026') return; // renamed to The Masters 2026, skip
     if (!byTournament[tName]) byTournament[tName] = [];
     byTournament[tName].push(t);
   });
 
   const tournaments = Object.keys(byTournament);
-  if (tournaments.length === 0) return;
+  if (tournaments.length === 0) {
+    renderDummyHistoryPreview();
+    return;
+  }
 
   let totalWins = 0;
   let bestFinishNum = Infinity;
@@ -4335,9 +4431,11 @@ function renderCareerStats(myTeams) {
     const tEarnings = tTeams.reduce((sum, t) => sum + (t.results ? t.results.teamEarnings : getTeamEarnings(t)), 0);
     totalEarnings += tEarnings;
 
-    const finishLabel = bestPoolFinish === Infinity ? '–' : (bestPoolFinish === 1 ? '🏆 1st' : `#${bestPoolFinish}`);
-    const finishColor = isWin ? 'var(--gold)' : 'var(--green)';
     const th = getTournamentTheme(tName);
+    const finishLabel = bestPoolFinish === Infinity ? '–' : (bestPoolFinish === 1 ? '🏆 1st' : `#${bestPoolFinish}`);
+    const finishColor = isWin ? 'var(--gold)' : (th ? th.accent : 'var(--green)');
+    const rankOtherBg = th?.rankBg || '#eee';
+    const rankOtherColor = th?.rankColor || '#666';
     const cardBg = th ? th.bg : 'var(--cream)';
     const cardBorder = th ? th.border : 'rgba(0,51,98,0.12)';
     const titleColor = th ? th.title : 'var(--green)';
@@ -4377,10 +4475,11 @@ function renderCareerStats(myTeams) {
 
       const rankNum = snap ? snap.poolRank : (allSorted.findIndex(s => s.id === t.id) + 1);
       const rankBadgeClass = rankNum === 1 ? 'rank-1' : rankNum === 2 ? 'rank-2' : rankNum === 3 ? 'rank-3' : 'rank-other';
+      const rankStyle = (rankNum > 3) ? `background:${rankOtherBg}; color:${rankOtherColor};` : '';
       return `<div style="padding:10px 0; border-bottom:1px solid ${innerBorder};">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <span class="rank-badge ${rankBadgeClass}" style="font-size:0.78rem; width:26px; height:26px; flex-shrink:0;">${rankNum}</span>
+            <span class="rank-badge ${rankBadgeClass}" style="font-size:0.78rem; width:26px; height:26px; flex-shrink:0; ${rankStyle}">${rankNum}</span>
             <div style="font-weight:700; font-size:0.88rem; color:${teamNameColor}; font-family:'Libre Baskerville',serif;">${t.name}</div>
           </div>
           <div style="text-align:right; flex-shrink:0;">
@@ -4427,6 +4526,87 @@ function renderCareerStats(myTeams) {
     histSection.style.display = 'block';
     histList.innerHTML = historyHTML;
   }
+}
+
+function renderDummyHistoryPreview() {
+  console.log('renderDummyHistoryPreview called');
+  const histSection = document.getElementById('tournament-history-section');
+  const histList = document.getElementById('tournament-history-list');
+  console.log('histSection:', histSection, 'histList:', histList);
+  if (!histSection || !histList) return;
+
+  const thAP = getTournamentTheme('Arnold Palmer Invitational 2026');
+  const thPC = getTournamentTheme('The Players Championship 2026');
+
+  const makeCard = (tName, theme, rank, teamName, earnings, golfers) => {
+    const bg = theme ? theme.bg : 'var(--cream)';
+    const border = theme ? theme.border : 'rgba(0,51,98,0.12)';
+    const titleColor = theme ? theme.title : 'var(--green)';
+    const subColor = theme ? theme.sub : 'var(--green-mid)';
+    const accentColor = theme ? theme.accent : 'var(--green)';
+    const innerBorder = theme ? `rgba(184,115,51,0.1)` : 'rgba(0,51,98,0.07)';
+    const innerBg = theme ? `rgba(184,115,51,0.06)` : 'rgba(0,51,98,0.04)';
+    const rankOtherBg = theme?.rankBg || '#eee';
+    const rankOtherColor = theme?.rankColor || '#666';
+    const rankBadgeClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+    const rankStyle = rank > 3 ? `background:${rankOtherBg}; color:${rankOtherColor};` : '';
+    const finishLabel = rank === 1 ? '🏆 1st' : `#${rank}`;
+    const finishColor = rank === 1 ? 'var(--gold)' : (theme ? theme.accent : 'var(--green)');
+    const golferNameColor = theme ? 'rgba(255,255,255,0.75)' : '#555';
+
+    const golferRows = golfers.map(g => `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:3px 0; font-size:0.78rem;">
+        <span style="color:${golferNameColor}; font-family:'Libre Baskerville',serif;">
+          <span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.68rem; margin-right:5px;">${g.pos}</span>${g.name}
+        </span>
+        <span style="font-family:'DM Mono',monospace; font-size:0.75rem; color:${accentColor};">$${g.earnings.toLocaleString()}</span>
+      </div>`).join('');
+
+    return `<div style="background:${bg}; border:1px solid ${border}; border-radius:8px; margin-bottom:12px; overflow:hidden;">
+      <div onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.querySelector('.hist-arrow').textContent = this.nextElementSibling.style.display === 'none' ? '▸' : '▾';"
+           style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; cursor:pointer; user-select:none;">
+        <div>
+          <div style="font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:${titleColor};">${tName}</div>
+          <div style="font-size:0.7rem; font-family:'DM Mono',monospace; color:${subColor}; margin-top:2px;">1 team · $${earnings.toLocaleString()} earned</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:${finishColor};">${finishLabel}</div>
+          <span class="hist-arrow" style="color:${subColor}; font-size:0.9rem;">▸</span>
+        </div>
+      </div>
+      <div style="display:none; padding:0 18px 14px;">
+        <div style="padding:10px 0; border-bottom:1px solid ${innerBorder};">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="rank-badge ${rankBadgeClass}" style="font-size:0.78rem; width:26px; height:26px; flex-shrink:0; ${rankStyle}">${rank}</span>
+              <div style="font-weight:700; font-size:0.88rem; color:${titleColor}; font-family:'Libre Baskerville',serif;">${teamName}</div>
+            </div>
+            <div style="font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:${accentColor};">$${earnings.toLocaleString()}</div>
+          </div>
+          <div style="background:${innerBg}; border-radius:5px; padding:6px 10px;">${golferRows}</div>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  const apCard = makeCard('Arnold Palmer Invitational 2026', thAP, 4, "Rogie's Favorite Fivesome", 1960000, [
+    { pos: 'T2',  name: 'S. Scheffler', earnings: 1089000 },
+    { pos: 'T8',  name: 'X. Schauffele', earnings: 462000 },
+    { pos: 'T14', name: 'R. McIlroy', earnings: 231000 },
+    { pos: 'T22', name: 'C. Morikawa', earnings: 126000 },
+    { pos: 'T35', name: 'J. Thomas', earnings: 52000 },
+  ]);
+
+  const pcCard = makeCard('The Players Championship 2026', thPC, 5, 'UNK Kai Kai', 2910500, [
+    { pos: 'T5',  name: 'L. Aberg', earnings: 925000 },
+    { pos: 'T5',  name: 'J. Bridgeman', earnings: 925000 },
+    { pos: 'T8',  name: 'S. Straka', earnings: 731250 },
+    { pos: 'T22', name: 'S. Scheffler', earnings: 271250 },
+    { pos: 'T56', name: 'C. Gotterup', earnings: 58000 },
+  ]);
+
+  histSection.style.display = 'block';
+  histList.innerHTML = apCard + pcCard;
 }
 
 function updateMobileTracker() {
@@ -4529,14 +4709,42 @@ function toggleEditProfile() {
   const isHidden = panel.style.display === 'none';
   if (isHidden) {
     document.getElementById('settings-name').value = currentUser.name || '';
+    // Render color swatches
+    const currentColor = getUserColor(currentUser.email);
+    const swatchContainer = document.getElementById('color-picker-swatches');
+    swatchContainer.innerHTML = USER_COLOR_PALETTE.map(color => `
+      <div onclick="selectUserColor('${color}')" id="swatch-${color.replace('#','')}"
+        style="width:32px; height:32px; border-radius:50%; background:${color}; cursor:pointer;
+               border: 3px solid ${color === currentColor ? '#1a4731' : 'transparent'};
+               box-shadow: ${color === currentColor ? '0 0 0 2px ' + color : 'none'};
+               transition: transform 0.15s;"
+        onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+      </div>`).join('');
   }
   panel.style.display = isHidden ? 'flex' : 'none';
   document.getElementById('edit-profile-btn').textContent = isHidden ? '✕ CLOSE' : '✎ EDIT';
 }
 
+function selectUserColor(color) {
+  // Update swatch selection UI
+  USER_COLOR_PALETTE.forEach(c => {
+    const el = document.getElementById('swatch-' + c.replace('#',''));
+    if (!el) return;
+    el.style.border = c === color ? '3px solid #1a4731' : '3px solid transparent';
+    el.style.boxShadow = c === color ? '0 0 0 2px ' + c : 'none';
+  });
+  // Store temporarily
+  document.getElementById('color-picker-swatches').dataset.selected = color;
+}
+
 async function saveSettings() {
   const name = document.getElementById('settings-name').value.trim();
   if (!name) { showToast('Please enter a name.', 'error'); return; }
+
+  // Save color choice if one was selected
+  const swatchContainer = document.getElementById('color-picker-swatches');
+  const selectedColor = swatchContainer?.dataset.selected;
+  if (selectedColor) localStorage.setItem('userColor_' + currentUser.email, selectedColor);
   // Update profile name
   const { error } = await sb.from('profiles').update({ name }).eq('id', currentUser.id);
   if (error) { showToast('Error saving settings.', 'error'); return; }
@@ -4553,7 +4761,12 @@ async function saveSettings() {
   if (editBtn) editBtn.textContent = '✎ EDIT';
   // Update profile display elements directly without full re-render
   const avatarEl = document.getElementById('profile-avatar');
-  if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+  if (avatarEl) {
+    avatarEl.textContent = name.charAt(0).toUpperCase();
+    const uc = getUserColor(currentUser.email);
+    avatarEl.style.background = uc;
+    avatarEl.style.color = getUserTextColor(uc);
+  }
   const nameEl = document.getElementById('profile-name');
   if (nameEl) nameEl.textContent = name;
   renderLeaderboard();
@@ -5201,7 +5414,7 @@ function renderH2H() {
 
   <!-- Duplicate lineup confirm modal -->
   <div id="duplicate-lineup-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:var(--green); border-radius:12px; padding:32px 28px; max-width:400px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.4); text-align:center;">
+    <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); border-radius:12px; padding:32px 28px; max-width:400px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.4); text-align:center;">
       <div style="font-size:2rem; margin-bottom:12px;">⚠️</div>
       <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--gold-light); margin-bottom:12px;">Duplicate Lineup</div>
       <div id="duplicate-lineup-msg" style="font-size:0.92rem; color:rgba(255,255,255,0.85); line-height:1.6; margin-bottom:28px; font-family:'DM Mono',monospace;"></div>
