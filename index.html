@@ -660,7 +660,7 @@
 
   /* ─── PROFILE ─── */
   .profile-header {
-    background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820);
+    background: #1a4731;
     border-radius: 8px;
     padding: 28px;
     display: flex;
@@ -727,7 +727,7 @@
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820);
+      background: #1a4731;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -820,7 +820,7 @@
       <button onclick="showPage('stats')" id="nav-stats" style="display:none;">Player Stats</button>
       <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(206,170,120,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
       <button onclick="showPage('history')" id="nav-history">History</button>
-      <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem;">⚙ Admin</button>
+      <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem; position:relative;">⚙ Admin<span id="admin-badge" style="display:none; position:absolute; top:-4px; right:-2px; width:9px; height:9px; background:#e05555; border-radius:50%; box-shadow:0 0 6px rgba(224,85,85,0.9); animation:pulse-dot 1.5s infinite;"></span></button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
       <button id="nav-logout" onclick="logout()" style="display:none">Sign Out</button>
     </nav>
@@ -856,10 +856,35 @@
 
         <!-- Hero text -->
         <div style="text-align:center; margin-bottom:44px;">
-          <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:24px; max-width:100%; overflow:hidden;">
+          <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:16px; max-width:100%; overflow:hidden;">
             <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
             <div style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">The Masters · 2026</div>
             <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
+          </div>
+
+          <!-- Countdown timer -->
+          <div id="masters-countdown" style="margin-bottom:24px; text-align:center;">
+            <div style="display:flex; gap:12px; justify-content:center; align-items:flex-end;">
+              <div style="text-align:center;">
+                <div id="cd-days" style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:600; color:var(--gold); line-height:1;">–</div>
+                <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(201,168,76,0.5); letter-spacing:2px;">DAYS</div>
+              </div>
+              <div style="color:rgba(201,168,76,0.4); font-size:1.5rem; padding-bottom:4px;">:</div>
+              <div style="text-align:center;">
+                <div id="cd-hours" style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:600; color:var(--gold); line-height:1;">–</div>
+                <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(201,168,76,0.5); letter-spacing:2px;">HRS</div>
+              </div>
+              <div style="color:rgba(201,168,76,0.4); font-size:1.5rem; padding-bottom:4px;">:</div>
+              <div style="text-align:center;">
+                <div id="cd-mins" style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:600; color:var(--gold); line-height:1;">–</div>
+                <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(201,168,76,0.5); letter-spacing:2px;">MINS</div>
+              </div>
+              <div style="color:rgba(201,168,76,0.4); font-size:1.5rem; padding-bottom:4px;">:</div>
+              <div style="text-align:center;">
+                <div id="cd-secs" style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:600; color:var(--gold); line-height:1;">–</div>
+                <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(201,168,76,0.5); letter-spacing:2px;">SECS</div>
+              </div>
+            </div>
           </div>
 
           <h1 style="font-family:'EB Garamond','Playfair Display',serif; font-size:clamp(2.2rem,7vw,5rem); font-weight:600; line-height:1.05; color:var(--cream); margin-bottom:18px; letter-spacing:-0.5px; word-break:break-word;">
@@ -876,7 +901,7 @@
             <button class="btn btn-gold" id="home-team-btn" onclick="requireAuth(() => showPage(adminSettings.registrationOpen ? 'builder' : 'myteams'))" style="padding:15px 36px; font-size:1rem; width:100%; max-width:300px;">Build Your Team →</button>
             <button class="btn btn-outline" onclick="showPage('leaderboard')" style="padding:15px 28px; width:100%; max-width:300px;">View All Teams</button>
           </div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(250,246,238,0.45); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">Augusta National · April 9–12, 2026 · $25 per entry</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(250,246,238,0.45); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">Augusta National · April 9–12, 2026</div>
         </div>
 
         <!-- Divider -->
@@ -1048,7 +1073,7 @@
 
           <div style="position:relative; margin-bottom:14px;">
             <div id="payment-note-display" style="font-family:'DM Mono',monospace; font-size:0.82rem; background:white; border:1.5px dashed #c8e0c8; border-radius:6px; padding:10px 44px 10px 10px; text-align:center; color:var(--green); font-weight:600;"></div>
-            <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
+            <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background: #1a4731; color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
           </div>
 
           <button onclick="openVenmo()" style="width:100%; background:#008CFF; color:white; border:none; border-radius:8px; padding:16px; font-size:1.05rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px;">
@@ -1124,7 +1149,7 @@
             <option value="">None</option>
           </select>
         </div>
-        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default; pointer-events:none;" id="refresh-btn">↻ REFRESH NOW</button>
+        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background: #1a4731; color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default; pointer-events:none;" id="refresh-btn">↻ REFRESH NOW</button>
       </div>
     </div>
     <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
@@ -1322,25 +1347,28 @@
   <!-- ADMIN PANEL -->
   <div id="page-admin" class="page">
     <div class="section-header">
-      <div class="section-title">⚙ Admin Panel</div>
-      <div class="section-sub">J.Ray's Swimmers Pool · Management</div>
+      <div>
+        <div class="section-title">⚙ Admin Panel</div>
+        <div class="section-sub">J.Ray's Swimmers Pool · Management</div>
+      </div>
+      <button onclick="copyInviteLink()" style="background:var(--green); color:var(--gold); border:1px solid rgba(201,168,76,0.4); border-radius:4px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; cursor:pointer; white-space:nowrap;">🔗 COPY INVITE LINK</button>
     </div>
 
     <!-- Summary Stats -->
     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:24px;">
-      <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: #1a4731; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--gold);" id="admin-stat-total">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">TOTAL ENTRIES</div>
       </div>
-      <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: #1a4731; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:#2ecc71;" id="admin-stat-paid">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">PAID</div>
       </div>
-      <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: #1a4731; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:#e74c3c;" id="admin-stat-unpaid">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">UNPAID</div>
       </div>
-      <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: #1a4731; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--gold);" id="admin-stat-collected">$0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">COLLECTED</div>
       </div>
@@ -1439,6 +1467,18 @@
           </label>
         </div>
 
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div>
+            <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">Show History Tab</div>
+            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Show or hide the History tab in the navigation for all users</div>
+          </div>
+          <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
+            <input type="checkbox" id="toggle-show-history" onchange="saveAdminSettings()" style="opacity:0; width:0; height:0;">
+            <span id="toggle-show-history-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
+            <span id="toggle-show-history-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+          </label>
+        </div>
+
       </div>
     <!-- Lock Tournament Results -->
     <div id="lock-tournament-panel" style="background:#fff8f0; border:1.5px solid var(--gold); border-radius:8px; padding:16px 20px; margin-bottom:20px;">
@@ -1456,7 +1496,7 @@
     <div style="background:#f0f4ff; border:1.5px solid #b0c0e8; border-radius:8px; padding:16px 20px; margin-bottom:20px;">
       <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:4px;">🧹 Next Tournament — Safe Clear SQL</div>
       <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">⚠️ Only run this AFTER locking results. Generates a SQL snippet that deletes only the current tournament's teams — never touches history.</div>
-      <button onclick="generateClearSQL()" style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); color:white; border:none; border-radius:6px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; cursor:pointer;">GENERATE CLEAR SQL</button>
+      <button onclick="generateClearSQL()" style="background: #1a4731; color:white; border:none; border-radius:6px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; cursor:pointer;">GENERATE CLEAR SQL</button>
       <pre id="clear-sql-output" style="display:none; margin-top:12px; background:#1e1e2e; color:#a8e6cf; padding:14px; border-radius:6px; font-size:0.72rem; overflow-x:auto; white-space:pre-wrap;"></pre>
     </div>
 
@@ -1513,10 +1553,10 @@
 <!-- MASTERS THEME AUDIO PLAYER -->
 <div id="music-player" style="position:fixed; bottom:20px; left:8px; z-index:999; display:none; align-items:center; gap:8px;">
   <button id="music-btn" onclick="toggleMusic()" title="Toggle Arnold Palmer theme music"
-    style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); border:1.5px solid var(--gold); color:var(--gold); width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.3); transition:all 0.2s; -webkit-tap-highlight-color:transparent;">
+    style="background: #1a4731; border:1.5px solid var(--gold); color:var(--gold); width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.3); transition:all 0.2s; -webkit-tap-highlight-color:transparent;">
     🔇
   </button>
-  <div id="music-label" style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+  <div id="music-label" style="background: #1a4731; border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
     ♪ Masters Theme
   </div>
 </div>
@@ -1675,6 +1715,7 @@ let adminSettings = {
   allowEditing: true,
   showCutLine: false,
   showProjectedWinner: false,
+  showHistory: true,
   officialCut: localStorage.getItem('officialCut') === '1',
 };
 
@@ -1690,6 +1731,7 @@ async function loadAdminSettings() {
     adminSettings.officialCut = localStorage.getItem('officialCut') === '1';
     updateToggleUI('toggle-official-cut', adminSettings.officialCut);
     adminSettings.showProjectedWinner = data.show_projected_winner || false;
+    adminSettings.showHistory = data.show_history !== undefined ? data.show_history : true;
   }
 }
 
@@ -1711,6 +1753,7 @@ async function saveAdminSettings() {
   adminSettings.allowEditing = document.getElementById('toggle-editing').checked;
   adminSettings.showCutLine = document.getElementById('toggle-cutline').checked;
   adminSettings.showProjectedWinner = document.getElementById('toggle-projected-winner').checked;
+  adminSettings.showHistory = document.getElementById('toggle-show-history').checked;
   const { error } = await sb.from('admin_settings').upsert({
     id: 1,
     registration_open: adminSettings.registrationOpen,
@@ -1718,8 +1761,8 @@ async function saveAdminSettings() {
     show_results: adminSettings.showResults,
     allow_editing: adminSettings.allowEditing,
     show_cut_line: adminSettings.showCutLine,
-
     show_projected_winner: adminSettings.showProjectedWinner,
+    show_history: adminSettings.showHistory,
     updated_at: new Date().toISOString()
   });
   if (error) { showToast('Error saving settings.', 'error'); return; }
@@ -1728,6 +1771,7 @@ async function saveAdminSettings() {
   updateToggleUI('toggle-results', adminSettings.showResults);
   updateToggleUI('toggle-cutline', adminSettings.showCutLine);
   updateToggleUI('toggle-projected-winner', adminSettings.showProjectedWinner);
+  updateToggleUI('toggle-show-history', adminSettings.showHistory);
   updateToggleUI('toggle-editing', adminSettings.allowEditing);
   updateNav();
   renderLeaderboard();
@@ -1749,6 +1793,7 @@ function initAdminToggles() {
   updateToggleUI('toggle-picks', adminSettings.showPicks);
   updateToggleUI('toggle-results', adminSettings.showResults);
   updateToggleUI('toggle-editing', adminSettings.allowEditing);
+  updateToggleUI('toggle-show-history', adminSettings.showHistory);
 }
 
 
@@ -2485,7 +2530,6 @@ async function initApp() {
   // Check if this is a password reset redirect from Supabase
   const hash = window.location.hash;
   if (hash && hash.includes('type=recovery')) {
-    // Supabase puts the session in the URL hash on recovery
     const { data: { session }, error } = await sb.auth.getSession();
     if (session) {
       openModal('password-reset-modal');
@@ -2507,10 +2551,69 @@ async function initApp() {
   await loadAdminSettings();
   await loadTeams();
   updateNav();
-  showPage('home');
+
+  // Handle invite link — ?join in URL jumps straight to builder
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('join')) {
+    if (currentUser) {
+      showPage(adminSettings.registrationOpen ? 'builder' : 'myteams');
+    } else {
+      showPage('home');
+      setTimeout(() => openModal('auth-modal'), 400);
+    }
+  } else {
+    showPage('home');
+  }
+
   updateStats();
+  startCountdown();
   if (TOURNAMENT_ACTIVE) startLiveFetching();
   startChatNotificationListener();
+  checkAdminBadge();
+}
+
+// ─── COUNTDOWN TO FIRST TEE ───
+function startCountdown() {
+  // April 9, 2026 8:00 AM ET = 12:00 UTC
+  const teeTime = new Date('2026-04-09T12:00:00Z');
+  function tick() {
+    const now = new Date();
+    const diff = teeTime - now;
+    const cd = document.getElementById('masters-countdown');
+    if (!cd) return;
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '0';
+      document.getElementById('cd-hours').textContent = '00';
+      document.getElementById('cd-mins').textContent = '00';
+      document.getElementById('cd-secs').textContent = '00';
+      return;
+    }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000) / 60000);
+    const secs  = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent  = days;
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ─── ADMIN BADGE (unpaid new teams) ───
+function checkAdminBadge() {
+  if (!adminLoggedIn && !(currentUser && currentUser.email === 'kai.padden11@gmail.com')) return;
+  const badge = document.getElementById('admin-badge');
+  if (!badge) return;
+  const unpaid = allTeams.filter(t => !t.paid && (t.tournament || '') === TOURNAMENT_NAME);
+  badge.style.display = unpaid.length > 0 ? 'block' : 'none';
+}
+
+// ─── INVITE LINK ───
+function copyInviteLink() {
+  const url = `${window.location.origin}${window.location.pathname}?join=1`;
+  navigator.clipboard.writeText(url).then(() => showToast('Invite link copied!', 'success'));
 }
 
 let lastChatMsgId = null;
@@ -2575,6 +2678,7 @@ async function loadTeams() {
   if (error) { console.error('Error loading teams:', error); allTeams = []; return; }
   allTeams = data || [];
   allTeamNames = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME).map(t => t.name.trim().toLowerCase());
+  checkAdminBadge();
 }
 
 let selectedGolfers = [];
@@ -2706,6 +2810,7 @@ function updateNav() {
   if (homeBtn) homeBtn.textContent = adminSettings.registrationOpen ? 'Build Your Team →' : 'View Your Team →';
   document.getElementById('nav-tournament').style.display = TOURNAMENT_ACTIVE ? '' : 'none';
   document.getElementById('nav-stats').style.display = TOURNAMENT_ACTIVE ? '' : 'none';
+  document.getElementById('nav-history').style.display = adminSettings.showHistory ? '' : 'none';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4119,7 +4224,7 @@ function renderStats(sortBy = 'picks') {
             <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${pct}%</td>
             <td style="padding:10px 12px; min-width:120px;">
               <div style="background:#e8e4da; border-radius:3px; height:8px; overflow:hidden;">
-                <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
+                <div style="background: #1a4731; height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
               </div>
             </td>
           </tr>`;
@@ -5414,7 +5519,7 @@ function renderH2H() {
 
   <!-- Duplicate lineup confirm modal -->
   <div id="duplicate-lineup-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; padding:20px;">
-    <div style="background: linear-gradient(90deg, #0077b6, #8b2fc9, #c0392b, #e06820); border-radius:12px; padding:32px 28px; max-width:400px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.4); text-align:center;">
+    <div style="background: #1a4731; border-radius:12px; padding:32px 28px; max-width:400px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.4); text-align:center;">
       <div style="font-size:2rem; margin-bottom:12px;">⚠️</div>
       <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--gold-light); margin-bottom:12px;">Duplicate Lineup</div>
       <div id="duplicate-lineup-msg" style="font-size:0.92rem; color:rgba(255,255,255,0.85); line-height:1.6; margin-bottom:28px; font-family:'DM Mono',monospace;"></div>
