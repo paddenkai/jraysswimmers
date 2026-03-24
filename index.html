@@ -856,52 +856,45 @@
 
         <!-- Hero text -->
         <div style="text-align:center; margin-bottom:44px;">
-          <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:16px; max-width:100%; overflow:hidden;">
-            <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
-            <div style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">The Masters · 2026</div>
-            <div style="width:20px; min-width:20px; height:1px; background:var(--gold); opacity:0.6; flex-shrink:0;"></div>
-          </div>
+
+          <!-- Tournament title -->
+          <div style="font-family:'EB Garamond',serif; font-size:clamp(2.4rem,6vw,4rem); font-weight:600; color:var(--gold); letter-spacing:4px; text-transform:uppercase; line-height:1; margin-bottom:10px;">The Masters</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(201,168,76,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Augusta National · April 9–12, 2026</div>
 
           <!-- Countdown timer -->
-          <div id="masters-countdown" style="margin-bottom:24px; text-align:center;">
-            <div style="display:flex; gap:12px; justify-content:center; align-items:flex-end;">
+          <div id="masters-countdown" style="margin-bottom:16px; text-align:center;">
+            <div style="display:flex; gap:16px; justify-content:center; align-items:flex-end;">
               <div style="text-align:center;">
-                <div id="cd-days" style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:600; color:var(--gold); line-height:1;">–</div>
-                <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(201,168,76,0.5); letter-spacing:2px;">DAYS</div>
+                <div id="cd-days" style="font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5rem); font-weight:900; color:var(--gold); line-height:1;">–</div>
+                <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(201,168,76,0.5); letter-spacing:2px; margin-top:4px;">DAYS</div>
               </div>
-              <div style="color:rgba(201,168,76,0.4); font-size:1.5rem; padding-bottom:4px;">:</div>
+              <div style="color:rgba(201,168,76,0.3); font-size:clamp(2rem,5vw,3.5rem); padding-bottom:18px; line-height:1;">:</div>
               <div style="text-align:center;">
-                <div id="cd-hours" style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:600; color:var(--gold); line-height:1;">–</div>
-                <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(201,168,76,0.5); letter-spacing:2px;">HRS</div>
+                <div id="cd-hours" style="font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5rem); font-weight:900; color:var(--cream); line-height:1;">–</div>
+                <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(201,168,76,0.5); letter-spacing:2px; margin-top:4px;">HRS</div>
               </div>
-              <div style="color:rgba(201,168,76,0.4); font-size:1.5rem; padding-bottom:4px;">:</div>
+              <div style="color:rgba(201,168,76,0.3); font-size:clamp(2rem,5vw,3.5rem); padding-bottom:18px; line-height:1;">:</div>
               <div style="text-align:center;">
-                <div id="cd-mins" style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:600; color:var(--gold); line-height:1;">–</div>
-                <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(201,168,76,0.5); letter-spacing:2px;">MINS</div>
+                <div id="cd-mins" style="font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5rem); font-weight:900; color:var(--cream); line-height:1;">–</div>
+                <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(201,168,76,0.5); letter-spacing:2px; margin-top:4px;">MINS</div>
               </div>
-              <div style="color:rgba(201,168,76,0.4); font-size:1.5rem; padding-bottom:4px;">:</div>
+              <div style="color:rgba(201,168,76,0.3); font-size:clamp(2rem,5vw,3.5rem); padding-bottom:18px; line-height:1;">:</div>
               <div style="text-align:center;">
-                <div id="cd-secs" style="font-family:'EB Garamond',serif; font-size:2rem; font-weight:600; color:var(--gold); line-height:1;">–</div>
-                <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(201,168,76,0.5); letter-spacing:2px;">SECS</div>
+                <div id="cd-secs" style="font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5rem); font-weight:900; color:var(--cream); line-height:1;">–</div>
+                <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(201,168,76,0.5); letter-spacing:2px; margin-top:4px;">SECS</div>
               </div>
             </div>
           </div>
 
-          <h1 style="font-family:'EB Garamond','Playfair Display',serif; font-size:clamp(2.2rem,7vw,5rem); font-weight:600; line-height:1.05; color:var(--cream); margin-bottom:18px; letter-spacing:-0.5px; word-break:break-word;">
-            Pick Your <em style="color:var(--gold); -webkit-text-fill-color:var(--gold); font-style:italic;">Champions.</em><br>Win the Pot.
-          </h1>
-
-          <p style="font-family:'EB Garamond',serif; font-size:1.1rem; color:var(--gold-light); font-style:italic; margin:0 auto 20px;">— It only takes one stroke —</p>
-
-          <p style="font-family:'EB Garamond',serif; font-size:1.05rem; max-width:440px; margin: 0 auto 28px; line-height:1.8; color:rgba(250,246,238,0.75);">
-            Build teams of 5 golfers from the current field. The team with the highest total team payout wins the pot.
-          </p>
+          <!-- Tagline -->
+          <div style="font-family:'Playfair Display',serif; font-size:clamp(0.95rem,2.5vw,1.2rem); font-style:italic; color:rgba(250,246,238,0.6); margin-bottom:32px;">
+            It only takes one <span style="color:var(--gold);">stroke.</span>
+          </div>
 
           <div class="hero-btns" style="display:flex; gap:12px; justify-content:center; flex-direction:column; align-items:center; margin-bottom:16px;">
             <button class="btn btn-gold" id="home-team-btn" onclick="requireAuth(() => showPage(adminSettings.registrationOpen ? 'builder' : 'myteams'))" style="padding:15px 36px; font-size:1rem; width:100%; max-width:300px;">Build Your Team →</button>
             <button class="btn btn-outline" onclick="showPage('leaderboard')" style="padding:15px 28px; width:100%; max-width:300px;">View All Teams</button>
           </div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(250,246,238,0.45); letter-spacing:2px; text-transform:uppercase; line-height:1.8;">Augusta National · April 9–12, 2026</div>
         </div>
 
         <!-- Divider -->
@@ -2596,6 +2589,11 @@ function startCountdown() {
     document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
     document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
     document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+    // Leading unit gets gold color
+    const goldUnit = days > 0 ? 'cd-days' : hours > 0 ? 'cd-hours' : mins > 0 ? 'cd-mins' : 'cd-secs';
+    ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => {
+      document.getElementById(id).style.color = id === goldUnit ? 'var(--gold)' : 'var(--cream)';
+    });
   }
   tick();
   setInterval(tick, 1000);
