@@ -3198,7 +3198,7 @@ function openVenmo() {
   const noteEl = document.getElementById('payment-note-display');
   const note = noteEl ? encodeURIComponent(noteEl.textContent) : '';
   const teamCount = (window._savedCart && window._savedCart.length) ? window._savedCart.length : 1;
-  const amount = teamCount * 15;
+  const amount = teamCount * CONFIG.ENTRY_FEE;
   const appUrl = `venmo://paycharge?txn=pay&recipients=JRaysPool&amount=${amount}&note=${note}`;
   const webUrl = `https://venmo.com/u/JRaysPool`;
   window.location.href = appUrl;
