@@ -1075,7 +1075,7 @@
       </select>
       <button id="export-results-btn" onclick="exportResults()" style="display:none; background:var(--gold); color:var(--dark); border:none; border-radius:4px; padding:9px 16px; font-size:0.78rem; font-family:'DM Mono',monospace; font-weight:700; cursor:pointer; letter-spacing:1px; white-space:nowrap;">↓ Download Results</button>
     </div>
-    <div class="tourn-table-wrap" style="border:2px solid #1a4731; border-radius:4px; overflow:hidden;">
+    <div class="tourn-table-wrap" style="border:2px solid #1a4731; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
       <table class="leaderboard-table" id="leaderboard-table">
         <thead>
           <tr>
@@ -1122,23 +1122,25 @@
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 65 + ties</div>
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
     </div>
-    <div style="background:#ffffff; border:2px solid #1a4731; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
-      <div style="background:#1a4731; padding:10px 16px; text-align:center;">
-        <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900; color:#ffffff; letter-spacing:4px; text-transform:uppercase;">Leaderboard</div>
+    <div style="border:2px solid #1a4731; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+      <div style="min-width:480px;">
+        <div style="background:#1a4731; padding:10px 16px; text-align:center;">
+          <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900; color:#ffffff; letter-spacing:4px; text-transform:uppercase;">Leaderboard</div>
+        </div>
+        <table class="leaderboard-table" id="tournament-table" style="min-width:480px; width:100%;">
+          <thead>
+            <tr>
+              <th style="width:50px; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold); text-align:center;">POS</th>
+              <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">PLAYER</th>
+              <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">SCORE</th>
+              <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TODAY</th>
+              <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">THRU</th>
+              <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">EARNINGS</th>
+            </tr>
+          </thead>
+          <tbody id="tournament-body"></tbody>
+        </table>
       </div>
-      <table class="leaderboard-table" id="tournament-table" style="min-width:480px;">
-        <thead>
-          <tr>
-            <th style="width:50px; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold); text-align:center;">POS</th>
-            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">PLAYER</th>
-            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">SCORE</th>
-            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TODAY</th>
-            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">THRU</th>
-            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">EARNINGS</th>
-          </tr>
-        </thead>
-        <tbody id="tournament-body"></tbody>
-      </table>
     </div>
     <div style="margin-top:12px; font-size:0.75rem; color:#aaa; font-family:'DM Mono',monospace; text-align:center;">
       * Earnings shown are projected based on current position. Official payouts announced after tournament.
@@ -4176,7 +4178,8 @@ function renderStats(sortBy = 'picks') {
   if (hintEl) hintEl.style.display = '';
 
   wrap.innerHTML = `
-    <table style="width:100%; border-collapse:collapse;">
+    <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+    <table style="width:100%; min-width:400px; border-collapse:collapse;">
       <thead>
         <tr style="border-bottom:2px solid var(--green);">
           <th style="text-align:left; padding:8px 12px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; color:#888;">GOLFER</th>
@@ -4206,7 +4209,8 @@ function renderStats(sortBy = 'picks') {
           </tr>`;
         }).join('')}
       </tbody>
-    </table>`;
+    </table>
+    </div>`;
 }
 
 
