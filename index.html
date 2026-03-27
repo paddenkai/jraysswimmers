@@ -553,7 +553,7 @@
     100% { box-shadow: 0 0 0 20px rgba(201,168,76,0.0); }
   }
   /* Earnings cell flash — green pulse */
-  .golfer-earnings-changed { animation: earningsFlash 1.5s ease forwards; border-radius: 3px; }
+  .golfer-earnings-changed { animation: earningsFlash 5s ease forwards; border-radius: 3px; }
   /* First place rank badge pulse */
   tr.took-first-place .rank-badge { animation: firstPlacePulse 3.5s ease forwards; }
   /* Team row position border — persistent until next refresh */
@@ -1123,8 +1123,8 @@
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
     </div>
     <div style="border:2px solid #1a4731; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
-      <div style="min-width:480px;">
-        <div style="background:#1a4731; padding:10px 16px; text-align:center;">
+      <div style="min-width:480px; display:inline-block; width:100%;">
+        <div style="background:#1a4731; padding:10px 16px; text-align:center; width:100%;">
           <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900; color:#ffffff; letter-spacing:4px; text-transform:uppercase;">Leaderboard</div>
         </div>
         <table class="leaderboard-table" id="tournament-table" style="min-width:480px; width:100%;">
@@ -3346,7 +3346,7 @@ function renderLeaderboard() {
             div.classList.remove('golfer-earnings-changed');
             void div.offsetWidth;
             div.classList.add('golfer-earnings-changed');
-            setTimeout(() => div.classList.remove('golfer-earnings-changed'), 1500);
+            setTimeout(() => div.classList.remove('golfer-earnings-changed'), 5000);
           }
         }
 
