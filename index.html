@@ -491,9 +491,9 @@
     border-bottom: none;
   }
   .leaderboard-table th:nth-child(1), .leaderboard-table th:nth-child(2), .leaderboard-table th:nth-child(3), .leaderboard-table th:nth-child(4), .leaderboard-table th:nth-child(5) { background: #1a4731; color: var(--gold); -webkit-text-fill-color: var(--gold); -webkit-background-clip: unset; background-clip: unset; }
-  .leaderboard-table td { padding: 11px 14px; border-bottom: 1px solid #ece8df; font-size: 0.9rem; vertical-align: middle; }
-  #page-leaderboard .leaderboard-table tr:nth-child(even) td { background: #f8f5ee; }
-  .leaderboard-table tr:hover td { background: #e8f0f8; }
+  .leaderboard-table td { padding: 11px 14px; border-bottom: 1px solid rgba(26,71,49,0.1); font-size: 0.9rem; vertical-align: middle; }
+  #page-leaderboard .leaderboard-table tr:nth-child(even) td { background: rgba(26,71,49,0.04); }
+  #page-leaderboard .leaderboard-table tr:hover td { background: rgba(201,168,76,0.08); }
   .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.9rem; }
   .rank-1 { background: var(--gold); color: var(--dark); }
   .rank-2 { background: #c0c0c0; color: var(--dark); }
@@ -502,7 +502,7 @@
   .team-golfers-mini { font-size: 0.75rem; color: #888; font-family: 'DM Mono', monospace; margin-top: 2px; }
   .earnings-display { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--green); }
   .owner-tag { font-size: 0.75rem; color: #999; }
-  .my-team-row td { background: rgba(0,51,98,0.18) !important; }
+  .my-team-row td { background: rgba(201,168,76,0.12) !important; }
 
   /* ─── MY TEAMS ─── */
   .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 8px; }
@@ -540,55 +540,28 @@
   .highlight-row { background: rgba(201,168,76,0.12) !important; }
   .highlight-row td { font-weight: 600; }
 
-  /* ─── LIVE CHANGE ANIMATIONS ─── */
+  /* ─── LIVE CHANGE INDICATORS ─── */
   @keyframes earningsFlash {
-    0%   { background: rgba(0,51,98,0.0); }
-    15%  { background: rgba(206,170,120,0.45); }
-    50%  { background: rgba(206,170,120,0.25); }
-    100% { background: rgba(0,51,98,0.0); }
+    0%   { background: transparent; }
+    20%  { background: rgba(26,71,49,0.25); }
+    100% { background: transparent; }
   }
   @keyframes firstPlacePulse {
-    0%   { box-shadow: 0 0 0 0 rgba(206,170,120,0.0); }
-    20%  { box-shadow: 0 0 0 8px rgba(206,170,120,0.35); }
-    60%  { box-shadow: 0 0 0 14px rgba(206,170,120,0.12); }
-    100% { box-shadow: 0 0 0 20px rgba(206,170,120,0.0); }
+    0%   { box-shadow: 0 0 0 0 rgba(201,168,76,0.0); }
+    20%  { box-shadow: 0 0 0 8px rgba(201,168,76,0.4); }
+    60%  { box-shadow: 0 0 0 14px rgba(201,168,76,0.15); }
+    100% { box-shadow: 0 0 0 20px rgba(201,168,76,0.0); }
   }
-  @keyframes possBadgeIn {
-    0%   { opacity: 0; transform: translateY(-6px) scale(0.8); }
-    30%  { opacity: 1; transform: translateY(0) scale(1.15); }
-    60%  { transform: translateY(0) scale(1); }
-    80%  { opacity: 1; }
-    100% { opacity: 0; }
-  }
-  .golfer-earnings-changed { animation: earningsFlash 3.5s ease forwards; border-radius: 4px; }
+  /* Earnings cell flash — green pulse */
+  .golfer-earnings-changed { animation: earningsFlash 1.5s ease forwards; border-radius: 3px; }
+  /* First place rank badge pulse */
   tr.took-first-place .rank-badge { animation: firstPlacePulse 3.5s ease forwards; }
-  .pos-change-badge {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    padding: 1px 5px;
-    border-radius: 8px;
-    margin-left: 5px;
-    vertical-align: middle;
-    animation: possBadgeIn 5s ease forwards;
-    pointer-events: none;
-  }
-  .pos-change-badge.up   { background: rgba(206,170,120,0.2); color: var(--green); }
-  .pos-change-badge.down { background: rgba(0,51,98,0.12);    color: var(--green-mid); }
-  .golfer-pos-arrow {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.58rem;
-    font-weight: 700;
-    margin-left: 5px;
-    vertical-align: middle;
-    pointer-events: none;
-  }
-  .golfer-pos-arrow.up   { color: var(--gold); }
-  .golfer-pos-arrow.down { color: var(--green-mid); }
-  .golfer-pos-arrow.animating { animation: possBadgeIn 5s ease forwards; }
+  /* Team row position border — persistent until next refresh */
+  tr.pos-moved-up td:first-child   { border-left: 3px solid var(--gold) !important; }
+  tr.pos-moved-down td:first-child  { border-left: 3px solid #bb3333 !important; }
+  /* Golfer position color — colored pos display */
+  .golfer-pos-up   { color: var(--gold) !important; font-weight: 700; }
+  .golfer-pos-down { color: #bb3333 !important; font-weight: 700; }
 
   /* ─── HEAD TO HEAD ─── */
   .h2h-chip {
@@ -1093,25 +1066,25 @@
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <input type="text" id="leaderboard-search" placeholder="Search team or owner name..."
         oninput="renderLeaderboard()"
-        style="padding:9px 14px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'Libre Baskerville',serif; font-size:0.88rem; background:#ffffff; flex:1; min-width:200px;" />
+        style="padding:9px 14px; border:1.5px solid rgba(26,71,49,0.25); border-radius:4px; font-family:'EB Garamond',serif; font-size:0.88rem; background:#ffffff; flex:1; min-width:200px;" />
       <select id="leaderboard-sort" onchange="renderLeaderboard()"
-        style="padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; background:#ffffff; color:var(--dark);">
+        style="padding:9px 12px; border:1.5px solid rgba(26,71,49,0.25); border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; background:#ffffff; color:var(--dark);">
         <option value="rank">Sort by Rank</option>
         <option value="team">Sort by Team Name</option>
         <option value="owner">Sort by Owner</option>
       </select>
       <button id="export-results-btn" onclick="exportResults()" style="display:none; background:var(--gold); color:var(--dark); border:none; border-radius:4px; padding:9px 16px; font-size:0.78rem; font-family:'DM Mono',monospace; font-weight:700; cursor:pointer; letter-spacing:1px; white-space:nowrap;">↓ Download Results</button>
     </div>
-    <div class="tourn-table-wrap">
+    <div class="tourn-table-wrap" style="border:2px solid #1a4731; border-radius:4px; overflow:hidden;">
       <table class="leaderboard-table" id="leaderboard-table">
         <thead>
           <tr>
-            <th style="width:50px; text-align:center">Rank</th>
-            <th style="text-align:center">Team</th>
-            <th style="text-align:center">Swimmer</th>
-            <th style="text-align:center; max-width:140px;">Golfers</th>
-            <th style="text-align:center">Total Projected Earnings</th>
-            <th style="width:44px; text-align:center"></th>
+            <th style="width:50px; text-align:center; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">RANK</th>
+            <th style="text-align:left; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TEAM</th>
+            <th style="text-align:left; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">SWIMMER</th>
+            <th style="text-align:left; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">GOLFERS</th>
+            <th style="text-align:right; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TOTAL PROJECTED EARNINGS</th>
+            <th style="width:44px; background:#1a4731;"></th>
           </tr>
         </thead>
         <tbody id="leaderboard-body"></tbody>
@@ -1149,16 +1122,19 @@
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 65 + ties</div>
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
     </div>
-    <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+    <div style="background:#ffffff; border:2px solid #1a4731; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+      <div style="background:#1a4731; padding:10px 16px; text-align:center;">
+        <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900; color:#ffffff; letter-spacing:4px; text-transform:uppercase;">Leaderboard</div>
+      </div>
       <table class="leaderboard-table" id="tournament-table" style="min-width:480px;">
         <thead>
           <tr>
-            <th style="width:50px">Pos</th>
-            <th>Player</th>
-            <th>Score</th>
-            <th>Today</th>
-            <th>Thru</th>
-            <th>Earnings</th>
+            <th style="width:50px; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold); text-align:center;">POS</th>
+            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">PLAYER</th>
+            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">SCORE</th>
+            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TODAY</th>
+            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">THRU</th>
+            <th style="background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">EARNINGS</th>
           </tr>
         </thead>
         <tbody id="tournament-body"></tbody>
@@ -1794,7 +1770,7 @@ function initAdminToggles() {
 // ═══════════════════════════════════════════════════════
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
-const TOURNAMENT_ACTIVE = false; // true = show live scores tab & leaderboard earnings
+const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
 const TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
@@ -3290,7 +3266,7 @@ function renderLeaderboard() {
     const earningsDisplay = hasLiveData
       ? `<span class="earnings-display">$${Math.round(earnings).toLocaleString()}</span>`
       : `<span style="color:#bbb; font-family:'DM Mono',monospace; font-size:0.82rem;">Awaiting scores</span>`;
-    return `<tr class="${isMyTeam ? 'my-team-row' : ''}">
+    return `<tr class="${isMyTeam ? 'my-team-row' : ''}" style="border-top:2px solid rgba(26,71,49,0.18);">
       <td style="text-align:center">${rankDisplay}</td>
       <td style="text-align:center"><strong>${team.name}</strong>${isMyTeam ? ' <span style="font-size:0.7rem;color:var(--gold);font-family:DM Mono,monospace;">YOU</span>' : ''}</td>
       <td style="text-align:center"><div style="font-size:0.88rem;">${team.owner_name || team.name}</div></td>
@@ -3352,7 +3328,7 @@ function renderLeaderboard() {
       const prevPos = _prevPositions[team.id];
       const posChanged = prevPos !== undefined && prevPos !== pos;
 
-      // Flash individual golfer divs + show position arrows
+      // Earnings flash + golfer position color
       team.golfers.forEach(gid => {
         const g = GOLFERS.find(g => g.id === gid);
         if (!g) return;
@@ -3361,36 +3337,24 @@ function renderLeaderboard() {
         const prevGPos  = golferPosSnapshot[gid];
         const curPos    = g.liveData?.posDisplay;
 
-        // Earnings flash + persistent arrow
+        // Earnings flash — brief green pulse on the golfer row
         if (prevGEarn !== undefined && prevGEarn !== g.earnings) {
           const div = document.getElementById(`gf-${team.id}-${gid}`);
           if (div) {
             div.classList.remove('golfer-earnings-changed');
             void div.offsetWidth;
             div.classList.add('golfer-earnings-changed');
-          }
-          const earnArrow = document.getElementById(`gea-${team.id}-${gid}`);
-          if (earnArrow) {
-            const delta = g.earnings - prevGEarn;
-            earnArrow.textContent = delta > 0 ? '\u2191' : '\u2193';
-            earnArrow.style.color = delta > 0 ? 'var(--gold)' : 'var(--green-mid)';
+            setTimeout(() => div.classList.remove('golfer-earnings-changed'), 1500);
           }
         }
 
-        // Position arrow — only show if numeric position changed
+        // Golfer position color — persistent until next refresh
         if (prevGPos !== undefined && prevGPos !== curPos) {
           const toNum = p => { if (!p || p === '–' || p === 'WD' || p === 'MC') return null; const n = parseInt((p||'').replace(/^T/,'')); return isNaN(n) ? null : n; };
           const prev = toNum(prevGPos), cur = toNum(curPos);
-          if (prev !== null && cur !== null && prev !== cur) {
-            const arrow = document.getElementById(`gfa-${team.id}-${gid}`);
-            if (arrow) {
-              const delta = prev - cur; // positive = moved up (lower number = better)
-              arrow.className = 'golfer-pos-arrow ' + (delta > 0 ? 'up' : 'down');
-              arrow.textContent = (delta > 0 ? '▲' : '▼') + Math.abs(delta);
-              void arrow.offsetWidth;
-              arrow.classList.add('animating');
-              setTimeout(() => { arrow.textContent = ''; arrow.className = 'golfer-pos-arrow'; }, 5000);
-            }
+          const posEl = document.getElementById(`gfa-${team.id}-${gid}`);
+          if (posEl && prev !== null && cur !== null && prev !== cur) {
+            posEl.className = prev > cur ? 'golfer-pos-up' : 'golfer-pos-down';
           }
         }
 
@@ -3408,23 +3372,15 @@ function renderLeaderboard() {
         row.classList.remove('took-first-place');
         void row.offsetWidth;
         row.classList.add('took-first-place');
-        setTimeout(() => row.classList.remove('took-first-place'), 2500);
+        setTimeout(() => row.classList.remove('took-first-place'), 3500);
       }
 
-      // Position change badge next to team name
+      // Persistent left border for team position change
+      row.classList.remove('pos-moved-up', 'pos-moved-down');
       if (posChanged && pos && prevPos) {
         const delta = prevPos - pos;
-        if (delta !== 0) {
-          const nameTd = row.cells[1];
-          if (nameTd) {
-            nameTd.querySelectorAll('.pos-change-badge').forEach(b => b.remove());
-            const badge = document.createElement('span');
-            badge.className = 'pos-change-badge ' + (delta > 0 ? 'up' : 'down');
-            badge.textContent = (delta > 0 ? '▲' : '▼') + Math.abs(delta);
-            nameTd.appendChild(badge);
-            setTimeout(() => badge.remove(), 5000);
-          }
-        }
+        if (delta > 0) row.classList.add('pos-moved-up');
+        else if (delta < 0) row.classList.add('pos-moved-down');
       }
     });
 
@@ -3715,17 +3671,28 @@ function renderTournament() {
   const renderRow = ([key, d]) => {
     const golfer = GOLFERS.find(g => normalizeName(g.name) === key);
     const isHighlighted = highlightedNames.has(key);
-    const scoreClass = typeof d.score === 'string' && d.score.startsWith('-') ? 'score-under' :
-                       d.score === 'E' ? 'score-even' : 'score-over';
-    const rowClass = [(d.cut && window._isPostCut) ? 'cut-row' : '', isHighlighted ? 'highlight-row' : ''].filter(Boolean).join(' ');
+    const isUnder = typeof d.score === 'string' && d.score.startsWith('-');
+    const isEven = d.score === 'E';
+    const scoreColor = isUnder ? '#bb0000' : isEven ? '#1a4731' : '#333';
+    const rowBg = isHighlighted ? 'rgba(201,168,76,0.1)' : '';
     const safeKey = key.replace(/'/g, "\\'");
-    return `<tr class="${rowClass}" onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer;">
-      <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.posDisplay || '–'}</td>
-      <td style="white-space:nowrap;">
-        <span onclick="event.stopPropagation(); toggleWatch('${safeKey}')" id="star-${safeKey}" style="cursor:pointer; margin-right:6px; font-size:1rem; color:${window._watchList?.has(safeKey) ? 'var(--gold)' : '#ccc'};">★</span><strong>${d.name || key}</strong>
+    const displayName = (d.name || key).toUpperCase();
+    return `<tr onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer; background:${rowBg}; border-bottom:1px solid #e8e4dc;">
+      <td style="font-family:'DM Mono',monospace; font-size:0.85rem; font-weight:700; color:#333; text-align:center; padding:10px 8px;">${d.posDisplay || '–'}</td>
+      <td style="padding:10px 8px; white-space:nowrap;">
+        <span onclick="event.stopPropagation(); toggleWatch('${safeKey}')" id="star-${safeKey}" style="cursor:pointer; margin-right:6px; font-size:0.9rem; color:${window._watchList?.has(safeKey) ? 'var(--gold)' : '#ddd'};">★</span>
+        <span style="font-family:'DM Mono',monospace; font-weight:700; font-size:0.88rem; letter-spacing:0.5px; color:#111;">${displayName}</span>
       </td>
-      ${(() => { const golfer = GOLFERS.find(g => normalizeName(g.name) === key); const tee = golfer?.teeTime ? golfer.teeTime + ' PST' : null; const notStartedYet = !d.thru || d.thru === '–' || d.thru === '-' || d.thru === 'F/R2' || d.thru === 'F/R3'; const todayCell = (tee && notStartedYet) ? `<td style="font-family:'DM Mono',monospace; color:#aaa; font-size:0.78rem; letter-spacing:0.5px;">${tee}</td>` : `<td style="font-family:'DM Mono',monospace; color:#888; font-size:0.85rem;">${d.today || '–'}</td>`; return `<td><span class="${scoreClass}" style="font-family:'DM Mono',monospace; font-weight:700;">${d.score || '–'}</span></td>${todayCell}<td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${d.thru || '–'}</td>`; })()}
-      <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--green-mid); font-weight:600;">${d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '$0'}</td>
+      ${(() => {
+        const tee = golfer?.teeTime ? golfer.teeTime + ' PST' : null;
+        const notStartedYet = !d.thru || d.thru === '–' || d.thru === '-';
+        const todayColor = d.today && d.today.startsWith('-') ? '#bb0000' : d.today === 'E' ? '#1a4731' : '#333';
+        const todayCell = (tee && notStartedYet)
+          ? `<td style="font-family:'DM Mono',monospace; color:#aaa; font-size:0.78rem; padding:10px 8px;">${tee}</td>`
+          : `<td style="font-family:'DM Mono',monospace; font-weight:700; font-size:0.88rem; color:${todayColor}; padding:10px 8px;">${d.today || '–'}</td>`;
+        return `<td style="font-family:'DM Mono',monospace; font-weight:900; font-size:1rem; color:${scoreColor}; padding:10px 8px;">${d.score || '–'}</td>${todayCell}<td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#888; padding:10px 8px;">${d.thru || '–'}</td>`;
+      })()}
+      <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--green); font-weight:600; padding:10px 8px;">${d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '–'}</td>
     </tr>
     <tr class="scorecard-expand-row" id="expand-${safeKey}" style="display:none;">
       <td colspan="6" style="padding:0; background:#f8f5ee; border-bottom:2px solid #e0dbd0;"></td>
