@@ -699,20 +699,22 @@
     #nav {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 57px; left: 0; right: 0;
       background: #1a4731;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      align-items: stretch;
+      gap: 0;
       z-index: 200;
-      padding: 40px 24px;
+      padding: 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      border-top: 1px solid rgba(201,168,76,0.3);
+      max-height: calc(100vh - 57px);
+      overflow-y: auto;
     }
-    #nav.mobile-open { display: flex; padding-top: 100px; }
-    #nav button { font-size: 1.1rem; padding: 14px 28px; width: 100%; max-width: 280px; text-align: center; border-bottom: 1px solid rgba(201,168,76,0.15) !important; border-radius: 0; }
-    #nav button.active { border-bottom: 2px solid var(--gold) !important; }
-    #mobile-nav-close { display: block; position: absolute; top: 32px; right: 50%; transform: translateX(50%); background: none; border: none; color: var(--gold-light); font-size: 3.5rem; cursor: pointer; line-height: 1; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
-    #nav button:first-of-type { border-top: none !important; }
+    #nav.mobile-open { display: flex; padding-top: 0; }
+    #nav button { font-size: 1rem; padding: 16px 24px; width: 100%; max-width: 100%; text-align: left; border-bottom: 1px solid rgba(201,168,76,0.1) !important; border-radius: 0; }
+    #nav button.active { border-bottom: 1px solid rgba(201,168,76,0.1) !important; background: rgba(201,168,76,0.1); color: var(--gold) !important; }
+    #mobile-nav-close { display: none; }
 
     /* ─── SECTION HEADERS ─── */
     .section-header { flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
@@ -5294,6 +5296,17 @@ function closeMobileNav() {
   nav.classList.remove('mobile-open');
   hamburger.classList.remove('open');
 }
+
+// Close mobile nav when tapping outside
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('nav');
+  const hamburgerWrap = document.getElementById('hamburger-wrap');
+  if (nav && nav.classList.contains('mobile-open') &&
+      !nav.contains(e.target) &&
+      hamburgerWrap && !hamburgerWrap.contains(e.target)) {
+    closeMobileNav();
+  }
+});
 
 // Clear old tournament localStorage on new tournament
 (function() {
