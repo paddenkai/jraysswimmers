@@ -1036,11 +1036,9 @@
         <p>J.Ray's Swimmers Pool · $25 per team</p>
       </div>
       <div class="payment-body">
-        <div id="order-lines"></div>
-        <div class="order-total"><span>Total</span><span id="order-total-val">$25.00</span></div>
 
         <!-- Venmo payment -->
-        <div style="margin:24px 0 0; background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:8px; padding:20px;">
+        <div style="margin:0 0 20px; background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:8px; padding:20px;">
           <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:6px; text-align:center;">Teams Submitted!</div>
           <div style="font-size:0.82rem; color:#666; text-align:center; margin-bottom:16px;">Send payment via Venmo to activate your spot on the leaderboard.</div>
 
@@ -1049,12 +1047,23 @@
             <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background: #1a4731; color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
           </div>
 
-          <button onclick="openVenmo()" style="width:100%; background:#008CFF; color:white; border:none; border-radius:8px; padding:16px; font-size:1.05rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px;">
-            <span style="font-size:1.3rem; font-weight:900;">V</span> Pay @JRaysPool on Venmo →
-          </button>
+          <div id="venmo-mobile-btn" style="display:none;">
+            <button onclick="openVenmo()" style="width:100%; background:#008CFF; color:white; border:none; border-radius:8px; padding:16px; font-size:1.05rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px;">
+              <span style="font-size:1.3rem; font-weight:900;">V</span> Pay @JRaysPool on Venmo →
+            </button>
+          </div>
+
+          <div id="venmo-desktop-instructions" style="display:none; margin-bottom:12px;">
+              <a href="https://venmo.com/u/JRaysPool" target="_blank" style="width:100%; background:#008CFF; color:white; border:none; border-radius:8px; padding:14px; font-size:1.05rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; text-decoration:none;">
+                <span style="font-size:1.3rem; font-weight:900;">V</span> Pay @JRaysPool on Venmo →
+              </a>
+          </div>
 
           <div style="margin-top:12px; font-size:0.78rem; color:#e67e22; font-family:'DM Mono',monospace; letter-spacing:0.5px; text-align:center;">⚠ Your team won't be activated until payment is received</div>
         </div>
+
+        <div id="order-lines"></div>
+        <div class="order-total"><span>Total</span><span id="order-total-val">$25.00</span></div>
 
         <div style="text-align:center; margin-top:20px;">
           <button style="background:none;border:none;color:#888;cursor:pointer;font-size:0.82rem;font-family:'Libre Baskerville',serif;" onclick="showPage('builder')">← Back to team builder</button>
@@ -1607,18 +1616,18 @@
 
 <!-- SUCCESS MODAL -->
 <div class="modal-overlay" id="success-modal">
-  <div class="modal" style="text-align:center;">
+  <div class="modal" style="text-align:center; max-width:420px;">
     <div style="font-size:3rem; margin-bottom:12px;">🏌️</div>
     <h2 style="color:var(--green);">Team Submitted!</h2>
     <p style="color:#666; margin: 12px 0 6px; line-height:1.6;">Your team has been registered. Once I receive your payment, your entry will be marked as paid and appear on the leaderboard.</p>
-    <div style="background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:6px; padding:12px 16px; margin:14px 0 20px; font-size:0.82rem; color:#555; line-height:1.6;">
+    <div style="background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:6px; padding:12px 16px; margin:14px 0 16px; font-size:0.82rem; color:#555; line-height:1.6;">
       📱 Send <strong style="color:var(--green);">$25</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
     </div>
-    <button class="btn btn-gold" onclick="closeModal('success-modal'); showPage('myteams');">View My Teams →</button>
-    <div style="margin-top:10px;">
+    <button class="btn btn-gold" onclick="closeModal('success-modal'); showPage('payment');" style="width:100%; margin-bottom:8px;">Continue to Payment →</button>
+    <div>
       <button style="background:none;border:none;cursor:pointer;color:#888;font-size:0.85rem;font-family:'Libre Baskerville',serif;" onclick="closeModal('success-modal'); resetBuilder(); showPage('builder');">Enter Another Team</button>
     </div>
-    <div style="margin-top:16px; font-family:'DM Mono',monospace; font-size:0.72rem; color:#e67e22; letter-spacing:0.5px;">⚠ Your team won't be activated until payment is received</div>
+    <div style="margin-top:12px; font-family:'DM Mono',monospace; font-size:0.72rem; color:#e67e22; letter-spacing:0.5px;">⚠ Your team won't be activated until payment is received</div>
   </div>
 </div>
 
@@ -3173,6 +3182,15 @@ function renderPaymentSummary() {
     const userName = currentUser?.name || '';
     noteEl.textContent = `Swimmers Pool – ${userName} – ${teamNames}`;
   }
+
+  // Show Venmo button on mobile, manual instructions on desktop
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const mobileBtn = document.getElementById('venmo-mobile-btn');
+  const desktopInstr = document.getElementById('venmo-desktop-instructions');
+  const desktopAmt = document.getElementById('desktop-amount');
+  if (mobileBtn) mobileBtn.style.display = isMobile ? 'block' : 'none';
+  if (desktopInstr) desktopInstr.style.display = isMobile ? 'none' : 'block';
+  if (desktopAmt) desktopAmt.textContent = `$${totalAmt}`;
 }
 
 function copyPaymentNote() {
@@ -3202,7 +3220,6 @@ function openVenmo() {
   const webUrl = `https://venmo.com/u/JRaysPool`;
   window.location.href = appUrl;
   setTimeout(() => { window.open(webUrl, '_blank'); }, 1500);
-  setTimeout(() => { openModal('success-modal'); }, 500);
 }
 
 
