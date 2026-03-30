@@ -288,41 +288,41 @@
     .team-builder-grid .team-panel { grid-column: 1; grid-row: 2; }
   }
 
-  .golfer-search { margin-bottom: 16px; }
+  .golfer-search { margin-bottom: 0; }
   .golfer-search input {
-    width: 100%; padding: 10px 14px;
+    width: 100%; padding: 8px 12px;
     border: 1.5px solid #d4d0c8; border-radius: 4px;
-    font-family: 'Libre Baskerville', serif; font-size: 0.9rem;
+    font-family: 'EB Garamond', serif; font-size: 0.88rem;
     background: #ffffff;
   }
   .golfer-search input:focus { outline: none; border-color: var(--green-light); }
 
   .golfer-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    max-height: 480px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-height: 520px;
     overflow-y: auto;
     padding-right: 4px;
   }
   .golfer-card {
-    border: 1.5px solid #e0dbd0;
+    border: 1.5px solid rgba(26,71,49,0.25);
     border-radius: 6px;
-    padding: 12px;
+    padding: 9px 10px;
     cursor: pointer;
     transition: all 0.18s;
-    background: var(--white);
+    background: #ffffff;
     position: relative;
+    box-shadow: 0 1px 3px rgba(26,71,49,0.08);
   }
-  .golfer-card:hover { border-color: var(--green-light); background: #f0faf4; transform: translateY(-1px); }
-  .golfer-card.selected { border-color: var(--green); background: #e8f5ee; }
-  .golfer-card.selected::after { content: '✓'; position: absolute; top: 8px; right: 10px; color: var(--green); font-weight: 700; }
+  .golfer-card:hover { border-color: var(--gold); background: rgba(201,168,76,0.06); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(26,71,49,0.12); }
+  .golfer-card.selected { border-color: var(--green); background: rgba(26,71,49,0.06); box-shadow: 0 2px 6px rgba(26,71,49,0.15); }
+  .golfer-card.selected::after { content: '✓'; position: absolute; top: 6px; right: 8px; color: var(--green); font-weight: 700; font-size: 0.85rem; }
   .golfer-card.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
   .golfer-card.amateur { opacity: 0.5; cursor: not-allowed; pointer-events: none; background: #f5f5f5; border-style: dashed; }
   .golfer-card.amateur .golfer-name { color: #999; }
-  .golfer-card.amateur .golfer-earnings { color: #bbb; font-style: italic; }
-  .golfer-name { font-weight: 700; font-size: 0.88rem; color: var(--dark); }
-  .golfer-rank { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: #888; margin-top: 2px; }
+  .golfer-name { font-weight: 700; font-size: 0.82rem; color: var(--green); line-height: 1.2; }
+  .golfer-rank { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--gold); margin-top: 3px; font-weight: 600; }
   .golfer-earnings { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--green-mid); margin-top: 2px; font-weight: 500; }
 
   .team-panel {
@@ -738,8 +738,8 @@
     .team-builder-grid { grid-template-columns: 1fr; }
     .team-builder-grid .golfer-col { grid-column: 1 !important; grid-row: 1 !important; }
     .team-builder-grid .team-panel { display: none !important; }
-    .golfer-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
-    .golfer-card { padding: 10px 12px !important; }
+    .golfer-grid { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+    .golfer-card { padding: 8px 10px !important; }
     .golfer-name { font-size: 0.82rem !important; }
     .golfer-earnings { font-size: 0.7rem !important; }
     .team-panel { position: static !important; max-height: none !important; }
@@ -1008,8 +1008,12 @@
 
       </div>
       <div class="golfer-col">
-        <div class="golfer-search">
-          <input type="text" id="golfer-search" placeholder="Search golfer name..." oninput="filterGolfers()" />
+        <div style="display:flex; gap:8px; margin-bottom:10px; align-items:center;">
+          <div class="golfer-search" style="flex:1;">
+            <input type="text" id="golfer-search" placeholder="Search golfer name..." oninput="filterGolfers()" />
+          </div>
+          <button onclick="setGolferSort('alpha')" id="sort-alpha" style="padding:8px 14px; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; border:1.5px solid var(--green); border-radius:4px; cursor:pointer; background:var(--green); color:var(--gold); white-space:nowrap;">A–Z</button>
+          <button onclick="setGolferSort('wgr')" id="sort-wgr" style="padding:8px 14px; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; border:1.5px solid var(--green); border-radius:4px; cursor:pointer; background:#fff; color:var(--green); white-space:nowrap;">WGR Rank</button>
         </div>
         <div class="golfer-grid" id="golfer-grid"></div>
       </div>
@@ -1904,94 +1908,99 @@ let fetchInterval = null;
 // Feb 26 – Mar 1, 2026 · Purse: $9,600,000
 // ═══════════════════════════════════════════════════════
 const GOLFERS = [
-  { id: 1,  name: "Scottie Scheffler", earnings: 0, teeTime: "" },
-  { id: 2,  name: "Jon Rahm", earnings: 0, teeTime: "" },
-  { id: 3,  name: "Rory McIlroy", earnings: 0, teeTime: "" },
-  { id: 4,  name: "Tommy Fleetwood", earnings: 0, teeTime: "" },
-  { id: 5,  name: "Cameron Young", earnings: 0, teeTime: "" },
-  { id: 6,  name: "Russell Henley", earnings: 0, teeTime: "" },
-  { id: 7,  name: "Xander Schauffele", earnings: 0, teeTime: "" },
-  { id: 8,  name: "Matt Fitzpatrick", earnings: 0, teeTime: "" },
-  { id: 9,  name: "Robert MacIntyre", earnings: 0, teeTime: "" },
-  { id: 10, name: "Ludvig Aberg", earnings: 0, teeTime: "" },
-  { id: 11, name: "Hideki Matsuyama", earnings: 0, teeTime: "" },
-  { id: 12, name: "Bryson DeChambeau", earnings: 0, teeTime: "" },
-  { id: 13, name: "Collin Morikawa", earnings: 0, teeTime: "" },
-  { id: 14, name: "Akshay Bhatia", earnings: 0, teeTime: "" },
-  { id: 15, name: "Si Woo Kim", earnings: 0, teeTime: "" },
-  { id: 16, name: "Viktor Hovland", earnings: 0, teeTime: "" },
-  { id: 17, name: "Jacob Bridgeman", earnings: 0, teeTime: "" },
-  { id: 18, name: "Maverick McNealy", earnings: 0, teeTime: "" },
-  { id: 19, name: "Sam Burns", earnings: 0, teeTime: "" },
-  { id: 20, name: "Min Woo Lee", earnings: 0, teeTime: "" },
-  { id: 21, name: "Alex Noren", earnings: 0, teeTime: "" },
-  { id: 22, name: "Patrick Cantlay", earnings: 0, teeTime: "" },
-  { id: 23, name: "Ben Griffin", earnings: 0, teeTime: "" },
-  { id: 24, name: "Sepp Straka", earnings: 0, teeTime: "" },
-  { id: 25, name: "J.J. Spaun", earnings: 0, teeTime: "" },
-  { id: 26, name: "Harris English", earnings: 0, teeTime: "" },
-  { id: 27, name: "Shane Lowry", earnings: 0, teeTime: "" },
-  { id: 28, name: "Harry Hall", earnings: 0, teeTime: "" },
-  { id: 29, name: "Adam Scott", earnings: 0, teeTime: "" },
-  { id: 30, name: "Ryan Gerard", earnings: 0, teeTime: "" },
-  { id: 31, name: "Chris Gotterup", earnings: 0, teeTime: "" },
-  { id: 32, name: "Jordan Spieth", earnings: 0, teeTime: "" },
-  { id: 33, name: "Kurt Kitayama", earnings: 0, teeTime: "" },
-  { id: 34, name: "Justin Rose", earnings: 0, teeTime: "" },
-  { id: 35, name: "Justin Thomas", earnings: 0, teeTime: "" },
-  { id: 36, name: "Nick Taylor", earnings: 0, teeTime: "" },
-  { id: 37, name: "Keegan Bradley", earnings: 0, teeTime: "" },
-  { id: 38, name: "Corey Conners", earnings: 0, teeTime: "" },
-  { id: 39, name: "Patrick Reed", earnings: 0, teeTime: "" },
-  { id: 40, name: "Rasmus Hojgaard", earnings: 0, teeTime: "" },
-  { id: 41, name: "Jason Day", earnings: 0, teeTime: "" },
-  { id: 42, name: "Ryan Fox", earnings: 0, teeTime: "" },
-  { id: 43, name: "Tyrrell Hatton", earnings: 0, teeTime: "" },
-  { id: 44, name: "Sam Stevens", earnings: 0, teeTime: "" },
-  { id: 45, name: "Aaron Rai", earnings: 0, teeTime: "" },
-  { id: 46, name: "Max Greyserman", earnings: 0, teeTime: "" },
-  { id: 47, name: "Nico Echavarria", earnings: 0, teeTime: "" },
-  { id: 48, name: "Casey Jarvis", earnings: 0, teeTime: "" },
-  { id: 49, name: "Wyndham Clark", earnings: 0, teeTime: "" },
-  { id: 50, name: "Max Homa", earnings: 0, teeTime: "" },
-  { id: 51, name: "Kristoffer Reitan", earnings: 0, teeTime: "" },
-  { id: 52, name: "Carlos Ortiz", earnings: 0, teeTime: "" },
-  { id: 53, name: "Haotong Li", earnings: 0, teeTime: "" },
-  { id: 54, name: "Brian Harman", earnings: 0, teeTime: "" },
-  { id: 55, name: "Tom McKibbin", earnings: 0, teeTime: "" },
-  { id: 56, name: "Brooks Koepka", earnings: 0, teeTime: "" },
-  { id: 57, name: "Cameron Smith", earnings: 0, teeTime: "" },
-  { id: 58, name: "Johnny Keefer", earnings: 0, teeTime: "" },
-  { id: 59, name: "Rasmus Neergaard-Petersen", earnings: 0, teeTime: "" },
-  { id: 60, name: "Marco Penge", earnings: 0, teeTime: "" },
-  { id: 61, name: "Andrew Novak", earnings: 0, teeTime: "" },
-  { id: 62, name: "Sami Valimaki", earnings: 0, teeTime: "" },
-  { id: 63, name: "Michael Kim", earnings: 0, teeTime: "" },
-  { id: 64, name: "Michael Brennan", earnings: 0, teeTime: "" },
-  { id: 65, name: "Sergio Garcia", earnings: 0, teeTime: "" },
-  { id: 66, name: "Sungjae Im", earnings: 0, teeTime: "" },
-  { id: 67, name: "Dustin Johnson", earnings: 0, teeTime: "" },
-  { id: 68, name: "Charl Schwartzel", earnings: 0, teeTime: "" },
-  { id: 69, name: "Zach Johnson", earnings: 0, teeTime: "" },
-  { id: 70, name: "Bubba Watson", earnings: 0, teeTime: "" },
-  { id: 71, name: "Aldrich Potgieter", earnings: 0, teeTime: "" },
-  { id: 72, name: "Brian Campbell", earnings: 0, teeTime: "" },
-  { id: 73, name: "Davis Riley", earnings: 0, teeTime: "" },
-  { id: 74, name: "Danny Willett", earnings: 0, teeTime: "" },
-  { id: 75, name: "Phil Mickelson", earnings: 0, teeTime: "" },
-  { id: 76, name: "Fred Couples", earnings: 0, teeTime: "" },
-  { id: 77, name: "Naoyuki Kataoka", earnings: 0, teeTime: "" },
-  { id: 78, name: "Angel Cabrera", earnings: 0, teeTime: "" },
-  { id: 79, name: "Jackson Herrington", earnings: 0, teeTime: "" },
-  { id: 80, name: "Vijay Singh", earnings: 0, teeTime: "" },
-  { id: 81, name: "Tiger Woods", earnings: 0, teeTime: "" },
-  { id: 82, name: "Ethan Fang", earnings: 0, teeTime: "" },
-  { id: 83, name: "Brandon Holtz", earnings: 0, teeTime: "" },
-  { id: 84, name: "Mike Weir", earnings: 0, teeTime: "" },
-  { id: 85, name: "Fifa Laopakdee", earnings: 0, teeTime: "" },
-  { id: 86, name: "Mateo Pulcini", earnings: 0, teeTime: "" },
-  { id: 87, name: "Jose Maria Olazabal", earnings: 0, teeTime: "" },
-  { id: 88, name: "Mason Howell", earnings: 0, teeTime: "" },
+  { id: 1, name: "Scottie Scheffler", wgr: 1, earnings: 0, teeTime: "" },
+  { id: 2, name: "Jon Rahm", wgr: 28, earnings: 0, teeTime: "" },
+  { id: 3, name: "Rory McIlroy", wgr: 2, earnings: 0, teeTime: "" },
+  { id: 4, name: "Xander Schauffele", wgr: 5, earnings: 0, teeTime: "" },
+  { id: 5, name: "Cameron Young", wgr: 3, earnings: 0, teeTime: "" },
+  { id: 6, name: "Matt Fitzpatrick", wgr: 6, earnings: 0, teeTime: "" },
+  { id: 7, name: "Tommy Fleetwood", wgr: 4, earnings: 0, teeTime: "" },
+  { id: 8, name: "Russell Henley", wgr: 9, earnings: 0, teeTime: "" },
+  { id: 9, name: "Bryson DeChambeau", wgr: 24, earnings: 0, teeTime: "" },
+  { id: 10, name: "Robert MacIntyre", wgr: 11, earnings: 0, teeTime: "" },
+  { id: 11, name: "Ludvig Aberg", wgr: 18, earnings: 0, teeTime: "" },
+  { id: 12, name: "Hideki Matsuyama", wgr: 14, earnings: 0, teeTime: "" },
+  { id: 13, name: "Collin Morikawa", wgr: 8, earnings: 0, teeTime: "" },
+  { id: 14, name: "Akshay Bhatia", wgr: 22, earnings: 0, teeTime: "" },
+  { id: 15, name: "Si Woo Kim", wgr: 29, earnings: 0, teeTime: "" },
+  { id: 16, name: "Jacob Bridgeman", wgr: 17, earnings: 0, teeTime: "" },
+  { id: 17, name: "Patrick Cantlay", wgr: 34, earnings: 0, teeTime: "" },
+  { id: 18, name: "Maverick McNealy", wgr: 26, earnings: 0, teeTime: "" },
+  { id: 19, name: "Sam Burns", wgr: 33, earnings: 0, teeTime: "" },
+  { id: 20, name: "Min Woo Lee", wgr: 31, earnings: 0, teeTime: "" },
+  { id: 21, name: "Jake Knapp", wgr: 42, earnings: 0, teeTime: "" },
+  { id: 22, name: "Viktor Hovland", wgr: 21, earnings: 0, teeTime: "" },
+  { id: 23, name: "Alex Noren", wgr: 19, earnings: 0, teeTime: "" },
+  { id: 24, name: "Sepp Straka", wgr: 12, earnings: 0, teeTime: "" },
+  { id: 25, name: "Ben Griffin", wgr: 16, earnings: 0, teeTime: "" },
+  { id: 26, name: "Harris English", wgr: 20, earnings: 0, teeTime: "" },
+  { id: 27, name: "Shane Lowry", wgr: 32, earnings: 0, teeTime: "" },
+  { id: 28, name: "Jordan Spieth", wgr: 59, earnings: 0, teeTime: "" },
+  { id: 29, name: "Harry Hall", wgr: 62, earnings: 0, teeTime: "" },
+  { id: 30, name: "Adam Scott", wgr: 52, earnings: 0, teeTime: "" },
+  { id: 31, name: "Ryan Gerard", wgr: 27, earnings: 0, teeTime: "" },
+  { id: 32, name: "Chris Gotterup", wgr: 10, earnings: 0, teeTime: "" },
+  { id: 33, name: "J.J. Spaun", wgr: 13, earnings: 0, teeTime: "" },
+  { id: 34, name: "Kurt Kitayama", wgr: 35, earnings: 0, teeTime: "" },
+  { id: 35, name: "Justin Rose", wgr: 7, earnings: 0, teeTime: "" },
+  { id: 36, name: "Nicolai Hojgaard", wgr: 47, earnings: 0, teeTime: "" },
+  { id: 37, name: "Justin Thomas", wgr: 15, earnings: 0, teeTime: "" },
+  { id: 38, name: "Corey Conners", wgr: 40, earnings: 0, teeTime: "" },
+  { id: 39, name: "Nick Taylor", wgr: 64, earnings: 0, teeTime: "" },
+  { id: 40, name: "Keegan Bradley", wgr: 25, earnings: 0, teeTime: "" },
+  { id: 41, name: "Patrick Reed", wgr: 23, earnings: 0, teeTime: "" },
+  { id: 42, name: "Jason Day", wgr: 41, earnings: 0, teeTime: "" },
+  { id: 43, name: "Ryan Fox", wgr: 45, earnings: 0, teeTime: "" },
+  { id: 44, name: "Rasmus Hojgaard", wgr: 53, earnings: 0, teeTime: "" },
+  { id: 45, name: "Daniel Berger", wgr: 37, earnings: 0, teeTime: "" },
+  { id: 46, name: "Sam Stevens", wgr: 50, earnings: 0, teeTime: "" },
+  { id: 47, name: "Carlos Ortiz", wgr: 153, earnings: 0, teeTime: "" },
+  { id: 48, name: "Tyrrell Hatton", wgr: 30, earnings: 0, teeTime: "" },
+  { id: 49, name: "Matt McCarty", wgr: 44, earnings: 0, teeTime: "" },
+  { id: 50, name: "Max Greyserman", wgr: 58, earnings: 0, teeTime: "" },
+  { id: 51, name: "Nico Echavarria", wgr: 38, earnings: 0, teeTime: "" },
+  { id: 52, name: "Aaron Rai", wgr: 39, earnings: 0, teeTime: "" },
+  { id: 53, name: "Casey Jarvis", wgr: 69, earnings: 0, teeTime: "" },
+  { id: 54, name: "Wyndham Clark", wgr: 72, earnings: 0, teeTime: "" },
+  { id: 55, name: "Kristoffer Reitan", wgr: 48, earnings: 0, teeTime: "" },
+  { id: 56, name: "Marco Penge", wgr: 36, earnings: 0, teeTime: "" },
+  { id: 57, name: "Brooks Koepka", wgr: 162, earnings: 0, teeTime: "" },
+  { id: 58, name: "Haotong Li", wgr: 78, earnings: 0, teeTime: "" },
+  { id: 59, name: "Brian Harman", wgr: 46, earnings: 0, teeTime: "" },
+  { id: 60, name: "Cameron Smith", wgr: 207, earnings: 0, teeTime: "" },
+  { id: 61, name: "Tom McKibbin", wgr: 97, earnings: 0, teeTime: "" },
+  { id: 62, name: "Sungjae Im", wgr: 67, earnings: 0, teeTime: "" },
+  { id: 63, name: "Rasmus Neergaard-Petersen", wgr: 66, earnings: 0, teeTime: "" },
+  { id: 64, name: "Michael Kim", wgr: 54, earnings: 0, teeTime: "" },
+  { id: 65, name: "Max Homa", wgr: 148, earnings: 0, teeTime: "" },
+  { id: 66, name: "Andrew Novak", wgr: 49, earnings: 0, teeTime: "" },
+  { id: 67, name: "Sami Valimaki", wgr: 55, earnings: 0, teeTime: "" },
+  { id: 68, name: "Michael Brennan", wgr: 43, earnings: 0, teeTime: "" },
+  { id: 69, name: "Sergio Garcia", wgr: 337, earnings: 0, teeTime: "" },
+  { id: 70, name: "Gary Woodland", wgr: 139, earnings: 0, teeTime: "" },
+  { id: 71, name: "Johnny Keefer", wgr: 74, earnings: 0, teeTime: "" },
+  { id: 72, name: "Dustin Johnson", wgr: null, earnings: 0, teeTime: "" },
+  { id: 73, name: "Charl Schwartzel", wgr: null, earnings: 0, teeTime: "" },
+  { id: 74, name: "Zach Johnson", wgr: 306, earnings: 0, teeTime: "" },
+  { id: 75, name: "Bubba Watson", wgr: null, earnings: 0, teeTime: "" },
+  { id: 76, name: "Aldrich Potgieter", wgr: 77, earnings: 0, teeTime: "" },
+  { id: 77, name: "Brian Campbell", wgr: 102, earnings: 0, teeTime: "" },
+  { id: 78, name: "Phil Mickelson", wgr: null, earnings: 0, teeTime: "" },
+  { id: 79, name: "Davis Riley", wgr: 114, earnings: 0, teeTime: "" },
+  { id: 80, name: "Fred Couples", wgr: null, earnings: 0, teeTime: "" },
+  { id: 81, name: "Naoyuki Kataoka", wgr: 359, earnings: 0, teeTime: "" },
+  { id: 82, name: "Angel Cabrera", wgr: null, earnings: 0, teeTime: "" },
+  { id: 83, name: "Jackson Herrington", wgr: null, earnings: 0, teeTime: "" },
+  { id: 84, name: "Danny Willett", wgr: 399, earnings: 0, teeTime: "" },
+  { id: 85, name: "Vijay Singh", wgr: null, earnings: 0, teeTime: "" },
+  { id: 86, name: "Tiger Woods", wgr: null, earnings: 0, teeTime: "" },
+  { id: 87, name: "Ethan Fang", wgr: null, earnings: 0, teeTime: "" },
+  { id: 88, name: "Brandon Holtz", wgr: null, earnings: 0, teeTime: "" },
+  { id: 89, name: "Mike Weir", wgr: null, earnings: 0, teeTime: "" },
+  { id: 90, name: "Fifa Laopakdee", wgr: null, earnings: 0, teeTime: "" },
+  { id: 91, name: "Mateo Pulcini", wgr: null, earnings: 0, teeTime: "" },
+  { id: 92, name: "Jose Maria Olazabal", wgr: null, earnings: 0, teeTime: "" },
+  { id: 93, name: "Mason Howell", wgr: null, earnings: 0, teeTime: "" },
 ];
 
 // ═══════════════════════════════════════════════════════
@@ -2888,28 +2897,39 @@ function filterGolfers() {
   renderGolferGrid(filtered);
 }
 
+let golferSortMode = 'alpha';
+
+function setGolferSort(mode) {
+  golferSortMode = mode;
+  document.getElementById('sort-alpha').style.background = mode === 'alpha' ? 'var(--green)' : '#fff';
+  document.getElementById('sort-alpha').style.color = mode === 'alpha' ? 'var(--gold)' : 'var(--green)';
+  document.getElementById('sort-wgr').style.background = mode === 'wgr' ? 'var(--green)' : '#fff';
+  document.getElementById('sort-wgr').style.color = mode === 'wgr' ? 'var(--gold)' : 'var(--green)';
+  filterGolfers();
+}
+
 function renderGolferGrid(golfers) {
   const sorted = [...golfers].sort((a, b) => {
-    const lastA = a.name.split(' ').pop();
-    const lastB = b.name.split(' ').pop();
-    return lastA.localeCompare(lastB);
+    if (golferSortMode === 'wgr') {
+      const wa = a.wgr || 9999, wb = b.wgr || 9999;
+      return wa - wb;
+    }
+    return a.name.split(' ').pop().localeCompare(b.name.split(' ').pop());
   });
   const grid = document.getElementById('golfer-grid');
   grid.innerHTML = sorted.map(g => {
-    const isAmateur = g.name === 'Daniel Bennett';
+    const isAmateur = !g.wgr && ['Jackson Herrington','Ethan Fang','Brandon Holtz','Fifa Laopakdee','Mateo Pulcini','Mason Howell'].includes(g.name);
     const isDisabled = selectedGolfers.length >= 5 && !selectedGolfers.includes(g.id);
     const classes = [
       'golfer-card',
       selectedGolfers.includes(g.id) ? 'selected' : '',
       isAmateur ? 'amateur' : (isDisabled ? 'disabled' : '')
     ].filter(Boolean).join(' ');
-    const earningsDisplay = isAmateur
-      ? 'Amateur – $0' // Bennett is an amateur, earns no prize money
-      : (g.earnings > 0 ? '$' + g.earnings.toLocaleString() : (g.cutMissed || g.withdrawn || g.liveData?.wd) ? '<span style="color:var(--green-mid)">$0</span>' : '–');
+    const wgrDisplay = g.wgr ? `#${g.wgr}` : isAmateur ? '(a)' : '–';
     return `
     <div class="${classes}" onclick="${isAmateur ? '' : `toggleGolfer(${g.id})`}">
       <div class="golfer-name">${g.name}</div>
-      <div class="golfer-earnings">${earningsDisplay}</div>
+      <div class="golfer-rank">${wgrDisplay}</div>
     </div>`;
   }).join('');
 }
