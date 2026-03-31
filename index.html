@@ -1280,13 +1280,14 @@
       </div>
     </div>
 
-    <!-- Master Push Notification Toggle -->
-    <div id="master-push-bar" style="background:#ffffff; border:1.5px solid rgba(26,71,49,0.15); border-radius:8px; padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between;">
-      <div>
-        <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--green);">📲 Phone Notifications</div>
-        <div id="master-push-status" style="font-size:0.75rem; color:#888; font-family:'DM Mono',monospace; margin-top:3px; letter-spacing:0.3px;">Get push alerts for your teams</div>
+    <!-- Master Push Notification Toggle — mobile only -->
+    <div id="master-push-bar" style="background:#ffffff; border:1.5px solid rgba(26,71,49,0.15); border-radius:8px; padding:14px 18px; margin-bottom:20px; display:none; align-items:flex-start; justify-content:space-between; gap:12px;">
+      <div style="flex:1;">
+        <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--green);">Push Notifications</div>
+        <div id="master-push-status" style="font-size:0.75rem; color:#888; font-family:'DM Mono',monospace; margin-top:3px; letter-spacing:0.3px;">Get alerts for your teams</div>
+        <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; margin-top:6px; line-height:1.5;">Requires app on home screen.<br>Tap the <strong style="color:var(--green);">⋯ menu</strong> → <strong style="color:var(--green);">"Add to Home Screen"</strong> in your browser.</div>
       </div>
-      <button onclick="toggleMasterPush()" id="master-push-btn" style="position:relative; width:52px; height:28px; cursor:pointer; background:none; border:none; padding:0; flex-shrink:0;">
+      <button onclick="toggleMasterPush()" id="master-push-btn" style="position:relative; width:52px; height:28px; cursor:pointer; background:none; border:none; padding:0; flex-shrink:0; margin-top:2px;">
         <span id="master-push-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
         <span id="master-push-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
       </button>
@@ -4473,32 +4474,24 @@ function renderMyTeams() {
       <div class="team-card-footer" style="flex-direction:column; gap:0; padding:0;">
         <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
           <div><div class="team-total-label">TEAM TOTAL</div><div class="team-total">$${total.toLocaleString()}</div></div>
-          <div style="display:flex; align-items:center; gap:16px;">
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="font-family:'DM Mono',monospace; font-size:0.68rem; color:#aaa; letter-spacing:1px;">🔔 IN-APP</span>
-              <div style="position:relative; width:36px; height:20px;" onclick="toggleTeamAlert('${team.id}')">
-                <input type="checkbox" id="alert-toggle-${team.id}" style="opacity:0; width:0; height:0; pointer-events:none;">
-                <span id="alert-toggle-${team.id}-track" style="position:absolute; inset:0; background:${new Set(JSON.parse(localStorage.getItem('alertTeams')||'[]')).has(String(team.id)) ? 'var(--green)' : '#ccc'}; border-radius:28px; transition:0.3s; cursor:pointer;"></span>
-                <span id="alert-toggle-${team.id}-thumb" style="position:absolute; left:${new Set(JSON.parse(localStorage.getItem('alertTeams')||'[]')).has(String(team.id)) ? '18px' : '3px'}; top:3px; width:14px; height:14px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2); pointer-events:none;"></span>
-              </div>
-            </div>
-            <div id="push-toggle-wrap-${team.id}" style="display:none; align-items:center; gap:6px;">
-              <span style="font-family:'DM Mono',monospace; font-size:0.68rem; color:#aaa; letter-spacing:1px;">📲 PUSH</span>
-              <div style="position:relative; width:36px; height:20px;" onclick="togglePushPref('${team.id}')">
-                <span id="push-toggle-${team.id}-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s; cursor:pointer;"></span>
-                <span id="push-toggle-${team.id}-thumb" style="position:absolute; left:3px; top:3px; width:14px; height:14px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2); pointer-events:none;"></span>
-              </div>
-            </div>
+          <div id="push-toggle-wrap-${team.id}" style="display:none; align-items:center; gap:6px;">
+            <span style="font-family:'DM Mono',monospace; font-size:0.68rem; color:#aaa; letter-spacing:1px;">📲 PUSH</span>
+            <button onclick="togglePushPref('${team.id}')" style="position:relative; width:36px; height:20px; background:none; border:none; padding:0; cursor:pointer;">
+              <span id="push-toggle-${team.id}-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
+              <span id="push-toggle-${team.id}-thumb" style="position:absolute; left:3px; top:3px; width:14px; height:14px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+            </button>
           </div>
         </div>
-        <div id="alert-feed-${team.id}" style="display:${new Set(JSON.parse(localStorage.getItem('alertTeams')||'[]')).has(String(team.id)) ? 'block' : 'none'}; border-top:1px solid #ece8df; padding:10px 18px; max-height:180px; overflow-y:auto; background:#faf8f3;">
+        <div id="alert-feed-${team.id}" style="display:none; border-top:1px solid #ece8df; padding:10px 18px; max-height:180px; overflow-y:auto; background:#faf8f3;">
           <div id="alert-feed-inner-${team.id}"></div>
         </div>
       </div>
     </div>`;
   }).join('');
 
-  // Apply push pref toggles after render
+  // Apply push pref toggles after render — use cached pushPrefs first for instant display
+  sortedMyTeams.forEach(team => applyPushPrefUI(team.id));
+  // Then refresh from DB
   loadPushPrefs().then(() => {
     sortedMyTeams.forEach(team => applyPushPrefUI(team.id));
   });
@@ -5782,17 +5775,25 @@ async function toggleMasterPush() {
 async function initPushNotifications() {
   if (!currentUser) return;
   const bar = document.getElementById('master-push-bar');
-  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
-    // Show bar but indicate not supported
-    if (bar) {
-      const status = document.getElementById('master-push-status');
-      if (status) status.textContent = 'Not supported on this browser — install the app to your home screen first';
-      const btn = document.getElementById('master-push-btn');
-      if (btn) btn.style.opacity = '0.4';
-    }
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  if (!isMobile) {
+    // Hide on desktop entirely
+    if (bar) bar.style.display = 'none';
     return;
   }
+
+  // Show on mobile
   if (bar) bar.style.display = 'flex';
+
+  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+    const status = document.getElementById('master-push-status');
+    if (status) status.textContent = 'Install the app to your home screen to enable notifications';
+    const btn = document.getElementById('master-push-btn');
+    if (btn) btn.style.opacity = '0.4';
+    return;
+  }
+
   if (Notification.permission === 'granted') {
     const reg = await navigator.serviceWorker.ready;
     const sub = await reg.pushManager.getSubscription();
