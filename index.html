@@ -2686,6 +2686,7 @@ async function sendAdminPush() {
       body: JSON.stringify({ adminMessage: { title, body } })
     });
     const data = await res.json();
+    console.log('Push result:', JSON.stringify(data));
     result.textContent = `✓ Sent to ${data.sent ?? 0} subscriber${data.sent !== 1 ? 's' : ''}.`;
     result.style.color = 'var(--green)';
     result.style.display = 'block';
