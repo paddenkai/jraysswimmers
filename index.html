@@ -896,7 +896,7 @@
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Pay via Venmo</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $25 per team to <span style="color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.82rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $10 per team to <span style="color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.82rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
           </div>
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
@@ -906,7 +906,7 @@
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Follow Live</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update throughout the tournament. Track your team against the field from anywhere.</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update every 60 seconds. Get score alerts for your teams, track the leaderboard, and install the app to your home screen for push notifications.</div>
           </div>
 
         </div>
@@ -946,7 +946,7 @@
   <div id="page-builder" class="page">
     <div class="section-header">
       <div class="section-title">Build Your Team</div>
-      <div class="section-sub">Select 5 golfers · $25 per entry</div>
+      <div class="section-sub">Select 5 golfers · $10 per entry</div>
     </div>
     <!-- Mobile sticky team tracker -->
     <div id="mobile-team-tracker">
@@ -1065,9 +1065,9 @@
         </div>
 
         <h3 id="payment-team-name" style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--green); margin:0 0 4px;">Your Entry</h3>
-        <p style="font-size:0.85rem; color:#888; font-family:'Libre Baskerville',serif; margin:0 0 12px;">J.Ray's Swimmers Pool · $25 per team</p>
+        <p style="font-size:0.85rem; color:#888; font-family:'Libre Baskerville',serif; margin:0 0 12px;">J.Ray's Swimmers Pool · $10 per team</p>
         <div id="order-lines"></div>
-        <div class="order-total"><span>Total</span><span id="order-total-val">$25.00</span></div>
+        <div class="order-total"><span>Total</span><span id="order-total-val">$10.00</span></div>
 
         <div style="text-align:center; margin-top:20px;">
           <button style="background:none;border:none;color:#888;cursor:pointer;font-size:0.82rem;font-family:'Libre Baskerville',serif;" onclick="showPage('builder')">← Back to team builder</button>
@@ -1142,11 +1142,12 @@
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 65 + ties</div>
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
     </div>
-    <div style="border:2px solid #1a4731; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+    <div style="border:2px solid #1a4731; border-radius:4px; overflow:hidden;">
+      <div style="background:#1a4731; padding:10px 16px; text-align:center; width:100%;">
+        <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900; color:#ffffff; letter-spacing:4px; text-transform:uppercase;">Leaderboard</div>
+      </div>
+      <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
       <div style="min-width:480px; display:inline-block; width:100%;">
-        <div style="background:#1a4731; padding:10px 16px; text-align:center; width:100%;">
-          <div style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900; color:#ffffff; letter-spacing:4px; text-transform:uppercase;">Leaderboard</div>
-        </div>
         <table class="leaderboard-table" id="tournament-table" style="min-width:480px; width:100%;">
           <thead>
             <tr>
@@ -1160,6 +1161,7 @@
           </thead>
           <tbody id="tournament-body"></tbody>
         </table>
+      </div>
       </div>
     </div>
     <div style="margin-top:12px; font-size:0.75rem; color:#aaa; font-family:'DM Mono',monospace; text-align:center;">
@@ -1502,12 +1504,23 @@
             style="width:100%; padding:9px 12px; border:1.5px solid #ccc; border-radius:5px; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--dark); background:white; box-sizing:border-box;">
         </div>
 
-        <!-- Par -->
+        <!-- Per-hole Par -->
         <div style="padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
-          <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:6px;">Course Par</div>
-          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Used to calculate scores relative to par on the leaderboard</div>
-          <input id="ts-par" type="number" min="68" max="74" placeholder="72"
-            style="width:100px; padding:9px 12px; border:1.5px solid #ccc; border-radius:5px; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--dark); background:white;">
+          <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:4px;">Hole-by-Hole Par</div>
+          <div style="font-size:0.78rem; color:#888; margin-bottom:12px;">Set par for each hole — total is calculated automatically</div>
+          <div style="margin-bottom:10px;">
+            <div style="font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px; margin-bottom:6px;">FRONT 9</div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <div id="par-holes-front" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+            </div>
+          </div>
+          <div style="margin-bottom:10px;">
+            <div style="font-size:0.72rem; font-family:'DM Mono',monospace; color:#aaa; letter-spacing:1px; margin-bottom:6px;">BACK 9</div>
+            <div id="par-holes-back" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+          </div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--green); font-weight:700; margin-top:4px;">
+            Total Par: <span id="ts-par-total">72</span>
+          </div>
         </div>
 
         <!-- Cut Rule -->
@@ -1580,6 +1593,10 @@
         <div id="push-send-result" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:#888; letter-spacing:0.5px; display:none;"></div>
         <div style="font-size:0.75rem; color:#aaa; font-family:'DM Mono',monospace;">
           Sends to all users who have enabled push notifications. <span id="push-sub-count" style="color:var(--green); font-weight:600;"></span>
+          <button onclick="toggleSubList()" id="sub-list-toggle" style="background:none; border:none; color:var(--green); font-family:'DM Mono',monospace; font-size:0.72rem; cursor:pointer; text-decoration:underline; margin-left:8px;">show subscribers</button>
+        </div>
+        <div id="sub-list-wrap" style="display:none; margin-top:12px; border:1.5px solid #e0dbd0; border-radius:6px; overflow:hidden;">
+          <div id="sub-list-inner" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:#555; max-height:220px; overflow-y:auto;"></div>
         </div>
       </div>
     </div>
@@ -1705,7 +1722,7 @@
     <h2 style="color:var(--green);">Team Submitted!</h2>
     <p style="color:#666; margin: 12px 0 6px; line-height:1.6;">Your team has been registered. Once I receive your payment, your entry will be marked as paid and appear on the leaderboard.</p>
     <div style="background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:6px; padding:12px 16px; margin:14px 0 16px; font-size:0.82rem; color:#555; line-height:1.6;">
-      📱 Send <strong style="color:var(--green);">$25</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
+      📱 Send <strong style="color:var(--green);">$10</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
     </div>
     <button class="btn btn-gold" onclick="closeModal('success-modal'); showPage('payment');" style="width:100%; margin-bottom:8px;">Continue to Payment →</button>
     <div>
@@ -1774,7 +1791,7 @@ const CONFIG = {
   STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/test_5kQ8wQcZB67v6Sg7YPe7m00',
   ORGANIZER_EMAIL: 'jray@example.com',
   POOL_NAME: "J.Ray's Swimmers Pool",
-  ENTRY_FEE: 25,
+  ENTRY_FEE: 10,
   TEAM_SIZE: 5,
 };
 
@@ -1810,16 +1827,18 @@ async function loadAdminSettings() {
     if (data.tournament_par) {
       TOURNAMENT_PAR = data.tournament_par;
     }
+    if (data.tournament_pars) {
+      try { const p = JSON.parse(data.tournament_pars); if (Array.isArray(p) && p.length === 18) PARS = p; } catch(e) {}
+    }
     if (data.cut_rule) {
       CUT_RULE = data.cut_rule;
     }
     // Populate inputs if admin panel is already visible
     const tsName = document.getElementById('ts-name');
-    const tsPar  = document.getElementById('ts-par');
     const tsCut  = document.getElementById('ts-cut');
     if (tsName) tsName.value = TOURNAMENT_NAME;
-    if (tsPar)  tsPar.value  = TOURNAMENT_PAR;
     if (tsCut)  tsCut.value  = CUT_RULE;
+    buildHoleParInputs();
   }
 }
 
@@ -1870,24 +1889,82 @@ async function saveAdminSettings() {
   showToast('Settings saved!', 'success');
 }
 
+function buildHoleParInputs() {
+  const frontWrap = document.getElementById('par-holes-front');
+  const backWrap  = document.getElementById('par-holes-back');
+  if (!frontWrap || !backWrap) return;
+  frontWrap.innerHTML = '';
+  backWrap.innerHTML  = '';
+  PARS.forEach((par, i) => {
+    const wrap = i < 9 ? frontWrap : backWrap;
+    const div = document.createElement('div');
+    div.style.textAlign = 'center';
+    div.innerHTML = `<div style="font-size:0.65rem; font-family:'DM Mono',monospace; color:#aaa; margin-bottom:2px;">${i+1}</div>
+      <input id="ts-hole-${i+1}" type="number" min="3" max="6" value="${par}"
+        oninput="updateParTotal()"
+        style="width:36px; padding:5px 4px; border:1.5px solid #ccc; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.82rem; text-align:center; color:var(--dark); background:white;">`;
+    wrap.appendChild(div);
+  });
+  updateParTotal();
+}
+
+function updateParTotal() {
+  let total = 0;
+  for (let i = 1; i <= 18; i++) {
+    const v = parseInt(document.getElementById('ts-hole-'+i)?.value);
+    if (!isNaN(v)) total += v;
+  }
+  const el = document.getElementById('ts-par-total');
+  if (el) el.textContent = total;
+}
+
+let _subListVisible = false;
+async function toggleSubList() {
+  const wrap = document.getElementById('sub-list-wrap');
+  const btn  = document.getElementById('sub-list-toggle');
+  _subListVisible = !_subListVisible;
+  wrap.style.display = _subListVisible ? 'block' : 'none';
+  btn.textContent = _subListVisible ? 'hide subscribers' : 'show subscribers';
+  if (_subListVisible) await loadSubList();
+}
+
+async function loadSubList() {
+  const inner = document.getElementById('sub-list-inner');
+  if (!inner) return;
+  inner.innerHTML = '<div style="padding:10px 14px; color:#aaa;">Loading...</div>';
+  const { data, error } = await sb.from('push_subscriptions').select('user_email, created_at, updated_at');
+  if (error || !data || data.length === 0) {
+    inner.innerHTML = '<div style="padding:10px 14px; color:#aaa;">No subscribers yet.</div>';
+    return;
+  }
+  inner.innerHTML = data.map((s, i) => `
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 14px; ${i % 2 === 0 ? 'background:#fafaf8;' : ''}">
+      <span style="color:var(--dark);">${s.user_email || '–'}</span>
+      <span style="color:#aaa; font-size:0.7rem;">${s.updated_at ? new Date(s.updated_at).toLocaleDateString() : ''}</span>
+    </div>`).join('');
+}
+
 async function saveTournamentSettings() {
   const nameInput = document.getElementById('ts-name').value.trim();
-  const parInput  = parseInt(document.getElementById('ts-par').value);
   const cutInput  = parseInt(document.getElementById('ts-cut').value);
+  const holeInputs = Array.from({length:18}, (_,i) => parseInt(document.getElementById('ts-hole-'+(i+1))?.value));
+  if (holeInputs.some(p => isNaN(p) || p < 3 || p > 6)) { showToast('Each hole par must be 3, 4, or 5.', 'error'); return; }
+  const parTotal = holeInputs.reduce((a,b) => a+b, 0);
 
   if (!nameInput) { showToast('Tournament name cannot be empty.', 'error'); return; }
-  if (isNaN(parInput) || parInput < 68 || parInput > 74) { showToast('Par must be between 68 and 74.', 'error'); return; }
   if (isNaN(cutInput) || cutInput < 50 || cutInput > 80) { showToast('Cut rule must be between 50 and 80.', 'error'); return; }
 
   const oldName = TOURNAMENT_NAME;
-  TOURNAMENT_NAME   = nameInput;
-  TOURNAMENT_PAR    = parInput;
-  CUT_RULE          = cutInput;
+  TOURNAMENT_NAME = nameInput;
+  TOURNAMENT_PAR  = parTotal;
+  PARS            = holeInputs;
+  CUT_RULE        = cutInput;
 
   const { error } = await sb.from('admin_settings').upsert({
     id: 1,
     tournament_name: TOURNAMENT_NAME,
     tournament_par: TOURNAMENT_PAR,
+    tournament_pars: JSON.stringify(PARS),
     cut_rule: CUT_RULE,
     updated_at: new Date().toISOString()
   });
@@ -2986,6 +3063,7 @@ async function showPage(name) {
   if (typeof closeMobileNav === 'function') closeMobileNav();
   // Guard admin before activating the page
   if (name === 'admin' && !adminLoggedIn) { openAdminLogin(); return; }
+  if (name === 'admin') { setTimeout(buildHoleParInputs, 0); }
   // Guard all non-home pages behind login
   const publicPages = ['home', 'login'];
   if (!publicPages.includes(name) && !currentUser) { openAuthModal(); return; }
@@ -5370,8 +5448,9 @@ function renderAdminPanel() {
   const tsPar  = document.getElementById('ts-par');
   const tsCut  = document.getElementById('ts-cut');
   if (tsName) tsName.value = TOURNAMENT_NAME;
-  if (tsPar)  tsPar.value  = TOURNAMENT_PAR;
   if (tsCut)  tsCut.value  = CUT_RULE;
+  // Build per-hole par inputs
+  buildHoleParInputs();
   if (!document.getElementById('page-admin').classList.contains('active')) return;
   console.log('renderAdminPanel called, allTeams length:', allTeams.length);
   const currentTeams = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME);
@@ -6019,6 +6098,90 @@ async function initPushNotifications() {
         .catch(err => console.log('SW registration failed:', err));
     });
   }
+
+// ── Install to Home Screen ──
+let _installPromptEvent = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _installPromptEvent = e;
+});
+
+function showInstallModal() {
+  const modal = document.getElementById('install-modal-wrap');
+  modal.style.display = 'flex';
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+  document.getElementById('install-android').style.display = 'none';
+  document.getElementById('install-ios').style.display = 'none';
+  document.getElementById('install-default').style.display = 'none';
+
+  if (isInstalled) {
+    closeInstallModal();
+    showToast('App is already on your home screen ✓', 'success');
+    return;
+  } else if (_installPromptEvent) {
+    document.getElementById('install-android').style.display = 'block';
+  } else if (isIOS) {
+    document.getElementById('install-ios').style.display = 'block';
+  } else {
+    document.getElementById('install-default').style.display = 'block';
+  }
+}
+
+function closeInstallModal() {
+  document.getElementById('install-modal-wrap').style.display = 'none';
+}
+
+async function triggerNativeInstall() {
+  if (!_installPromptEvent) return;
+  _installPromptEvent.prompt();
+  const { outcome } = await _installPromptEvent.userChoice;
+  if (outcome === 'accepted') {
+    showToast('App installed! ✓', 'success');
+    closeInstallModal();
+  }
+  _installPromptEvent = null;
+}
+
 </script>
+<!-- Install to Home Screen Modal -->
+<div id="install-modal-wrap" onclick="if(event.target===this)closeInstallModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:white; border-radius:12px; max-width:380px; width:100%; padding:28px 24px; position:relative; box-shadow:0 8px 40px rgba(0,0,0,0.25);">
+    <button onclick="closeInstallModal()" style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.3rem; cursor:pointer; color:#aaa; line-height:1;">✕</button>
+    <div style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--green); margin-bottom:6px;">📲 Add to Home Screen</div>
+    <div style="font-size:0.8rem; color:#888; font-family:'DM Mono',monospace; margin-bottom:20px;">Required for push notifications to work</div>
+    <div id="install-android" style="display:none;">
+      <p style="font-size:0.9rem; color:#444; margin-bottom:16px; line-height:1.6;">Tap below and your phone will ask you to install — just like a regular app.</p>
+      <button onclick="triggerNativeInstall()" style="width:100%; background:var(--green); color:var(--gold); border:none; border-radius:6px; padding:13px; font-family:'DM Mono',monospace; font-size:0.85rem; letter-spacing:1px; font-weight:700; cursor:pointer;">INSTALL APP</button>
+    </div>
+    <div id="install-ios" style="display:none;">
+      <p style="font-size:0.9rem; color:#444; margin-bottom:16px; line-height:1.6;">Follow these steps:</p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:12px 14px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">1️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap the <strong>three dots ⋯</strong> in the top right corner of your browser</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:12px 14px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">2️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>Share</strong></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:12px 14px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">3️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>View More</strong></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:12px 14px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">4️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>Add to Home Screen</strong></div>
+        </div>
+      </div>
+    </div>
+    <div id="install-default" style="display:none;">
+      <p style="font-size:0.9rem; color:#444; line-height:1.6;">Open <strong>jraysswimmers.com</strong> in Safari (iPhone) or Chrome (Android) and follow the prompt to add it to your home screen.</p>
+    </div>
+  </div>
+</div>
 </body>
 </html>
