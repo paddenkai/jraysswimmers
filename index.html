@@ -1287,7 +1287,7 @@
       <div style="flex:1;">
         <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--green);">Push Notifications</div>
         <div id="master-push-status" style="font-size:0.75rem; color:#888; font-family:'DM Mono',monospace; margin-top:3px; letter-spacing:0.3px;">Get alerts for your teams</div>
-        <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; margin-top:6px; line-height:1.6;">Requires app on home screen via Safari.<br>Tap <strong style="color:var(--green);">⋯ → Share → View More → Add to Home Screen</strong></div>
+        <button onclick="showInstallModal()" id="install-hint-btn" style="display:none; margin-top:8px; background:none; border:1.5px solid #ccc; color:#888; border-radius:5px; padding:5px 12px; font-family:'DM Mono',monospace; font-size:0.72rem; cursor:pointer;">📲 Add to Home Screen</button>
       </div>
       <button onclick="toggleMasterPush()" id="master-push-btn" style="position:relative; width:52px; height:28px; cursor:pointer; background:none; border:none; padding:0; flex-shrink:0; margin-top:2px;">
         <span id="master-push-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
@@ -5939,9 +5939,11 @@ function updateMasterPushUI(enabled) {
   const track = document.getElementById('master-push-track');
   const thumb = document.getElementById('master-push-thumb');
   const status = document.getElementById('master-push-status');
+  const installBtn = document.getElementById('install-hint-btn');
+  if (installBtn) installBtn.style.display = enabled ? 'none' : 'inline-block';
   if (track) track.style.background = enabled ? 'var(--green)' : '#ccc';
   if (thumb) thumb.style.left = enabled ? '28px' : '4px';
-  if (status) status.textContent = enabled ? 'Push notifications are ON for your teams' : 'Get push alerts for your teams';
+  if (status) status.textContent = enabled ? 'Notifications ON ✓' : 'Get alerts for your teams';
   document.querySelectorAll('[id^="push-toggle-wrap-"]').forEach(el => {
     el.style.display = enabled ? 'flex' : 'none';
   });
@@ -6018,7 +6020,7 @@ async function initPushNotifications() {
 
   if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
     const status = document.getElementById('master-push-status');
-    if (status) status.textContent = 'Install the app to your home screen to enable notifications';
+    if (status) status.textContent = 'Add to home screen to enable';
     const btn = document.getElementById('master-push-btn');
     if (btn) btn.style.opacity = '0.4';
     return;
