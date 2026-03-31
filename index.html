@@ -1795,6 +1795,11 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
+let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
+let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
+let CUT_RULE        = 65;  // top N + ties — overridden by admin_settings
+let PARS            = [4,5,3,4,4,4,3,5,4, 4,4,4,3,5,4,3,4,5]; // TPC San Antonio par 72 — overridden by admin_settings
+
 // Admin-controlled settings (persisted in Supabase)
 let adminSettings = {
   registrationOpen: true,
@@ -1932,8 +1937,12 @@ async function loadSubList() {
   const inner = document.getElementById('sub-list-inner');
   if (!inner) return;
   inner.innerHTML = '<div style="padding:10px 14px; color:#aaa;">Loading...</div>';
-  const { data, error } = await sb.from('push_subscriptions').select('user_email, created_at, updated_at');
-  if (error || !data || data.length === 0) {
+  const { data, error } = await sb.from('push_subscriptions').select('*');
+  if (error) {
+    inner.innerHTML = `<div style="padding:10px 14px; color:#e74c3c; font-size:0.75rem;">Error loading subscribers: ${error.message}<br>You may need to add a Supabase RLS policy allowing admin reads on push_subscriptions.</div>`;
+    return;
+  }
+  if (!data || data.length === 0) {
     inner.innerHTML = '<div style="padding:10px 14px; color:#aaa;">No subscribers yet.</div>';
     return;
   }
@@ -2004,9 +2013,7 @@ function initAdminToggles() {
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
 const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
-let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
-let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
-let CUT_RULE        = 65;  // top N + ties — overridden by admin_settings
+
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
@@ -3767,8 +3774,7 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = [4,5,3,4,4,4,3,5,4, 4,4,4,3,5,4,3,4,5]; // TPC San Antonio par 72 (Valero Texas Open)
-
+const HOLE_PARS = [4,5,3,4,4,4,3,5,4, 4,4,4,3,5,4,3,4,5]; // TPC San Antonio fallback
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
   if (!expandRow) return;
