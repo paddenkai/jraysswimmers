@@ -4,9 +4,15 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="alternate icon" href="favicon.ico">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>J.Ray's Swimmers Pool</title>
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1a4731">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="J.Ray's">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Raleway:wght@300;400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1031,14 +1037,10 @@
       <div class="section-sub">Your team(s) have been submitted — send payment to activate your spot on the leaderboard</div>
     </div>
     <div class="payment-box">
-      <div class="payment-header">
-        <h3 id="payment-team-name">Your Entry</h3>
-        <p>J.Ray's Swimmers Pool · $25 per team</p>
-      </div>
       <div class="payment-body">
 
         <!-- Venmo payment -->
-        <div style="margin:0 0 20px; background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:8px; padding:20px;">
+        <div style="margin:0 0 16px; background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:8px; padding:20px;">
           <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:6px; text-align:center;">Teams Submitted!</div>
           <div style="font-size:0.82rem; color:#666; text-align:center; margin-bottom:16px;">Send payment via Venmo to activate your spot on the leaderboard.</div>
 
@@ -1062,6 +1064,8 @@
           <div style="margin-top:12px; font-size:0.78rem; color:#e67e22; font-family:'DM Mono',monospace; letter-spacing:0.5px; text-align:center;">⚠ Your team won't be activated until payment is received</div>
         </div>
 
+        <h3 id="payment-team-name" style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--green); margin:0 0 4px;">Your Entry</h3>
+        <p style="font-size:0.85rem; color:#888; font-family:'Libre Baskerville',serif; margin:0 0 12px;">J.Ray's Swimmers Pool · $25 per team</p>
         <div id="order-lines"></div>
         <div class="order-total"><span>Total</span><span id="order-total-val">$25.00</span></div>
 
@@ -1096,10 +1100,10 @@
         <thead>
           <tr>
             <th style="width:50px; text-align:center; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">RANK</th>
-            <th style="text-align:left; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TEAM</th>
+            <th style="text-align:left; padding-left:16px; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TEAM</th>
             <th style="text-align:left; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">SWIMMER</th>
             <th style="text-align:left; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">GOLFERS</th>
-            <th style="text-align:right; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TOTAL PROJECTED EARNINGS</th>
+            <th style="text-align:right; padding-right:16px; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TOTAL PROJECTED EARNINGS</th>
             <th style="width:44px; background:#1a4731;"></th>
           </tr>
         </thead>
@@ -1232,9 +1236,11 @@
   </div>
 
   <div id="page-stats" class="page">
-    <div style="max-width:900px; margin:0 auto; padding:32px 16px;">
-      <h2 style="font-family:'Libre Baskerville',serif; color:var(--green); margin-bottom:8px;">Player Stats</h2>
-      <p style="color:#888; font-size:0.9rem; margin-bottom:24px;">How many times each golfer has been selected across all pool entries.</p>
+    <div class="section-header">
+      <div class="section-title">Player Stats</div>
+      <div class="section-sub">How many times each golfer has been selected across all pool entries</div>
+    </div>
+    <div style="max-width:900px; margin:0 auto;">
       <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
         <button onclick="renderStats('picks')" id="stats-sort-picks" style="padding:8px 18px; font-size:0.82rem; font-family:'DM Mono',monospace; border:2px solid var(--green); border-radius:4px; cursor:pointer; letter-spacing:0.5px;">Most Picked</button>
         <button onclick="renderStats('alpha')" id="stats-sort-alpha" style="padding:8px 18px; font-size:0.82rem; font-family:'DM Mono',monospace; border:2px solid var(--green); border-radius:4px; cursor:pointer; letter-spacing:0.5px;">A–Z</button>
@@ -3257,6 +3263,7 @@ function renderLeaderboard() {
 
   // Sort by earnings to establish rank
   const rankedTeams = [...paidTeams].sort((a,b) => getTeamEarnings(b) - getTeamEarnings(a));
+  const maxEarnings = rankedTeams.length > 0 ? getTeamEarnings(rankedTeams[0]) : 0;
 
   // Build golf-style position map (accounts for ties)
   const positionMap = new Map();
@@ -3308,11 +3315,22 @@ function renderLeaderboard() {
     const earningsDisplay = hasLiveData
       ? `<span class="earnings-display">$${Math.round(earnings).toLocaleString()}</span>`
       : `<span style="color:#bbb; font-family:'DM Mono',monospace; font-size:0.82rem;">Awaiting scores</span>`;
-    return `<tr class="${isMyTeam ? 'my-team-row' : ''}" style="border-top:2px solid rgba(26,71,49,0.18);">
-      <td style="text-align:center">${rankDisplay}</td>
-      <td style="text-align:center"><strong>${team.name}</strong>${isMyTeam ? ' <span style="font-size:0.7rem;color:var(--gold);font-family:DM Mono,monospace;">YOU</span>' : ''}</td>
-      <td style="text-align:center"><div style="font-size:0.88rem;">${team.owner_name || team.name}</div></td>
-      <td style="text-align:center"><div class="team-golfers-mini">${adminSettings.showPicks || (currentUser && team.owner === currentUser.email) ? [...team.golfers].sort((a,b) => { const ga=GOLFERS.find(g=>g.id===a), gb=GOLFERS.find(g=>g.id===b); const getPosSort = g => { if (!g.liveData?.posDisplay || g.liveData?.posDisplay === '–') return 999; if (g.liveData?.wd || g.withdrawn) return 998; if (g.cutMissed) return 997; const p = g.liveData.posDisplay.replace(/^T/,''); const n = parseInt(p); return isNaN(n) ? 996 : n; }; return getPosSort(ga||{}) - getPosSort(gb||{}); }).map((id, i, arr) => {
+
+    const leftBorderColor = pos===1 && !isTied ? 'var(--gold)' : pos===2 && !isTied ? '#b0b0b0' : pos===3 && !isTied ? '#cd7f32' : 'transparent';
+    const rowBg = isMyTeam ? 'rgba(201,168,76,0.18)' : '';
+    const barPct = hasLiveData && maxEarnings > 0 ? Math.round((earnings / maxEarnings) * 100) : 0;
+    // Heat map: gold at 100%, warm green → teal → blue as pct drops
+    const barColor = barPct === 100 ? '#c9a84c' : barPct >= 90 ? '#52b788' : barPct >= 75 ? '#2a9d8f' : barPct >= 55 ? '#2196a6' : '#4a90c4';
+    const isLeader = barPct === 100;
+    const earningsBar = hasLiveData ? `<div style="height:${isLeader ? '6' : '3'}px; background:rgba(26,71,49,0.08); border-radius:2px; margin-top:4px; overflow:hidden; ${isLeader ? 'box-shadow:0 0 6px rgba(201,168,76,0.6);' : ''}">
+      <div style="height:100%; width:${barPct}%; background:${barColor}; border-radius:2px; transition:width 0.6s ease; ${isLeader ? 'box-shadow:0 0 8px rgba(201,168,76,0.8);' : ''}"></div>
+    </div>` : '';
+
+    return `<tr class="${isMyTeam ? 'my-team-row' : ''}" style="border-top:2px solid rgba(26,71,49,0.18); background:${rowBg};">
+      <td style="text-align:center; border-left:4px solid ${leftBorderColor};">${rankDisplay}</td>
+      <td style="text-align:left; padding-left:16px;"><strong>${team.name}</strong>${isMyTeam ? ' <span style="font-size:0.7rem;color:var(--gold);font-family:DM Mono,monospace;">YOU</span>' : ''}</td>
+      <td style="text-align:left;"><div style="font-size:0.88rem;">${team.owner_name || team.name}</div></td>
+      <td style="text-align:left;"><div class="team-golfers-mini">${adminSettings.showPicks || (currentUser && team.owner === currentUser.email) ? [...team.golfers].sort((a,b) => { const ga=GOLFERS.find(g=>g.id===a), gb=GOLFERS.find(g=>g.id===b); const getPosSort = g => { if (!g.liveData?.posDisplay || g.liveData?.posDisplay === '–') return 999; if (g.liveData?.wd || g.withdrawn) return 998; if (g.cutMissed) return 997; const p = g.liveData.posDisplay.replace(/^T/,''); const n = parseInt(p); return isNaN(n) ? 996 : n; }; return getPosSort(ga||{}) - getPosSort(gb||{}); }).map((id, i, arr) => {
         const g = GOLFERS.find(g => g.id === id);
         if (!g) return '';
         const parts = g.name.trim().split(' ');
@@ -3322,15 +3340,15 @@ function renderLeaderboard() {
         const pos = g.liveData?.posDisplay;
         const isWD = g.liveData?.wd || g.withdrawn;
         const posStr = !isWD && hasLiveData && pos && pos !== '–'
-          ? `<span style="color:var(--gold); font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">${pos}</span>`
-          : isWD ? `<span style="color:var(--gold); font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">WD</span>` : '';
+          ? `<span id="gfa-${team.id}-${g.id}" style="color:var(--gold); font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">${pos}</span>`
+          : isWD ? `<span id="gfa-${team.id}-${g.id}" style="color:var(--gold); font-size:0.72rem; margin-right:5px; min-width:28px; display:inline-block;">WD</span>` : `<span id="gfa-${team.id}-${g.id}"></span>`;
         const earningsOrWD = isWD
           ? `<span style="color:rgb(0,20,40); margin-left:6px;">$0</span>`
           : (hasLiveData ? earned : '');
         const border = i < arr.length - 1 ? 'border-bottom:1px solid rgba(0,0,0,0.07); padding-bottom:3px; margin-bottom:3px;' : '';
-        return `<div id="gf-${team.id}-${g.id}" style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}<span class="golfer-earn-arrow" id="gea-${team.id}-${g.id}" style="font-size:0.65rem; margin-left:3px; vertical-align:middle;"></span><span class="golfer-pos-arrow" id="gfa-${team.id}-${g.id}"></span></div>`;
+        return `<div id="gf-${team.id}-${g.id}" style="${border} white-space:nowrap;">${posStr}${shortName}${earningsOrWD}<span class="golfer-earn-arrow" id="gea-${team.id}-${g.id}" style="font-size:0.65rem; margin-left:3px; vertical-align:middle;"></span></div>`;
       }).filter(Boolean).join('') : '<span style="color:#bbb;font-style:italic;font-size:0.78rem;">Hidden until tournament starts</span>'}</div></td>
-      <td style="text-align:center">${earningsDisplay}</td>
+      <td style="text-align:right; padding-right:16px;">${earningsDisplay}${earningsBar}</td>
       <td style="text-align:center; padding:4px;">
         <button
           onclick="toggleH2HTeam('${team.id}')"
@@ -5613,5 +5631,15 @@ function renderH2H() {
   <div id="h2h-content" style="padding:14px 18px 18px;"></div>
 </div>
 
+<!-- PWA Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.log('SW registration failed:', err));
+    });
+  }
+</script>
 </body>
 </html>
