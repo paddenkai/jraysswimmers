@@ -2732,50 +2732,55 @@ function showHistoryList() {
 }
 
 async function initApp() {
-  // Check if this is a password reset redirect from Supabase
-  const hash = window.location.hash;
-  if (hash && hash.includes('type=recovery')) {
-    const { data: { session }, error } = await sb.auth.getSession();
-    if (session) {
-      openModal('password-reset-modal');
-      await loadAdminSettings();
-      await loadTeams();
-      updateNav();
-      showPage('home');
-      updateStats();
-      if (TOURNAMENT_ACTIVE) startLiveFetching();
-      return;
-    }
-  }
-
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    const { data: profile } = await sb.from('profiles').select('name').eq('id', session.user.id).single();
-    currentUser = { id: session.user.id, email: session.user.email, name: profile?.name || session.user.email };
-  }
-  await loadAdminSettings();
-  await loadTeams();
-  updateNav();
-
-  // Handle invite link — ?join in URL jumps straight to builder
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.has('join')) {
-    if (currentUser) {
-      showPage(adminSettings.registrationOpen ? 'builder' : 'myteams');
-    } else {
-      showPage('home');
-      setTimeout(() => openModal('auth-modal'), 400);
-    }
-  } else {
-    showPage('home');
-  }
-
-  updateStats();
+  // Always show home immediately — don't block on Supabase
+  showPage('home');
   startCountdown();
-  if (TOURNAMENT_ACTIVE) startLiveFetching();
-  startChatNotificationListener();
-  setTimeout(initPushNotifications, 2000);
-  checkAdminBadge();
+
+  try {
+    // Check if this is a password reset redirect from Supabase
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        openModal('password-reset-modal');
+        await loadAdminSettings();
+        await loadTeams();
+        updateNav();
+        updateStats();
+        if (TOURNAMENT_ACTIVE) startLiveFetching();
+        return;
+      }
+    }
+
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      const { data: profile } = await sb.from('profiles').select('name').eq('id', session.user.id).single();
+      currentUser = { id: session.user.id, email: session.user.email, name: profile?.name || session.user.email };
+    }
+    await loadAdminSettings();
+    await loadTeams();
+    updateNav();
+
+    // Handle invite link — ?join in URL jumps straight to builder
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('join')) {
+      if (currentUser) {
+        showPage(adminSettings.registrationOpen ? 'builder' : 'myteams');
+      } else {
+        setTimeout(() => openModal('auth-modal'), 400);
+      }
+    }
+
+    updateStats();
+    if (TOURNAMENT_ACTIVE) startLiveFetching();
+    startChatNotificationListener();
+    setTimeout(initPushNotifications, 2000);
+    checkAdminBadge();
+  } catch(e) {
+    console.warn('initApp: Supabase unavailable (local file?)', e);
+    updateNav();
+    updateStats();
+  }
 }
 
 // ─── COUNTDOWN TO FIRST TEE ───
