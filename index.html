@@ -5725,18 +5725,30 @@ function updateMasterPushUI(enabled) {
 }
 
 async function toggleMasterPush() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
-    showToast('Push notifications are not supported on this browser. Try adding the app to your home screen first.', '');
+  if (!('Notification' in window)) {
+    showToast('Notifications not supported on this browser.', '');
     return;
   }
-  const reg = await navigator.serviceWorker.ready;
-  const existingSub = await reg.pushManager.getSubscription();
-  const isOn = Notification.permission === 'granted' && !!existingSub;
+
+  // Check current state
+  let isOn = false;
+  if (Notification.permission === 'granted' && 'serviceWorker' in navigator && 'PushManager' in window) {
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      isOn = !!sub;
+    } catch(e) { isOn = false; }
+  }
 
   if (!isOn) {
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') {
-      showToast('Notifications blocked — enable them in browser/device settings.', ''); return;
+      showToast('Notifications blocked — enable them in your browser settings.', '');
+      return;
+    }
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      showToast('Push not fully supported here — try the installed app.', '');
+      return;
     }
     const ok = await subscribeToPush();
     if (ok) {
@@ -5749,7 +5761,9 @@ async function toggleMasterPush() {
         applyPushPrefUI(team.id);
       }
       updateMasterPushUI(true);
-      showToast('📲 Push notifications enabled for all your teams!', 'success');
+      showToast('📲 Push notifications enabled!', 'success');
+    } else {
+      showToast('Could not enable push — try refreshing and trying again.', 'error');
     }
   } else {
     await unsubscribeFromPush();
@@ -5766,11 +5780,19 @@ async function toggleMasterPush() {
 }
 
 async function initPushNotifications() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window) || !currentUser) {
-    const bar = document.getElementById('master-push-bar');
-    if (bar) bar.style.display = 'none';
+  if (!currentUser) return;
+  const bar = document.getElementById('master-push-bar');
+  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+    // Show bar but indicate not supported
+    if (bar) {
+      const status = document.getElementById('master-push-status');
+      if (status) status.textContent = 'Not supported on this browser — install the app to your home screen first';
+      const btn = document.getElementById('master-push-btn');
+      if (btn) btn.style.opacity = '0.4';
+    }
     return;
   }
+  if (bar) bar.style.display = 'flex';
   if (Notification.permission === 'granted') {
     const reg = await navigator.serviceWorker.ready;
     const sub = await reg.pushManager.getSubscription();
