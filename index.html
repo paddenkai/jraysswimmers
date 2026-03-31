@@ -840,8 +840,8 @@
         <div style="text-align:center; margin-bottom:44px;">
 
           <!-- Tournament title -->
-          <div style="font-family:'EB Garamond',serif; font-size:clamp(2.4rem,6vw,4rem); font-weight:600; color:var(--gold); letter-spacing:4px; text-transform:uppercase; line-height:1; margin-bottom:10px;">The Masters</div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(201,168,76,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Augusta National · April 9–12, 2026</div>
+          <div style="font-family:'EB Garamond',serif; font-size:clamp(2.4rem,6vw,4rem); font-weight:600; color:var(--gold); letter-spacing:4px; text-transform:uppercase; line-height:1; margin-bottom:10px;">Valero Texas Open</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(201,168,76,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">TPC San Antonio · April 2–5, 2026</div>
 
           <!-- Countdown timer -->
           <div id="masters-countdown" style="margin-bottom:16px; text-align:center;">
@@ -891,7 +891,7 @@
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Draft Your Teams</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Pick 5 golfers from the The Masters 2026 field. Enter as many teams as you want — more teams, more chances to win.</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Pick 5 golfers from the The Valero Texas Open 2026 field. Enter as many teams as you want — more teams, more chances to win.</div>
           </div>
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
@@ -901,7 +901,7 @@
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Most Earnings Wins</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at Augusta National. Highest total takes the pot.</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at TPC San Antonio. Highest total takes the pot.</div>
           </div>
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
@@ -1120,7 +1120,7 @@
   <div id="page-tournament" class="page">
     <div class="section-header">
       <div class="section-title">Live Scores</div>
-      <div class="section-sub">Live The Masters 2026 scores</div>
+      <div class="section-sub">Live Valero Texas Open 2026 scores</div>
     </div>
     <div style="margin-bottom:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1139,7 +1139,7 @@
       </div>
     </div>
     <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-      <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 50 + ties</div>
+      <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 65 + ties</div>
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
     </div>
     <div style="border:2px solid #1a4731; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
@@ -1485,7 +1485,45 @@
           </label>
         </div>
 
+
       </div>
+    </div>
+
+    <!-- Tournament Settings -->
+    <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; padding:20px; margin-bottom:24px;">
+      <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:16px;">🏆 Tournament Settings</div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+
+        <!-- Tournament Name -->
+        <div style="padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:6px;">Tournament Name</div>
+          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Must match the tournament column in the DB — changing this starts a new pool</div>
+          <input id="ts-name" type="text" placeholder="e.g. Valero Texas Open 2026"
+            style="width:100%; padding:9px 12px; border:1.5px solid #ccc; border-radius:5px; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--dark); background:white; box-sizing:border-box;">
+        </div>
+
+        <!-- Par -->
+        <div style="padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:6px;">Course Par</div>
+          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Used to calculate scores relative to par on the leaderboard</div>
+          <input id="ts-par" type="number" min="68" max="74" placeholder="72"
+            style="width:100px; padding:9px 12px; border:1.5px solid #ccc; border-radius:5px; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--dark); background:white;">
+        </div>
+
+        <!-- Cut Rule -->
+        <div style="padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:6px;">Cut Rule (top N + ties)</div>
+          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Number of players who make the cut — e.g. 65 = top 65 + ties</div>
+          <input id="ts-cut" type="number" min="50" max="80" placeholder="65"
+            style="width:100px; padding:9px 12px; border:1.5px solid #ccc; border-radius:5px; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--dark); background:white;">
+        </div>
+
+        <button onclick="saveTournamentSettings()"
+          style="align-self:flex-start; background:var(--green); color:var(--gold); border:none; border-radius:5px; padding:10px 24px; font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:1px; font-weight:700; cursor:pointer;">
+          💾 SAVE SETTINGS
+        </button>
+      </div>
+    </div>
     <!-- Lock Tournament Results -->
     <div id="lock-tournament-panel" style="background:#fff8f0; border:1.5px solid var(--gold); border-radius:8px; padding:16px 20px; margin-bottom:20px;">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
@@ -1765,6 +1803,23 @@ async function loadAdminSettings() {
     updateToggleUI('toggle-official-cut', adminSettings.officialCut);
     adminSettings.showProjectedWinner = data.show_projected_winner || false;
     adminSettings.showHistory = data.show_history !== undefined ? data.show_history : true;
+    // Tournament settings
+    if (data.tournament_name) {
+      TOURNAMENT_NAME = data.tournament_name;
+    }
+    if (data.tournament_par) {
+      TOURNAMENT_PAR = data.tournament_par;
+    }
+    if (data.cut_rule) {
+      CUT_RULE = data.cut_rule;
+    }
+    // Populate inputs if admin panel is already visible
+    const tsName = document.getElementById('ts-name');
+    const tsPar  = document.getElementById('ts-par');
+    const tsCut  = document.getElementById('ts-cut');
+    if (tsName) tsName.value = TOURNAMENT_NAME;
+    if (tsPar)  tsPar.value  = TOURNAMENT_PAR;
+    if (tsCut)  tsCut.value  = CUT_RULE;
   }
 }
 
@@ -1796,6 +1851,9 @@ async function saveAdminSettings() {
     show_cut_line: adminSettings.showCutLine,
     show_projected_winner: adminSettings.showProjectedWinner,
     show_history: adminSettings.showHistory,
+    tournament_name: TOURNAMENT_NAME,
+    tournament_par: TOURNAMENT_PAR,
+    cut_rule: CUT_RULE,
     updated_at: new Date().toISOString()
   });
   if (error) { showToast('Error saving settings.', 'error'); return; }
@@ -1810,6 +1868,40 @@ async function saveAdminSettings() {
   renderLeaderboard();
   renderMyTeams();
   showToast('Settings saved!', 'success');
+}
+
+async function saveTournamentSettings() {
+  const nameInput = document.getElementById('ts-name').value.trim();
+  const parInput  = parseInt(document.getElementById('ts-par').value);
+  const cutInput  = parseInt(document.getElementById('ts-cut').value);
+
+  if (!nameInput) { showToast('Tournament name cannot be empty.', 'error'); return; }
+  if (isNaN(parInput) || parInput < 68 || parInput > 74) { showToast('Par must be between 68 and 74.', 'error'); return; }
+  if (isNaN(cutInput) || cutInput < 50 || cutInput > 80) { showToast('Cut rule must be between 50 and 80.', 'error'); return; }
+
+  const oldName = TOURNAMENT_NAME;
+  TOURNAMENT_NAME   = nameInput;
+  TOURNAMENT_PAR    = parInput;
+  CUT_RULE          = cutInput;
+
+  const { error } = await sb.from('admin_settings').upsert({
+    id: 1,
+    tournament_name: TOURNAMENT_NAME,
+    tournament_par: TOURNAMENT_PAR,
+    cut_rule: CUT_RULE,
+    updated_at: new Date().toISOString()
+  });
+
+  if (error) {
+    showToast('Error saving tournament settings: ' + error.message, 'error');
+    // Roll back
+    TOURNAMENT_NAME = oldName;
+    return;
+  }
+
+  showToast('Tournament settings saved!', 'success');
+  renderLeaderboard();
+  renderAdminPanel();
 }
 
 function updateToggleUI(id, isOn) {
@@ -1835,7 +1927,9 @@ function initAdminToggles() {
 // TOURNAMENT MODE
 // ═══════════════════════════════════════════════════════
 const TOURNAMENT_ACTIVE = true; // true = show live scores tab & leaderboard earnings
-const TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB
+let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
+let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
+let CUT_RULE        = 65;  // top N + ties — overridden by admin_settings
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
@@ -1926,99 +2020,135 @@ let fetchInterval = null;
 // Feb 26 – Mar 1, 2026 · Purse: $9,600,000
 // ═══════════════════════════════════════════════════════
 const GOLFERS = [
-  { id: 1, name: "Scottie Scheffler", wgr: 1, earnings: 0, teeTime: "" },
-  { id: 2, name: "Jon Rahm", wgr: 28, earnings: 0, teeTime: "" },
-  { id: 3, name: "Rory McIlroy", wgr: 2, earnings: 0, teeTime: "" },
-  { id: 4, name: "Xander Schauffele", wgr: 5, earnings: 0, teeTime: "" },
-  { id: 5, name: "Cameron Young", wgr: 3, earnings: 0, teeTime: "" },
-  { id: 6, name: "Matt Fitzpatrick", wgr: 6, earnings: 0, teeTime: "" },
-  { id: 7, name: "Tommy Fleetwood", wgr: 4, earnings: 0, teeTime: "" },
-  { id: 8, name: "Russell Henley", wgr: 9, earnings: 0, teeTime: "" },
-  { id: 9, name: "Bryson DeChambeau", wgr: 24, earnings: 0, teeTime: "" },
-  { id: 10, name: "Robert MacIntyre", wgr: 11, earnings: 0, teeTime: "" },
-  { id: 11, name: "Ludvig Aberg", wgr: 18, earnings: 0, teeTime: "" },
-  { id: 12, name: "Hideki Matsuyama", wgr: 14, earnings: 0, teeTime: "" },
-  { id: 13, name: "Collin Morikawa", wgr: 8, earnings: 0, teeTime: "" },
-  { id: 14, name: "Akshay Bhatia", wgr: 22, earnings: 0, teeTime: "" },
-  { id: 15, name: "Si Woo Kim", wgr: 29, earnings: 0, teeTime: "" },
-  { id: 16, name: "Jacob Bridgeman", wgr: 17, earnings: 0, teeTime: "" },
-  { id: 17, name: "Patrick Cantlay", wgr: 34, earnings: 0, teeTime: "" },
-  { id: 18, name: "Maverick McNealy", wgr: 26, earnings: 0, teeTime: "" },
-  { id: 19, name: "Sam Burns", wgr: 33, earnings: 0, teeTime: "" },
-  { id: 20, name: "Min Woo Lee", wgr: 31, earnings: 0, teeTime: "" },
-  { id: 21, name: "Jake Knapp", wgr: 42, earnings: 0, teeTime: "" },
-  { id: 22, name: "Viktor Hovland", wgr: 21, earnings: 0, teeTime: "" },
-  { id: 23, name: "Alex Noren", wgr: 19, earnings: 0, teeTime: "" },
-  { id: 24, name: "Sepp Straka", wgr: 12, earnings: 0, teeTime: "" },
-  { id: 25, name: "Ben Griffin", wgr: 16, earnings: 0, teeTime: "" },
-  { id: 26, name: "Harris English", wgr: 20, earnings: 0, teeTime: "" },
-  { id: 27, name: "Shane Lowry", wgr: 32, earnings: 0, teeTime: "" },
-  { id: 28, name: "Jordan Spieth", wgr: 59, earnings: 0, teeTime: "" },
-  { id: 29, name: "Harry Hall", wgr: 62, earnings: 0, teeTime: "" },
-  { id: 30, name: "Adam Scott", wgr: 52, earnings: 0, teeTime: "" },
-  { id: 31, name: "Ryan Gerard", wgr: 27, earnings: 0, teeTime: "" },
-  { id: 32, name: "Chris Gotterup", wgr: 10, earnings: 0, teeTime: "" },
-  { id: 33, name: "J.J. Spaun", wgr: 13, earnings: 0, teeTime: "" },
-  { id: 34, name: "Kurt Kitayama", wgr: 35, earnings: 0, teeTime: "" },
-  { id: 35, name: "Justin Rose", wgr: 7, earnings: 0, teeTime: "" },
-  { id: 36, name: "Nicolai Hojgaard", wgr: 47, earnings: 0, teeTime: "" },
-  { id: 37, name: "Justin Thomas", wgr: 15, earnings: 0, teeTime: "" },
-  { id: 38, name: "Corey Conners", wgr: 40, earnings: 0, teeTime: "" },
-  { id: 39, name: "Nick Taylor", wgr: 64, earnings: 0, teeTime: "" },
-  { id: 40, name: "Keegan Bradley", wgr: 25, earnings: 0, teeTime: "" },
-  { id: 41, name: "Patrick Reed", wgr: 23, earnings: 0, teeTime: "" },
-  { id: 42, name: "Jason Day", wgr: 41, earnings: 0, teeTime: "" },
-  { id: 43, name: "Ryan Fox", wgr: 45, earnings: 0, teeTime: "" },
-  { id: 44, name: "Rasmus Hojgaard", wgr: 53, earnings: 0, teeTime: "" },
-  { id: 45, name: "Daniel Berger", wgr: 37, earnings: 0, teeTime: "" },
-  { id: 46, name: "Sam Stevens", wgr: 50, earnings: 0, teeTime: "" },
-  { id: 47, name: "Carlos Ortiz", wgr: 153, earnings: 0, teeTime: "" },
-  { id: 48, name: "Tyrrell Hatton", wgr: 30, earnings: 0, teeTime: "" },
-  { id: 49, name: "Matt McCarty", wgr: 44, earnings: 0, teeTime: "" },
-  { id: 50, name: "Max Greyserman", wgr: 58, earnings: 0, teeTime: "" },
-  { id: 51, name: "Nico Echavarria", wgr: 38, earnings: 0, teeTime: "" },
-  { id: 52, name: "Aaron Rai", wgr: 39, earnings: 0, teeTime: "" },
-  { id: 53, name: "Casey Jarvis", wgr: 69, earnings: 0, teeTime: "" },
-  { id: 54, name: "Wyndham Clark", wgr: 72, earnings: 0, teeTime: "" },
-  { id: 55, name: "Kristoffer Reitan", wgr: 48, earnings: 0, teeTime: "" },
-  { id: 56, name: "Marco Penge", wgr: 36, earnings: 0, teeTime: "" },
-  { id: 57, name: "Brooks Koepka", wgr: 162, earnings: 0, teeTime: "" },
-  { id: 58, name: "Haotong Li", wgr: 78, earnings: 0, teeTime: "" },
-  { id: 59, name: "Brian Harman", wgr: 46, earnings: 0, teeTime: "" },
-  { id: 60, name: "Cameron Smith", wgr: 207, earnings: 0, teeTime: "" },
-  { id: 61, name: "Tom McKibbin", wgr: 97, earnings: 0, teeTime: "" },
-  { id: 62, name: "Sungjae Im", wgr: 67, earnings: 0, teeTime: "" },
-  { id: 63, name: "Rasmus Neergaard-Petersen", wgr: 66, earnings: 0, teeTime: "" },
-  { id: 64, name: "Michael Kim", wgr: 54, earnings: 0, teeTime: "" },
-  { id: 65, name: "Max Homa", wgr: 148, earnings: 0, teeTime: "" },
-  { id: 66, name: "Andrew Novak", wgr: 49, earnings: 0, teeTime: "" },
-  { id: 67, name: "Sami Valimaki", wgr: 55, earnings: 0, teeTime: "" },
-  { id: 68, name: "Michael Brennan", wgr: 43, earnings: 0, teeTime: "" },
-  { id: 69, name: "Sergio Garcia", wgr: 337, earnings: 0, teeTime: "" },
-  { id: 70, name: "Gary Woodland", wgr: 139, earnings: 0, teeTime: "" },
-  { id: 71, name: "Johnny Keefer", wgr: 74, earnings: 0, teeTime: "" },
-  { id: 72, name: "Dustin Johnson", wgr: null, earnings: 0, teeTime: "" },
-  { id: 73, name: "Charl Schwartzel", wgr: null, earnings: 0, teeTime: "" },
-  { id: 74, name: "Zach Johnson", wgr: 306, earnings: 0, teeTime: "" },
-  { id: 75, name: "Bubba Watson", wgr: null, earnings: 0, teeTime: "" },
-  { id: 76, name: "Aldrich Potgieter", wgr: 77, earnings: 0, teeTime: "" },
-  { id: 77, name: "Brian Campbell", wgr: 102, earnings: 0, teeTime: "" },
-  { id: 78, name: "Phil Mickelson", wgr: null, earnings: 0, teeTime: "" },
-  { id: 79, name: "Davis Riley", wgr: 114, earnings: 0, teeTime: "" },
-  { id: 80, name: "Fred Couples", wgr: null, earnings: 0, teeTime: "" },
-  { id: 81, name: "Naoyuki Kataoka", wgr: 359, earnings: 0, teeTime: "" },
-  { id: 82, name: "Angel Cabrera", wgr: null, earnings: 0, teeTime: "" },
-  { id: 83, name: "Jackson Herrington", wgr: null, earnings: 0, teeTime: "" },
-  { id: 84, name: "Danny Willett", wgr: 399, earnings: 0, teeTime: "" },
-  { id: 85, name: "Vijay Singh", wgr: null, earnings: 0, teeTime: "" },
-  { id: 86, name: "Tiger Woods", wgr: null, earnings: 0, teeTime: "" },
-  { id: 87, name: "Ethan Fang", wgr: null, earnings: 0, teeTime: "" },
-  { id: 88, name: "Brandon Holtz", wgr: null, earnings: 0, teeTime: "" },
-  { id: 89, name: "Mike Weir", wgr: null, earnings: 0, teeTime: "" },
-  { id: 90, name: "Fifa Laopakdee", wgr: null, earnings: 0, teeTime: "" },
-  { id: 91, name: "Mateo Pulcini", wgr: null, earnings: 0, teeTime: "" },
-  { id: 92, name: "Jose Maria Olazabal", wgr: null, earnings: 0, teeTime: "" },
-  { id: 93, name: "Mason Howell", wgr: null, earnings: 0, teeTime: "" },
+  { id: 1, name: "Ludvig Aberg", wgr: 20, earnings: 0, teeTime: "" },
+  { id: 2, name: "Zach Bauchou", wgr: 179, earnings: 0, teeTime: "" },
+  { id: 3, name: "Daniel Berger", wgr: 53, earnings: 0, teeTime: "" },
+  { id: 4, name: "Christiaan Bezuidenhout", wgr: 88, earnings: 0, teeTime: "" },
+  { id: 5, name: "Chandler Blanchet", wgr: 136, earnings: 0, teeTime: "" },
+  { id: 6, name: "Dan Brown", wgr: 76, earnings: 0, teeTime: "" },
+  { id: 7, name: "Rafael Campos", wgr: null, earnings: 0, teeTime: "" },
+  { id: 8, name: "Ricky Castillo", wgr: 160, earnings: 0, teeTime: "" },
+  { id: 9, name: "Bud Cauley", wgr: 78, earnings: 0, teeTime: "" },
+  { id: 10, name: "Davis Chatfield", wgr: null, earnings: 0, teeTime: "" },
+  { id: 11, name: "Luke Clanton", wgr: null, earnings: 0, teeTime: "" },
+  { id: 12, name: "Eric Cole", wgr: 117, earnings: 0, teeTime: "" },
+  { id: 13, name: "Pierceson Coody", wgr: 44, earnings: 0, teeTime: "" },
+  { id: 14, name: "Zecheng Dou", wgr: 185, earnings: 0, teeTime: "" },
+  { id: 15, name: "Adrien Dumont de Chassart", wgr: 162, earnings: 0, teeTime: "" },
+  { id: 16, name: "Nick Dunlap", wgr: 199, earnings: 0, teeTime: "" },
+  { id: 17, name: "Austin Eckroat", wgr: 147, earnings: 0, teeTime: "" },
+  { id: 18, name: "A.J. Ewart", wgr: null, earnings: 0, teeTime: "" },
+  { id: 19, name: "Tony Finau", wgr: 105, earnings: 0, teeTime: "" },
+  { id: 20, name: "Patrick Fishburn", wgr: 145, earnings: 0, teeTime: "" },
+  { id: 21, name: "Steven Fisk", wgr: 118, earnings: 0, teeTime: "" },
+  { id: 22, name: "Tommy Fleetwood", wgr: 4, earnings: 0, teeTime: "" },
+  { id: 23, name: "David Ford", wgr: null, earnings: 0, teeTime: "" },
+  { id: 24, name: "Rickie Fowler", wgr: 75, earnings: 0, teeTime: "" },
+  { id: 25, name: "Brice Garnett", wgr: null, earnings: 0, teeTime: "" },
+  { id: 26, name: "Ryan Gerard", wgr: 24, earnings: 0, teeTime: "" },
+  { id: 27, name: "Doug Ghim", wgr: 164, earnings: 0, teeTime: "" },
+  { id: 28, name: "Lucas Glover", wgr: 72, earnings: 0, teeTime: "" },
+  { id: 29, name: "Emiliano Grillo", wgr: 110, earnings: 0, teeTime: "" },
+  { id: 30, name: "Brian Harman", wgr: 46, earnings: 0, teeTime: "" },
+  { id: 31, name: "Russell Henley", wgr: 6, earnings: 0, teeTime: "" },
+  { id: 32, name: "Garrick Higgo", wgr: 69, earnings: 0, teeTime: "" },
+  { id: 33, name: "Joe Highsmith", wgr: 126, earnings: 0, teeTime: "" },
+  { id: 34, name: "Kensei Hirata", wgr: 165, earnings: 0, teeTime: "" },
+  { id: 35, name: "Ryo Hisatsune", wgr: 78, earnings: 0, teeTime: "" },
+  { id: 36, name: "Lee Hodges", wgr: 130, earnings: 0, teeTime: "" },
+  { id: 37, name: "Rico Hoey", wgr: 73, earnings: 0, teeTime: "" },
+  { id: 38, name: "Charley Hoffman", wgr: null, earnings: 0, teeTime: "" },
+  { id: 39, name: "Tom Hoge", wgr: 96, earnings: 0, teeTime: "" },
+  { id: 40, name: "Nicolai Hojgaard", wgr: 50, earnings: 0, teeTime: "" },
+  { id: 41, name: "Max Homa", wgr: 149, earnings: 0, teeTime: "" },
+  { id: 42, name: "Billy Horschel", wgr: 71, earnings: 0, teeTime: "" },
+  { id: 43, name: "Beau Hossler", wgr: 150, earnings: 0, teeTime: "" },
+  { id: 44, name: "Mark Hubbard", wgr: 132, earnings: 0, teeTime: "" },
+  { id: 45, name: "Mackenzie Hughes", wgr: 104, earnings: 0, teeTime: "" },
+  { id: 46, name: "Stephan Jaeger", wgr: 101, earnings: 0, teeTime: "" },
+  { id: 47, name: "Takumi Kanaya", wgr: 123, earnings: 0, teeTime: "" },
+  { id: 48, name: "Jeffrey Kang", wgr: null, earnings: 0, teeTime: "" },
+  { id: 49, name: "Johnny Keefer", wgr: 57, earnings: 0, teeTime: "" },
+  { id: 50, name: "Michael Kim", wgr: 41, earnings: 0, teeTime: "" },
+  { id: 51, name: "S.H. Kim", wgr: 148, earnings: 0, teeTime: "" },
+  { id: 52, name: "Si Woo Kim", wgr: 26, earnings: 0, teeTime: "" },
+  { id: 53, name: "Tom Kim", wgr: 116, earnings: 0, teeTime: "" },
+  { id: 54, name: "Chris Kirk", wgr: 93, earnings: 0, teeTime: "" },
+  { id: 55, name: "Patton Kizzire", wgr: null, earnings: 0, teeTime: "" },
+  { id: 56, name: "Christo Lamprecht", wgr: 172, earnings: 0, teeTime: "" },
+  { id: 57, name: "Hank Lebioda", wgr: null, earnings: 0, teeTime: "" },
+  { id: 58, name: "K.H. Lee", wgr: null, earnings: 0, teeTime: "" },
+  { id: 59, name: "Haotong Li", wgr: 68, earnings: 0, teeTime: "" },
+  { id: 60, name: "David Lipsky", wgr: 144, earnings: 0, teeTime: "" },
+  { id: 61, name: "Robert MacIntyre", wgr: 8, earnings: 0, teeTime: "" },
+  { id: 62, name: "Peter Malnati", wgr: null, earnings: 0, teeTime: "" },
+  { id: 63, name: "Hideki Matsuyama", wgr: 11, earnings: 0, teeTime: "" },
+  { id: 64, name: "Denny McCarthy", wgr: 83, earnings: 0, teeTime: "" },
+  { id: 65, name: "Matt McCarty", wgr: 36, earnings: 0, teeTime: "" },
+  { id: 66, name: "Max McGreevy", wgr: 66, earnings: 0, teeTime: "" },
+  { id: 67, name: "Maverick McNealy", wgr: 22, earnings: 0, teeTime: "" },
+  { id: 68, name: "Mac Meissner", wgr: 103, earnings: 0, teeTime: "" },
+  { id: 69, name: "Keith Mitchell", wgr: 122, earnings: 0, teeTime: "" },
+  { id: 70, name: "Collin Morikawa", wgr: 19, earnings: 0, teeTime: "" },
+  { id: 71, name: "William Mouw", wgr: 135, earnings: 0, teeTime: "" },
+  { id: 72, name: "Alex Noren", wgr: 16, earnings: 0, teeTime: "" },
+  { id: 73, name: "Andrew Novak", wgr: 35, earnings: 0, teeTime: "" },
+  { id: 74, name: "Pontus Nyholm", wgr: null, earnings: 0, teeTime: "" },
+  { id: 75, name: "Thorbjorn Olesen", wgr: 97, earnings: 0, teeTime: "" },
+  { id: 76, name: "John Parry", wgr: 84, earnings: 0, teeTime: "" },
+  { id: 77, name: "Matthieu Pavon", wgr: null, earnings: 0, teeTime: "" },
+  { id: 78, name: "Marco Penge", wgr: 31, earnings: 0, teeTime: "" },
+  { id: 79, name: "Chandler Phillips", wgr: 156, earnings: 0, teeTime: "" },
+  { id: 80, name: "J.T. Poston", wgr: 61, earnings: 0, teeTime: "" },
+  { id: 81, name: "Seamus Power", wgr: 151, earnings: 0, teeTime: "" },
+  { id: 82, name: "Andrew Putnam", wgr: 119, earnings: 0, teeTime: "" },
+  { id: 83, name: "Chad Ramey", wgr: 155, earnings: 0, teeTime: "" },
+  { id: 84, name: "Kristoffer Reitan", wgr: 38, earnings: 0, teeTime: "" },
+  { id: 85, name: "Patrick Rodgers", wgr: 86, earnings: 0, teeTime: "" },
+  { id: 86, name: "Kevin Roy", wgr: 134, earnings: 0, teeTime: "" },
+  { id: 87, name: "Marcelo Rozo", wgr: null, earnings: 0, teeTime: "" },
+  { id: 88, name: "Adrien Saddier", wgr: 85, earnings: 0, teeTime: "" },
+  { id: 89, name: "Isaiah Salinda", wgr: null, earnings: 0, teeTime: "" },
+  { id: 90, name: "Gordon Sargent", wgr: null, earnings: 0, teeTime: "" },
+  { id: 91, name: "Adam Schenk", wgr: 131, earnings: 0, teeTime: "" },
+  { id: 92, name: "Matti Schmid", wgr: 99, earnings: 0, teeTime: "" },
+  { id: 93, name: "Neal Shipley", wgr: 120, earnings: 0, teeTime: "" },
+  { id: 94, name: "Webb Simpson", wgr: null, earnings: 0, teeTime: "" },
+  { id: 95, name: "Alex Smalley", wgr: 125, earnings: 0, teeTime: "" },
+  { id: 96, name: "Jordan Smith", wgr: 91, earnings: 0, teeTime: "" },
+  { id: 97, name: "Austin Smotherman", wgr: 128, earnings: 0, teeTime: "" },
+  { id: 98, name: "Brandt Snedeker", wgr: null, earnings: 0, teeTime: "" },
+  { id: 99, name: "J.J. Spaun", wgr: 7, earnings: 0, teeTime: "" },
+  { id: 100, name: "Jordan Spieth", wgr: 89, earnings: 0, teeTime: "" },
+  { id: 101, name: "Jimmy Stanger", wgr: null, earnings: 0, teeTime: "" },
+  { id: 102, name: "Sepp Straka", wgr: 14, earnings: 0, teeTime: "" },
+  { id: 103, name: "Kevin Streelman", wgr: null, earnings: 0, teeTime: "" },
+  { id: 104, name: "Adam Svensson", wgr: null, earnings: 0, teeTime: "" },
+  { id: 105, name: "Jesper Svensson", wgr: 159, earnings: 0, teeTime: "" },
+  { id: 106, name: "Nick Taylor", wgr: 58, earnings: 0, teeTime: "" },
+  { id: 107, name: "Davis Thompson", wgr: 112, earnings: 0, teeTime: "" },
+  { id: 108, name: "Michael Thorbjornsen", wgr: 43, earnings: 0, teeTime: "" },
+  { id: 109, name: "Brendon Todd", wgr: null, earnings: 0, teeTime: "" },
+  { id: 110, name: "Alejandro Tosti", wgr: null, earnings: 0, teeTime: "" },
+  { id: 111, name: "Sami Valimaki", wgr: 45, earnings: 0, teeTime: "" },
+  { id: 112, name: "Erik van Rooyen", wgr: 138, earnings: 0, teeTime: "" },
+  { id: 113, name: "John VanDerLaan", wgr: null, earnings: 0, teeTime: "" },
+  { id: 114, name: "Jhonattan Vegas", wgr: 95, earnings: 0, teeTime: "" },
+  { id: 115, name: "Kris Ventura", wgr: null, earnings: 0, teeTime: "" },
+  { id: 116, name: "Karl Vilips", wgr: 139, earnings: 0, teeTime: "" },
+  { id: 117, name: "Camilo Villegas", wgr: null, earnings: 0, teeTime: "" },
+  { id: 118, name: "Danny Walker", wgr: null, earnings: 0, teeTime: "" },
+  { id: 119, name: "Jimmy Walker", wgr: null, earnings: 0, teeTime: "" },
+  { id: 120, name: "Matt Wallace", wgr: 90, earnings: 0, teeTime: "" },
+  { id: 121, name: "Paul Waring", wgr: null, earnings: 0, teeTime: "" },
+  { id: 122, name: "Vince Whaley", wgr: 115, earnings: 0, teeTime: "" },
+  { id: 123, name: "Aaron Wise", wgr: null, earnings: 0, teeTime: "" },
+  { id: 124, name: "Gary Woodland", wgr: 141, earnings: 0, teeTime: "" },
+  { id: 125, name: "Dylan Wu", wgr: null, earnings: 0, teeTime: "" },
+  { id: 126, name: "Austin Wylie", wgr: null, earnings: 0, teeTime: "" },
+  { id: 127, name: "Sudarshan Yellamaraju", wgr: null, earnings: 0, teeTime: "" },
+  { id: 128, name: "Kevin Yu", wgr: 102, earnings: 0, teeTime: "" },
+  { id: 129, name: "Will Zalatoris", wgr: null, earnings: 0, teeTime: "" },
 ];
 
 // ═══════════════════════════════════════════════════════
@@ -2141,7 +2271,7 @@ function parseESPNAPI(data) {
         }
         const completedTwo = players.filter(p => p.roundsPlayed >= 2 && !p.wd);
         const sorted = [...completedTwo].sort((a, b) => getTwoRoundScore(a) - getTwoRoundScore(b));
-        const cutScore = sorted.length >= 50 ? getTwoRoundScore(sorted[49]) : null;
+        const cutScore = sorted.length >= CUT_RULE ? getTwoRoundScore(sorted[CUT_RULE - 1]) : null;
         missedCutNames = players
           .filter(p => p.wd || p.roundsPlayed < 2 || (cutScore !== null && getTwoRoundScore(p) > cutScore))
           .map(p => normalizeName(p.name));
@@ -2184,12 +2314,12 @@ function parseESPNAPI(data) {
     }
 
     // Projected cut line — only used during round 2, not after cut is official
-    // The Masters 2026 rule: top 50 + ties
+    // Valero Texas Open 2026 rule: top 65 + ties
     let cutScore = null;
-    if (!isPostCut && madecut.length >= 50) {
+    if (!isPostCut && madecut.length >= 65) {
       const startedPlayers = madecut.filter(p => p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-'));
       if (startedPlayers.length >= 10) { // need enough data to project meaningfully
-        cutScore = madecut[49].scoreNum;
+        cutScore = madecut[64].scoreNum;
       }
     }
 
@@ -2574,7 +2704,7 @@ async function initApp() {
 // ─── COUNTDOWN TO FIRST TEE ───
 function startCountdown() {
   // April 9, 2026 8:00 AM ET = 12:00 UTC
-  const teeTime = new Date('2026-04-09T12:00:00Z');
+  const teeTime = new Date('2026-04-02T12:00:00Z');
   function tick() {
     const now = new Date();
     const diff = teeTime - now;
@@ -3554,7 +3684,7 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = [4,5,4,3,4,3,4,5,4, 4,4,3,5,4,5,3,4,4]; // Augusta National par 72 (Masters)
+const HOLE_PARS = [4,5,3,4,4,4,3,5,4, 4,4,4,3,5,4,3,4,5]; // TPC San Antonio par 72 (Valero Texas Open)
 
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
@@ -3902,7 +4032,7 @@ function renderTournament() {
       if (!isNaN(posNum) && posNum <= 65) lastInRow = row;
     }
     if (lastInRow) {
-      const cutScore = parseInt(sortedStarted[Math.min(49, sortedStarted.length-1)]?.[1]?.score) || 0;
+      const cutScore = parseInt(sortedStarted[Math.min(64, sortedStarted.length-1)]?.[1]?.score) || 0;
       const cutLabel = cutScore === 0 ? 'E' : cutScore > 0 ? '+'+cutScore : ''+cutScore;
       const cutTr = document.createElement('tr');
       cutTr.innerHTML = `<td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${cutLabel} —</td>`;
@@ -5235,6 +5365,13 @@ function adminLogout() {
 
 function renderAdminPanel() {
   if (!adminLoggedIn) return;
+  // Populate tournament settings inputs
+  const tsName = document.getElementById('ts-name');
+  const tsPar  = document.getElementById('ts-par');
+  const tsCut  = document.getElementById('ts-cut');
+  if (tsName) tsName.value = TOURNAMENT_NAME;
+  if (tsPar)  tsPar.value  = TOURNAMENT_PAR;
+  if (tsCut)  tsCut.value  = CUT_RULE;
   if (!document.getElementById('page-admin').classList.contains('active')) return;
   console.log('renderAdminPanel called, allTeams length:', allTeams.length);
   const currentTeams = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME);
