@@ -1277,6 +1277,7 @@
           <div style="font-size:0.62rem;font-family:'DM Mono',monospace;letter-spacing:1px;color:rgba(255,255,255,0.6);">BEST RANK</div>
         </div>
         <button onclick="toggleEditProfile()" id="edit-profile-btn" style="background:none;border:1px solid rgba(255,255,255,0.4);color:white;border-radius:4px;padding:6px 12px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:1px;">✎ EDIT</button>
+        <button onclick="requestPushPermission()" id="notif-btn" style="display:none; background:none;border:1px solid rgba(201,168,76,0.6);color:var(--gold);border-radius:4px;padding:6px 12px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:1px;">🔔 NOTIFY</button>
       </div>
     </div>
 
@@ -2567,6 +2568,7 @@ async function initApp() {
   startCountdown();
   if (TOURNAMENT_ACTIVE) startLiveFetching();
   startChatNotificationListener();
+  setTimeout(initPushNotifications, 2000);
   checkAdminBadge();
 }
 
@@ -2712,6 +2714,7 @@ async function login() {
   updateNav();
   renderProfile();
   showToast('Welcome back, ' + currentUser.name + '!', 'success');
+  setTimeout(initPushNotifications, 1000);
 }
 
 async function register() {
@@ -2735,6 +2738,7 @@ async function register() {
   updateNav();
   renderProfile();
   showToast('Account created! Welcome, ' + name + '!', 'success');
+  setTimeout(initPushNotifications, 1000);
 }
 
 async function logout() {
@@ -5560,6 +5564,71 @@ function renderH2H() {
   }
 
   content.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+// PUSH NOTIFICATIONS
+// ═══════════════════════════════════════════════════════
+const VAPID_PUBLIC_KEY = 'BLiT_0ASL26LXBZRplvgsjn6HqB6cv5eaJRhYGs2xO9_WN5lvNWHYiPfN3stL7ryokNfyzQ8vBSyAIDbkmYvZts';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+  return outputArray;
+}
+
+async function initPushNotifications() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  if (!currentUser) return;
+
+  const permission = Notification.permission;
+  const notifBtn = document.getElementById('notif-btn');
+
+  if (permission === 'granted') {
+    // Already granted — silently subscribe
+    await subscribeToPush();
+    if (notifBtn) notifBtn.style.display = 'none';
+  } else if (permission === 'default') {
+    // Show the button so user can opt in
+    if (notifBtn) notifBtn.style.display = 'block';
+  } else {
+    // Denied — hide button
+    if (notifBtn) notifBtn.style.display = 'none';
+  }
+}
+
+async function requestPushPermission() {
+  const permission = await Notification.requestPermission();
+  const notifBtn = document.getElementById('notif-btn');
+  if (permission === 'granted') {
+    await subscribeToPush();
+    if (notifBtn) notifBtn.style.display = 'none';
+    showToast('Notifications enabled! 🔔', 'success');
+  } else {
+    if (notifBtn) notifBtn.style.display = 'none';
+    showToast('Notifications blocked — you can enable them in browser settings.', '');
+  }
+}
+
+async function subscribeToPush() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+    const sub = existing || await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+    // Save subscription to Supabase
+    await sb.from('push_subscriptions').upsert({
+      user_email: currentUser.email,
+      subscription: sub.toJSON()
+    }, { onConflict: 'user_email' });
+  } catch (err) {
+    console.error('Push subscription error:', err);
+  }
 }
 
 </script>
