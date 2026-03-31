@@ -1507,6 +1507,33 @@
       <button onclick="adminLogout()" style="padding:9px 16px; font-size:0.78rem; background:none; border:1.5px solid #d4d0c8; border-radius:4px; cursor:pointer; font-family:'DM Mono',monospace; color:#888;">Sign Out</button>
     </div>
 
+    <!-- Push Notifications -->
+    <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; padding:20px; margin-bottom:24px;">
+      <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:16px;">📲 Push Notifications</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+          <div style="flex:1; min-width:200px;">
+            <div style="font-size:0.75rem; font-family:'DM Mono',monospace; color:#888; letter-spacing:1px; margin-bottom:6px;">TITLE</div>
+            <input id="push-title-input" type="text" value="J.Ray's Swimmers 🏌️" placeholder="Notification title..."
+              style="width:100%; padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'EB Garamond',serif; font-size:0.9rem; box-sizing:border-box;" />
+          </div>
+          <div style="flex:2; min-width:260px;">
+            <div style="font-size:0.75rem; font-family:'DM Mono',monospace; color:#888; letter-spacing:1px; margin-bottom:6px;">MESSAGE</div>
+            <input id="push-message-input" type="text" placeholder="e.g. Scheffler just took the lead!"
+              style="width:100%; padding:9px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'EB Garamond',serif; font-size:0.9rem; box-sizing:border-box;" />
+          </div>
+          <button onclick="sendAdminPush()" id="push-send-btn"
+            style="background:var(--green); color:var(--gold); border:none; border-radius:4px; padding:10px 20px; font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:1px; cursor:pointer; white-space:nowrap; font-weight:700;">
+            📤 SEND TO ALL
+          </button>
+        </div>
+        <div id="push-send-result" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:#888; letter-spacing:0.5px; display:none;"></div>
+        <div style="font-size:0.75rem; color:#aaa; font-family:'DM Mono',monospace;">
+          Sends to all users who have enabled push notifications. <span id="push-sub-count" style="color:var(--green); font-weight:600;"></span>
+        </div>
+      </div>
+    </div>
+
     <!-- Team Table -->
     <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
       <table class="leaderboard-table" id="admin-table" style="min-width:640px;">
@@ -2620,6 +2647,56 @@ async function togglePushPref(teamId) {
   showToast(newVal ? '📲 Push notifications on for this team' : '🔕 Push notifications off for this team', 'success');
 }
 
+async function sendAdminPush() {
+  const title = document.getElementById('push-title-input').value.trim() || "J.Ray's Swimmers 🏌️";
+  const body = document.getElementById('push-message-input').value.trim();
+  if (!body) { showToast('Please enter a message.', 'error'); return; }
+
+  const btn = document.getElementById('push-send-btn');
+  const result = document.getElementById('push-send-result');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    const { data: subs } = await sb.from('push_subscriptions').select('*');
+    if (!subs || subs.length === 0) {
+      result.textContent = '⚠ No subscribers found.';
+      result.style.display = 'block';
+      return;
+    }
+
+    const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGd3ZXJxc2xmc2Z3bGprdXRxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjE3MjgwMiwiZXhwIjoyMDg3NzQ4ODAyfQ.iHx2sEYntApKU1iyGlhFilUfNoPm-R653TNXsUrZAOk';
+    const res = await fetch('https://faxgwerqslfsfwljkutq.supabase.co/functions/v1/send-push-notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SERVICE_ROLE_KEY}`
+      },
+      body: JSON.stringify({ adminMessage: { title, body } })
+    });
+    const data = await res.json();
+    result.textContent = `✓ Sent to ${data.sent ?? 0} subscriber${data.sent !== 1 ? 's' : ''}.`;
+    result.style.color = 'var(--green)';
+    result.style.display = 'block';
+    document.getElementById('push-message-input').value = '';
+    showToast(`Push sent to ${data.sent ?? 0} subscribers!`, 'success');
+  } catch(e) {
+    result.textContent = '✗ Error sending — check console.';
+    result.style.color = '#e74c3c';
+    result.style.display = 'block';
+    console.error(e);
+  } finally {
+    btn.textContent = '📤 SEND TO ALL';
+    btn.disabled = false;
+  }
+}
+
+async function loadPushSubCount() {
+  const { count } = await sb.from('push_subscriptions').select('*', { count: 'exact', head: true });
+  const el = document.getElementById('push-sub-count');
+  if (el) el.textContent = `${count || 0} subscriber${count !== 1 ? 's' : ''} currently opted in.`;
+}
+
 function copyInviteLink() {
   const url = `${window.location.origin}${window.location.pathname}?join=1`;
   navigator.clipboard.writeText(url).then(() => showToast('Invite link copied!', 'success'));
@@ -2799,7 +2876,7 @@ async function showPage(name) {
   }
   window.scrollTo(0, 0);
   if (name === 'leaderboard') renderLeaderboard();
-  if (name === 'admin') renderAdminPanel();
+  if (name === 'admin') { renderAdminPanel(); loadPushSubCount(); }
   if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); await loadScoreAlertsFromSupabase(); clearProfileBadge(); }
   if (name === 'tournament') renderTournament();
   if (name === 'stats') { await loadTeams(); renderStats('picks'); }
