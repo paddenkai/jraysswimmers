@@ -1287,7 +1287,7 @@
       <div style="flex:1;">
         <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--green);">Push Notifications</div>
         <div id="master-push-status" style="font-size:0.75rem; color:#888; font-family:'DM Mono',monospace; margin-top:3px; letter-spacing:0.3px;">Get alerts for your teams</div>
-        <button onclick="showInstallModal()" id="install-hint-btn" style="display:none; margin-top:8px; background:none; border:1.5px solid #ccc; color:#888; border-radius:5px; padding:5px 12px; font-family:'DM Mono',monospace; font-size:0.72rem; cursor:pointer;">📲 Add to Home Screen</button>
+        <button onclick="showInstallModal()" id="install-hint-btn" style="display:none; margin-top:8px; background:none; border:1.5px solid #ccc; color:#888; border-radius:5px; padding:5px 12px; font-family:'DM Mono',monospace; font-size:0.72rem; cursor:pointer;">📲 How to Enable Notifications</button>
       </div>
       <button onclick="toggleMasterPush()" id="master-push-btn" style="position:relative; width:52px; height:28px; cursor:pointer; background:none; border:none; padding:0; flex-shrink:0; margin-top:2px;">
         <span id="master-push-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
@@ -1795,7 +1795,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v1.9.4 · 2026-03-31 9:25 PM';
+const APP_VERSION = 'v1.9.8 · 2026-03-31 9:40 PM';
 
 let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -2797,8 +2797,8 @@ async function initApp() {
 
 // ─── COUNTDOWN TO FIRST TEE ───
 function startCountdown() {
-  // April 9, 2026 8:00 AM ET = 12:00 UTC
-  const teeTime = new Date('2026-04-02T12:00:00Z');
+  // April 2, 2026 5:30 AM PDT = 12:30 UTC (Daylight Saving Time)
+  const teeTime = new Date('2026-04-02T12:30:00Z');
   function tick() {
     const now = new Date();
     const diff = teeTime - now;
@@ -6064,7 +6064,7 @@ async function initPushNotifications() {
       const installBtn = document.getElementById('install-hint-btn');
       if (installBtn) {
         installBtn.style.display = 'inline-block';
-        installBtn.textContent = '📲 How to add to your phone';
+        installBtn.textContent = '📲 How to Enable Notifications';
       }
     }
     return;
@@ -6224,7 +6224,7 @@ async function triggerNativeInstall() {
 <div id="install-modal-wrap" onclick="if(event.target===this)closeInstallModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center; padding:20px;">
   <div style="background:white; border-radius:12px; max-width:420px; width:100%; padding:24px; position:relative; box-shadow:0 8px 40px rgba(0,0,0,0.25);">
     <button onclick="closeInstallModal()" style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.3rem; cursor:pointer; color:#aaa; line-height:1;">✕</button>
-    <div style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--green); margin-bottom:6px;">📲 Add to Home Screen</div>
+    <div style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--green); margin-bottom:6px;">📲 How to Enable Notifications</div>
     <div style="font-size:0.8rem; color:#888; font-family:'DM Mono',monospace; margin-bottom:20px;">Required for push notifications to work</div>
     <div id="install-android" style="display:none;">
       <p style="font-size:0.9rem; color:#444; margin-bottom:16px; line-height:1.6;">Tap below and your phone will ask you to install — just like a regular app.</p>
