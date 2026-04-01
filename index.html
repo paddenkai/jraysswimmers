@@ -3468,6 +3468,10 @@ async function confirmAndSubmit() {
   allTeams = [...allTeams, ...(data || rows)];
   allTeamNames = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME).map(t => t.name.trim().toLowerCase());
   window._savedCart = [...cart];
+
+  // Notify admin of new submission
+  notifyAdminNewTeam(rows);
+
   cart = [];
   pendingTeam = window._savedCart[0];
   if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = 'Yes, Submit Teams →'; }
@@ -3475,6 +3479,36 @@ async function confirmAndSubmit() {
 
   closeModal('checkout-confirm-modal');
   showPage('payment');
+}
+
+async function notifyAdminNewTeam(rows) {
+  try {
+    const ADMIN_EMAIL = 'kai.padden11@gmail.com';
+    const { data: subs } = await sb.from('push_subscriptions').select('*').eq('user_email', ADMIN_EMAIL);
+    if (!subs || subs.length === 0) return;
+
+    const teamNames = rows.map(r => r.name).join(', ');
+    const ownerName = rows[0]?.owner_name || rows[0]?.owner || 'Someone';
+    const count = rows.length;
+    const title = "J.Ray's Swimmers 🏌️";
+    const body = `${ownerName} just submitted ${count} team${count !== 1 ? 's' : ''}: ${teamNames}`;
+
+    const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGd3ZXJxc2xmc2Z3bGprdXRxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjE3MjgwMiwiZXhwIjoyMDg3NzQ4ODAyfQ.iHx2sEYntApKU1iyGlhFilUfNoPm-R653TNXsUrZAOk';
+    // Pass only admin's subscription so edge function sends to just this device
+    await fetch('https://faxgwerqslfsfwljkutq.supabase.co/functions/v1/send-push-notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SERVICE_ROLE_KEY}`
+      },
+      body: JSON.stringify({
+        adminMessage: { title, body },
+        targetSubscriptions: subs.map(s => s.subscription)
+      })
+    });
+  } catch(e) {
+    console.warn('Admin notification failed:', e);
+  }
 }
 
 function resetBuilder() {
