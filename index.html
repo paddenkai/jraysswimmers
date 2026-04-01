@@ -1795,6 +1795,8 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
+const APP_VERSION = 'v1.9.1 · 2026-03-31 8:52 PM';
+
 let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
 let CUT_RULE        = 65;  // top N + ties — overridden by admin_settings
@@ -3125,6 +3127,14 @@ async function showPage(name) {
 }
 
 function updateNav() {
+  // Show version tag only for admin
+  const vtag = document.getElementById('version-tag');
+  const vtext = document.getElementById('version-tag-text');
+  if (vtag && vtext) {
+    const isAdmin = currentUser && currentUser.email === 'kai.padden11@gmail.com';
+    vtag.style.display = isAdmin ? 'block' : 'none';
+    vtext.textContent = APP_VERSION;
+  }
   const loggedIn = !!currentUser;
   document.getElementById('nav-login').style.display = loggedIn ? 'none' : '';
   document.getElementById('nav-logout').style.display = loggedIn ? '' : 'none';
@@ -6044,8 +6054,19 @@ async function initPushNotifications() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   if (!isMobile) {
-    // Hide on desktop entirely
-    if (bar) bar.style.display = 'none';
+    // On desktop: show a message pointing them to mobile
+    if (bar) {
+      bar.style.display = 'flex';
+      const status = document.getElementById('master-push-status');
+      if (status) status.textContent = 'Available on mobile only';
+      const toggleBtn = document.getElementById('master-push-btn');
+      if (toggleBtn) toggleBtn.style.display = 'none';
+      const installBtn = document.getElementById('install-hint-btn');
+      if (installBtn) {
+        installBtn.style.display = 'inline-block';
+        installBtn.textContent = '📲 How to add to your phone';
+      }
+    }
     return;
   }
 
@@ -6057,6 +6078,8 @@ async function initPushNotifications() {
     if (status) status.textContent = 'Add to home screen to enable';
     const btn = document.getElementById('master-push-btn');
     if (btn) btn.style.opacity = '0.4';
+    const installBtn = document.getElementById('install-hint-btn');
+    if (installBtn) installBtn.style.display = 'inline-block';
     return;
   }
 
@@ -6199,7 +6222,7 @@ async function triggerNativeInstall() {
 </script>
 <!-- Install to Home Screen Modal -->
 <div id="install-modal-wrap" onclick="if(event.target===this)closeInstallModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center; padding:20px;">
-  <div style="background:white; border-radius:12px; max-width:380px; width:100%; padding:28px 24px; position:relative; box-shadow:0 8px 40px rgba(0,0,0,0.25);">
+  <div style="background:white; border-radius:12px; max-width:420px; width:100%; padding:24px; position:relative; box-shadow:0 8px 40px rgba(0,0,0,0.25);">
     <button onclick="closeInstallModal()" style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.3rem; cursor:pointer; color:#aaa; line-height:1;">✕</button>
     <div style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--green); margin-bottom:6px;">📲 Add to Home Screen</div>
     <div style="font-size:0.8rem; color:#888; font-family:'DM Mono',monospace; margin-bottom:20px;">Required for push notifications to work</div>
@@ -6210,28 +6233,57 @@ async function triggerNativeInstall() {
     <div id="install-ios" style="display:none;">
       <p style="font-size:0.9rem; color:#444; margin-bottom:16px; line-height:1.6;">Follow these steps:</p>
       <div style="display:flex; flex-direction:column; gap:12px;">
-        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:12px 14px;">
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
           <div style="font-size:1.4rem; flex-shrink:0;">1️⃣</div>
-          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap the <strong>three dots ⋯</strong> in the top right corner of your browser</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap the <strong>three dots ⋯</strong> in the top right corner</div>
         </div>
-        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:12px 14px;">
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
           <div style="font-size:1.4rem; flex-shrink:0;">2️⃣</div>
           <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>Share</strong></div>
         </div>
-        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:12px 14px;">
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
           <div style="font-size:1.4rem; flex-shrink:0;">3️⃣</div>
           <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>View More</strong></div>
         </div>
-        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:12px 14px;">
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
           <div style="font-size:1.4rem; flex-shrink:0;">4️⃣</div>
           <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>Add to Home Screen</strong></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">5️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Open the app from your home screen, go to <strong>Profile</strong> and enable <strong>Push Notifications</strong></div>
         </div>
       </div>
     </div>
     <div id="install-default" style="display:none;">
-      <p style="font-size:0.9rem; color:#444; line-height:1.6;">Open <strong>jraysswimmers.com</strong> in Safari (iPhone) or Chrome (Android) and follow the prompt to add it to your home screen.</p>
+      <p style="font-size:0.9rem; color:#444; margin-bottom:16px; line-height:1.6;">Follow these steps on your iPhone:</p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">1️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Open <strong>jraysswimmers.com</strong> in your phone's browser and tap the <strong>three dots ⋯</strong></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">2️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>Share</strong></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">3️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>View More</strong></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">4️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Tap <strong>Add to Home Screen</strong></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#f8f5ee; border-radius:8px; padding:9px 12px;">
+          <div style="font-size:1.4rem; flex-shrink:0;">5️⃣</div>
+          <div style="font-size:0.85rem; color:#444; line-height:1.5;">Open the app from your home screen, go to <strong>Profile</strong> and enable <strong>Push Notifications</strong></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+  <div id="version-tag" style="display:none; position:fixed; bottom:8px; right:12px; font-family:'DM Mono',monospace; font-size:0.65rem; color:#aaa; letter-spacing:0.5px; pointer-events:none; z-index:9999;">
+    J.Ray's Swimmers <span id="version-tag-text"></span>
+  </div>
 </body>
 </html>
