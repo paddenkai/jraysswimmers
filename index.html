@@ -1828,7 +1828,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.0.6 · 2026-04-01 8:00 PM';
+const APP_VERSION = 'v2.0.7 · 2026-04-01 8:15 PM';
 
 let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -4881,7 +4881,7 @@ function renderMyTeams() {
       <div class="team-card-footer" style="flex-direction:column; gap:0; padding:0;">
         <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
           <div><div class="team-total-label">TEAM TOTAL</div><div class="team-total">$${total.toLocaleString()}</div></div>
-          <div id="push-toggle-wrap-${team.id}" style="display:none; align-items:center; gap:6px;">
+          <div id="push-toggle-wrap-${team.id}" style="display:${('serviceWorker' in navigator && 'PushManager' in window && Notification.permission==='granted') ? 'flex' : 'none'}; align-items:center; gap:6px;">
             <span style="font-family:'DM Mono',monospace; font-size:0.68rem; color:#aaa; letter-spacing:1px;">📲 PUSH</span>
             <button onclick="togglePushPref('${team.id}')" style="position:relative; width:36px; height:20px; background:none; border:none; padding:0; cursor:pointer;">
               <span id="push-toggle-${team.id}-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
@@ -4898,6 +4898,12 @@ function renderMyTeams() {
 
   // Apply push pref toggles after render — use cached pushPrefs first for instant display
   sortedMyTeams.forEach(team => applyPushPrefUI(team.id));
+  // Re-apply master push visibility in case push was already enabled
+  if ('serviceWorker' in navigator && 'PushManager' in window && Notification.permission === 'granted') {
+    navigator.serviceWorker.ready.then(reg => reg.pushManager.getSubscription()).then(sub => {
+      if (sub) updateMasterPushUI(true);
+    }).catch(() => {});
+  }
   // Then refresh from DB
   loadPushPrefs().then(() => {
     sortedMyTeams.forEach(team => applyPushPrefUI(team.id));
