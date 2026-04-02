@@ -1795,7 +1795,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.0.2 · 2026-04-01 12:05 AM';
+const APP_VERSION = 'v2.0.3 · 2026-04-01 7:30 PM';
 
 let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -3121,6 +3121,7 @@ async function showPage(name) {
   // Guard admin before activating the page
   if (name === 'admin' && !adminLoggedIn) { openAdminLogin(); return; }
   if (name === 'admin') { setTimeout(buildHoleParInputs, 0); }
+  if (name === 'stats' && !adminSettings.showPicks) { showPage('home'); return; }
   // Guard all non-home pages behind login
   const publicPages = ['home', 'login'];
   if (!publicPages.includes(name) && !currentUser) { openAuthModal(); return; }
@@ -3183,7 +3184,7 @@ function updateNav() {
   const homeBtn = document.getElementById('home-team-btn');
   if (homeBtn) homeBtn.textContent = adminSettings.registrationOpen ? 'Build Your Team →' : 'View Your Team →';
   document.getElementById('nav-tournament').style.display = TOURNAMENT_ACTIVE ? '' : 'none';
-  document.getElementById('nav-stats').style.display = TOURNAMENT_ACTIVE ? '' : 'none';
+  document.getElementById('nav-stats').style.display = (TOURNAMENT_ACTIVE && adminSettings.showPicks) ? '' : 'none';
   document.getElementById('nav-history').style.display = adminSettings.showHistory ? '' : 'none';
 }
 
