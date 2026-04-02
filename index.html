@@ -1828,7 +1828,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.0.5 · 2026-04-01 7:50 PM';
+const APP_VERSION = 'v2.0.6 · 2026-04-01 8:00 PM';
 
 let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -4539,6 +4539,16 @@ function toggleTeamAlert(teamId) {
   const feed = document.getElementById(`alert-feed-${teamId}`);
   if (feed) feed.style.display = enabled ? 'block' : 'none';
   renderAllAlertFeeds();
+  // Save to Supabase so edge function can read it for push notifications
+  if (currentUser) {
+    sb.from('push_notification_prefs').upsert({
+      user_email: currentUser.email,
+      team_id: String(teamId),
+      enabled: enabled
+    }, { onConflict: 'user_email,team_id' }).then(({ error }) => {
+      if (error) console.error('Failed to save push pref:', error);
+    });
+  }
 }
 
 function initScoreNotifUI() {
