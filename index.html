@@ -1537,6 +1537,39 @@
         </button>
       </div>
     </div>
+
+    <!-- Countdown Settings -->
+    <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; padding:20px; margin-bottom:24px;">
+      <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:16px;">⏱ Countdown Timer</div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+
+        <!-- Show/hide toggle -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div>
+            <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark);">Show Countdown</div>
+            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Display the countdown timer on the home page</div>
+          </div>
+          <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
+            <input type="checkbox" id="toggle-countdown" onchange="saveCountdownSettings()" style="opacity:0; width:0; height:0;">
+            <span id="toggle-countdown-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
+            <span id="toggle-countdown-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+          </label>
+        </div>
+
+        <!-- Date/time input -->
+        <div style="padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
+          <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:6px;">Target Date & Time</div>
+          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Set when the countdown ends — enters in your local time</div>
+          <input id="countdown-datetime" type="datetime-local"
+            style="padding:9px 12px; border:1.5px solid #ccc; border-radius:5px; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--dark); background:white;">
+        </div>
+
+        <button onclick="saveCountdownSettings()"
+          style="align-self:flex-start; background:var(--green); color:var(--gold); border:none; border-radius:5px; padding:10px 24px; font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:1px; font-weight:700; cursor:pointer;">
+          💾 SAVE COUNTDOWN
+        </button>
+      </div>
+    </div>
     <!-- Lock Tournament Results -->
     <div id="lock-tournament-panel" style="background:#fff8f0; border:1.5px solid var(--gold); border-radius:8px; padding:16px 20px; margin-bottom:20px;">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
@@ -1795,7 +1828,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.0.3 · 2026-04-01 7:30 PM';
+const APP_VERSION = 'v2.0.5 · 2026-04-01 7:50 PM';
 
 let TOURNAMENT_NAME = 'Valero Texas Open 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -1812,6 +1845,8 @@ let adminSettings = {
   showProjectedWinner: false,
   showHistory: true,
   officialCut: localStorage.getItem('officialCut') === '1',
+  showCountdown: true,
+  countdownTarget: '2026-04-02T12:30:00Z',
 };
 
 async function loadAdminSettings() {
@@ -1827,6 +1862,8 @@ async function loadAdminSettings() {
     updateToggleUI('toggle-official-cut', adminSettings.officialCut);
     adminSettings.showProjectedWinner = data.show_projected_winner || false;
     adminSettings.showHistory = data.show_history !== undefined ? data.show_history : true;
+    if (data.show_countdown !== undefined) adminSettings.showCountdown = data.show_countdown;
+    if (data.countdown_target) adminSettings.countdownTarget = data.countdown_target;
     // Tournament settings
     if (data.tournament_name) {
       TOURNAMENT_NAME = data.tournament_name;
@@ -1846,6 +1883,20 @@ async function loadAdminSettings() {
     if (tsName) tsName.value = TOURNAMENT_NAME;
     if (tsCut)  tsCut.value  = CUT_RULE;
     buildHoleParInputs();
+    // Populate countdown inputs
+    const cdToggle = document.getElementById('toggle-countdown');
+    const cdInput  = document.getElementById('countdown-datetime');
+    if (cdToggle) {
+      cdToggle.checked = adminSettings.showCountdown;
+      updateToggleUI('toggle-countdown', adminSettings.showCountdown);
+    }
+    if (cdInput && adminSettings.countdownTarget) {
+      // Convert ISO to local datetime-local format
+      const d = new Date(adminSettings.countdownTarget);
+      const pad = n => String(n).padStart(2,'0');
+      cdInput.value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+    applyCountdownSettings();
   }
 }
 
@@ -1877,6 +1928,8 @@ async function saveAdminSettings() {
     show_cut_line: adminSettings.showCutLine,
     show_projected_winner: adminSettings.showProjectedWinner,
     show_history: adminSettings.showHistory,
+    show_countdown: adminSettings.showCountdown,
+    countdown_target: adminSettings.countdownTarget,
     tournament_name: TOURNAMENT_NAME,
     tournament_par: TOURNAMENT_PAR,
     cut_rule: CUT_RULE,
@@ -1953,6 +2006,41 @@ async function loadSubList() {
       <span style="color:var(--dark);">${s.user_email || '–'}</span>
       <span style="color:#aaa; font-size:0.7rem;">${s.updated_at ? new Date(s.updated_at).toLocaleDateString() : ''}</span>
     </div>`).join('');
+}
+
+async function saveCountdownSettings() {
+  const showToggle = document.getElementById('toggle-countdown').checked;
+  const dtInput = document.getElementById('countdown-datetime').value;
+
+  adminSettings.showCountdown = showToggle;
+  if (dtInput) {
+    adminSettings.countdownTarget = new Date(dtInput).toISOString();
+  }
+
+  const { error } = await sb.from('admin_settings').upsert({
+    id: 1,
+    show_countdown: adminSettings.showCountdown,
+    countdown_target: adminSettings.countdownTarget,
+    updated_at: new Date().toISOString()
+  });
+
+  if (error) { showToast('Error saving countdown settings.', 'error'); return; }
+
+  updateToggleUI('toggle-countdown', adminSettings.showCountdown);
+  applyCountdownSettings();
+  showToast('Countdown settings saved!', 'success');
+}
+
+function applyCountdownSettings() {
+  const cd = document.getElementById('masters-countdown');
+  if (!cd) return;
+  if (!adminSettings.showCountdown) {
+    cd.style.display = 'none';
+  } else {
+    cd.style.display = '';
+    // Restart countdown with new target
+    startCountdown();
+  }
 }
 
 async function saveTournamentSettings() {
@@ -2786,7 +2874,12 @@ function showHistoryList() {
 async function initApp() {
   // Always show home immediately — don't block on Supabase
   showPage('home');
-  startCountdown();
+  if (adminSettings.showCountdown) {
+    startCountdown();
+  } else {
+    const cd = document.getElementById('masters-countdown');
+    if (cd) cd.style.display = 'none';
+  }
 
   try {
     // Check if this is a password reset redirect from Supabase
@@ -2838,17 +2931,14 @@ async function initApp() {
 // ─── COUNTDOWN TO FIRST TEE ───
 function startCountdown() {
   // April 2, 2026 5:30 AM PDT = 12:30 UTC (Daylight Saving Time)
-  const teeTime = new Date('2026-04-02T12:30:00Z');
+  const teeTime = new Date(adminSettings.countdownTarget || '2026-04-02T12:30:00Z');
   function tick() {
     const now = new Date();
     const diff = teeTime - now;
     const cd = document.getElementById('masters-countdown');
     if (!cd) return;
     if (diff <= 0) {
-      document.getElementById('cd-days').textContent = '0';
-      document.getElementById('cd-hours').textContent = '00';
-      document.getElementById('cd-mins').textContent = '00';
-      document.getElementById('cd-secs').textContent = '00';
+      if (cd) cd.style.display = 'none';
       return;
     }
     const days  = Math.floor(diff / 86400000);
@@ -5550,6 +5640,15 @@ function renderAdminPanel() {
   if (tsCut)  tsCut.value  = CUT_RULE;
   // Build per-hole par inputs
   buildHoleParInputs();
+  // Populate countdown inputs
+  const cdToggle = document.getElementById('toggle-countdown');
+  const cdInput  = document.getElementById('countdown-datetime');
+  if (cdToggle) { cdToggle.checked = adminSettings.showCountdown; updateToggleUI('toggle-countdown', adminSettings.showCountdown); }
+  if (cdInput && adminSettings.countdownTarget) {
+    const d = new Date(adminSettings.countdownTarget);
+    const pad = n => String(n).padStart(2,'0');
+    cdInput.value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
   if (!document.getElementById('page-admin').classList.contains('active')) return;
   console.log('renderAdminPanel called, allTeams length:', allTeams.length);
   const currentTeams = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME);
