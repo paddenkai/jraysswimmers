@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jrays-swimmers-v27';
+const CACHE_NAME = 'jrays-swimmers-v31';
 const SHELL_ASSETS = ['/', '/index.html'];
 
 self.addEventListener('install', event => {
