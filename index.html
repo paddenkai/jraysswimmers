@@ -1673,7 +1673,7 @@
 </div>
 <div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
   <audio id="bg-audio" loop>
-    <source src="./The_Masters_Full_Theme.mp3" type="audio/mpeg">
+    <source src="./The Masters Full Theme.mp3" type="audio/mpeg">
   </audio>
 </div>
 
@@ -1818,7 +1818,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.1.8 · 2026-04-06 4:45 PM';
+const APP_VERSION = 'v2.2.0 · 2026-04-06 4:05 PM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -5717,13 +5717,26 @@ function startMusic() {
   musicStarted = true;
   const audio = document.getElementById('bg-audio');
   audio.volume = 0.6;
-  audio.play();
-  musicPlaying = true;
-  updateMusicBtn();
-  const label = document.getElementById('music-label');
-  label.textContent = '♪ Masters Theme';
-  label.style.opacity = '1';
-  setTimeout(() => { label.style.opacity = '0'; }, 3500);
+  audio.load();
+  const playPromise = audio.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      musicPlaying = true;
+      updateMusicBtn();
+      const label = document.getElementById('music-label');
+      label.textContent = '♪ Masters Theme';
+      label.style.opacity = '1';
+      setTimeout(() => { label.style.opacity = '0'; }, 3500);
+    }).catch(err => {
+      console.error('Audio play failed:', err);
+      musicStarted = false;
+      musicPlaying = false;
+      updateMusicBtn();
+    });
+  } else {
+    musicPlaying = true;
+    updateMusicBtn();
+  }
 }
 
 function toggleMusic() {
