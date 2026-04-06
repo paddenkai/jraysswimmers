@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jrays-swimmers-v32';
+const CACHE_NAME = 'jrays-swimmers-v36';
 const SHELL_ASSETS = ['/', '/index.html'];
 
 self.addEventListener('install', event => {
@@ -34,7 +34,6 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Push received — show notification
 self.addEventListener('push', event => {
   let data = { title: "J.Ray's Swimmers", body: 'Leaderboard update!', url: '/' };
   if (event.data) {
@@ -52,7 +51,6 @@ self.addEventListener('push', event => {
   );
 });
 
-// Tap notification — open app
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   const url = event.notification.data?.url || '/';
