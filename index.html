@@ -96,12 +96,13 @@
     background: none;
     border: none;
     color: rgba(250,246,238,0.75);
-    font-family: 'EB Garamond', serif;
-    font-size: 0.95rem;
+    font-family: 'Azalea', 'EB Garamond', serif;
+    font-size: 1.05rem;
     padding: 8px 14px;
     cursor: pointer;
     border-radius: 4px;
     transition: background 0.2s, color 0.2s;
+    font-weight: 400;
   }
   nav button:hover { color: var(--gold); background: rgba(201,168,76,0.1); }
   nav button.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
@@ -207,9 +208,9 @@
     padding-bottom: 12px;
   }
   .section-title {
-    font-family: 'EB Garamond', 'Playfair Display', serif;
+    font-family: 'Azalea', 'EB Garamond', 'Playfair Display', serif;
     font-size: 1.8rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--green);
   }
   .section-sub { font-size: 0.85rem; color: #666; font-family: 'DM Mono', monospace; }
@@ -810,7 +811,7 @@
       <button onclick="showPage('stats')" id="nav-stats" style="display:none;">Player Stats</button>
       <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(206,170,120,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
       <button onclick="showPage('history')" id="nav-history">History</button>
-      <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); font-size:0.78rem; position:relative;">⚙ Admin<span id="admin-badge" style="display:none; position:absolute; top:-4px; right:-2px; width:9px; height:9px; background:#e05555; border-radius:50%; box-shadow:0 0 6px rgba(224,85,85,0.9); animation:pulse-dot 1.5s infinite;"></span></button>
+      <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); position:relative;">Admin<span id="admin-badge" style="display:none; position:absolute; top:-4px; right:-2px; width:9px; height:9px; background:#e05555; border-radius:50%; box-shadow:0 0 6px rgba(224,85,85,0.9); animation:pulse-dot 1.5s infinite;"></span></button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
       <button id="nav-logout" onclick="logout()" style="display:none">Sign Out</button>
     </nav>
@@ -877,8 +878,8 @@
           </div>
 
           <!-- Tagline -->
-          <div style="font-family:'Playfair Display',serif; font-size:clamp(0.95rem,2.5vw,1.2rem); font-style:italic; color:rgba(250,246,238,0.6); margin-bottom:32px;">
-            It only takes one <span style="color:var(--gold);">stroke.</span>
+          <div style="font-family:'Azalea',serif; font-size:clamp(1.1rem,2.5vw,1.5rem); color:rgba(250,246,238,0.75); margin-bottom:32px;">
+            It Only Takes One <span style="color:var(--gold);">Stroke.</span>
           </div>
 
           <div class="hero-btns" style="display:flex; gap:12px; justify-content:center; flex-direction:column; align-items:center; margin-bottom:16px;">
@@ -1354,7 +1355,7 @@
   <div id="page-admin" class="page">
     <div class="section-header">
       <div>
-        <div class="section-title">⚙ Admin Panel</div>
+        <div class="section-title">Admin Panel</div>
         <div class="section-sub">J.Ray's Swimmers Pool · Management</div>
       </div>
       <button onclick="copyInviteLink()" style="background:var(--green); color:var(--gold); border:1px solid rgba(201,168,76,0.4); border-radius:4px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px; cursor:pointer; white-space:nowrap;">🔗 COPY INVITE LINK</button>
@@ -1851,7 +1852,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.5.4 · 2026-04-07 10:25 AM';
+const APP_VERSION = 'v2.5.6 · 2026-04-07 10:35 AM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
