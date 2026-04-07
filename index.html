@@ -97,8 +97,8 @@
     border: none;
     color: rgba(250,246,238,0.75);
     font-family: 'Azalea', 'EB Garamond', serif;
-    font-size: 1.05rem;
-    padding: 8px 14px;
+    font-size: 0.95rem;
+    padding: 8px 12px;
     cursor: pointer;
     border-radius: 4px;
     transition: background 0.2s, color 0.2s;
@@ -813,7 +813,7 @@
       <button onclick="showPage('history')" id="nav-history">History</button>
       <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); position:relative;">Admin<span id="admin-badge" style="display:none; position:absolute; top:-4px; right:-2px; width:9px; height:9px; background:#e05555; border-radius:50%; box-shadow:0 0 6px rgba(224,85,85,0.9); animation:pulse-dot 1.5s infinite;"></span></button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
-      <button id="nav-logout" onclick="logout()" style="display:none">Sign Out</button>
+      <button id="nav-logout" onclick="logout()" style="display:none; font-size:0.75rem; opacity:0.7;">Sign Out</button>
     </nav>
   </div>
 </header>
@@ -899,22 +899,22 @@
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:1px; background:rgba(201,168,76,0.2); border:1px solid rgba(201,168,76,0.25); border-radius:4px; overflow:hidden;">
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.3rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Draft Your Teams</div>
+            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.15rem; color:var(--gold); margin-bottom:8px;">Draft Your Teams</div>
             <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Pick 5 golfers from The Masters 2026 field. Enter as many teams as you want — more teams, more chances to win.</div>
           </div>
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.3rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Pay via Venmo</div>
+            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.15rem; color:var(--gold); margin-bottom:8px;">Pay via Venmo</div>
             <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $25 per team to <span style="color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.82rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
           </div>
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.3rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Follow Live</div>
+            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.15rem; color:var(--gold); margin-bottom:8px;">Follow Live</div>
             <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update every 60 seconds. Track the leaderboard and see your team's earnings in real time.</div>
           </div>
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.3rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Most Earnings Wins</div>
+            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.15rem; color:var(--gold); margin-bottom:8px;">Most Earnings Wins</div>
             <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at Augusta National. Highest total takes the pot.</div>
           </div>
 
@@ -1852,7 +1852,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.5.6 · 2026-04-07 10:35 AM';
+const APP_VERSION = 'v2.5.7 · 2026-04-07 10:40 AM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
