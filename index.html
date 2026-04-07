@@ -1377,6 +1377,19 @@
       <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:16px;">⚙ Tournament Controls</div>
       <div style="display:flex; flex-direction:column; gap:14px;">
 
+        <!-- Tournament Live Toggle -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f0f8f0; border-radius:6px; border:1.5px solid #a8d5a8;">
+          <div>
+            <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--green);">🏌️ Tournament Live</div>
+            <div style="font-size:0.78rem; color:#888; margin-top:2px;">Enable live score fetching from ESPN · Turn on when the tournament begins</div>
+          </div>
+          <label style="position:relative; display:inline-block; width:52px; height:28px; cursor:pointer;">
+            <input type="checkbox" id="toggle-scores-live" onchange="saveAdminSettings()" style="opacity:0; width:0; height:0;">
+            <span id="toggle-scores-live-track" style="position:absolute; inset:0; background:#ccc; border-radius:28px; transition:0.3s;"></span>
+            <span id="toggle-scores-live-thumb" style="position:absolute; left:4px; top:4px; width:20px; height:20px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+          </label>
+        </div>
+
         <!-- Registration Toggle -->
         <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
           <div>
@@ -1830,7 +1843,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.4.4 · 2026-04-07 8:35 AM';
+const APP_VERSION = 'v2.4.5 · 2026-04-07 9:00 AM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -1859,6 +1872,7 @@ async function loadAdminSettings() {
     adminSettings.showResults = data.show_results || false;
     adminSettings.allowEditing = data.allow_editing !== undefined ? data.allow_editing : true;
     adminSettings.showCutLine = data.show_cut_line || false;
+    adminSettings.scoresLive = data.scores_live || false;
     // officialCut stored in localStorage (not Supabase — no schema change needed)
     adminSettings.officialCut = localStorage.getItem('officialCut') === '1';
     updateToggleUI('toggle-official-cut', adminSettings.officialCut);
@@ -1885,6 +1899,9 @@ async function loadAdminSettings() {
     if (tsName) tsName.value = TOURNAMENT_NAME;
     if (tsCut)  tsCut.value  = CUT_RULE;
     buildHoleParInputs();
+    // Scores live toggle
+    const slToggle = document.getElementById('toggle-scores-live');
+    if (slToggle) { slToggle.checked = adminSettings.scoresLive; updateToggleUI('toggle-scores-live', adminSettings.scoresLive); }
     // Populate countdown inputs
     const cdToggle = document.getElementById('toggle-countdown');
     const cdInput  = document.getElementById('countdown-datetime');
@@ -1921,6 +1938,7 @@ async function saveAdminSettings() {
   adminSettings.showCutLine = document.getElementById('toggle-cutline').checked;
   adminSettings.showProjectedWinner = document.getElementById('toggle-projected-winner').checked;
   adminSettings.showHistory = document.getElementById('toggle-show-history').checked;
+  adminSettings.scoresLive = document.getElementById('toggle-scores-live').checked;
   const { error } = await sb.from('admin_settings').upsert({
     id: 1,
     registration_open: adminSettings.registrationOpen,
@@ -1932,6 +1950,7 @@ async function saveAdminSettings() {
     show_history: adminSettings.showHistory,
     show_countdown: adminSettings.showCountdown,
     countdown_target: adminSettings.countdownTarget,
+    scores_live: adminSettings.scoresLive,
     tournament_name: TOURNAMENT_NAME,
     tournament_par: TOURNAMENT_PAR,
     cut_rule: CUT_RULE,
@@ -1945,6 +1964,7 @@ async function saveAdminSettings() {
   updateToggleUI('toggle-projected-winner', adminSettings.showProjectedWinner);
   updateToggleUI('toggle-show-history', adminSettings.showHistory);
   updateToggleUI('toggle-editing', adminSettings.allowEditing);
+  updateToggleUI('toggle-scores-live', adminSettings.scoresLive);
   updateNav();
   renderLeaderboard();
   renderMyTeams();
@@ -2563,10 +2583,11 @@ function updateFetchStatus(status) {
 }
 
 function startLiveFetching() {
+  if (!adminSettings.scoresLive) return; // only fetch when admin has enabled live scores
   const btn = document.getElementById('refresh-btn');
   if (btn) { btn.style.opacity = '1'; btn.style.cursor = 'pointer'; btn.style.pointerEvents = 'auto'; }
   fetchESPNScores();
-  fetchInterval = setInterval(fetchESPNScores, 60000); // every 60s
+  if (!fetchInterval) fetchInterval = setInterval(() => { if (adminSettings.scoresLive) fetchESPNScores(); }, 60000);
 }
 
 // Helper: resolve golfer name to ID
