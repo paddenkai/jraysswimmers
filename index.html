@@ -1604,7 +1604,10 @@
             <div style="font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700; color:var(--green); letter-spacing:1px;">MY DEVICE NOTIFICATIONS</div>
             <div id="admin-push-status-text" style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#888; margin-top:2px;">Checking...</div>
           </div>
-          <button id="admin-push-toggle-btn" onclick="toggleAdminPush()" style="padding:9px 20px; border-radius:4px; border:none; font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700; letter-spacing:1px; cursor:pointer; background:var(--green); color:var(--gold);">...</button>
+          <div style="display:flex; gap:8px;">
+            <button id="admin-push-test-btn" onclick="testAdminPush()" style="padding:9px 14px; border-radius:4px; border:1.5px solid var(--green); font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700; letter-spacing:1px; cursor:pointer; background:transparent; color:var(--green);">TEST</button>
+            <button id="admin-push-toggle-btn" onclick="toggleAdminPush()" style="padding:9px 20px; border-radius:4px; border:none; font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700; letter-spacing:1px; cursor:pointer; background:var(--green); color:var(--gold);">...</button>
+          </div>
         </div>
         <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
           <div style="flex:1; min-width:200px;">
@@ -1827,7 +1830,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.4.1 · 2026-04-07 8:00 AM';
+const APP_VERSION = 'v2.4.2 · 2026-04-07 8:15 AM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -6048,12 +6051,16 @@ async function subscribeToPush() {
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
     });
-    await sb.from('push_subscriptions').upsert({
+    const subJson = sub.toJSON();
+    console.log('[subscribeToPush] subscription endpoint:', subJson.endpoint?.slice(0, 60));
+    const { error } = await sb.from('push_subscriptions').upsert({
       user_email: currentUser.email,
-      subscription: sub.toJSON()
+      subscription: subJson
     }, { onConflict: 'user_email' });
+    if (error) { console.error('[subscribeToPush] upsert error:', error); return false; }
+    console.log('[subscribeToPush] saved to Supabase for', currentUser.email);
     return true;
-  } catch (err) { console.error('Push subscription error:', err); return false; }
+  } catch (err) { console.error('[subscribeToPush] error:', err); return false; }
 }
 
 async function unsubscribeFromPush() {
@@ -6106,6 +6113,37 @@ async function toggleAdminPush() {
   }
   btn.disabled = false;
   await updateAdminPushUI();
+}
+
+async function testAdminPush() {
+  const btn = document.getElementById('admin-push-test-btn');
+  btn.disabled = true;
+  btn.textContent = '...';
+  const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGd3ZXJxc2xmc2Z3bGprdXRxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjE3MjgwMiwiZXhwIjoyMDg3NzQ4ODAyfQ.iHx2sEYntApKU1iyGlhFilUfNoPm-R653TNXsUrZAOk';
+  const { data: subs } = await sb.from('push_subscriptions').select('*').eq('user_email', 'kai.padden11@gmail.com');
+  console.log('[testPush] subs in DB:', subs?.length, subs);
+  if (!subs || subs.length === 0) {
+    showToast('No subscription found in DB — hit ENABLE first', 'error');
+    btn.disabled = false; btn.textContent = 'TEST'; return;
+  }
+  try {
+    const res = await fetch('https://faxgwerqslfsfwljkutq.supabase.co/functions/v1/send-push-notifications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SERVICE_ROLE_KEY}` },
+      body: JSON.stringify({
+        adminMessage: { title: "J.Ray's Swimmers 🏌️", body: 'Test notification — it works! 🎉' },
+        targetSubscriptions: subs.map(s => s.subscription)
+      })
+    });
+    const json = await res.json().catch(() => ({}));
+    console.log('[testPush] response:', res.status, json);
+    if (res.ok && json.sent > 0) showToast('✅ Test notification sent!', 'success');
+    else showToast(`Edge function error: ${JSON.stringify(json)}`, 'error');
+  } catch(e) {
+    console.error('[testPush]', e);
+    showToast('Failed: ' + e.message, 'error');
+  }
+  btn.disabled = false; btn.textContent = 'TEST';
 }
 
 function updateMasterPushUI(enabled) {
