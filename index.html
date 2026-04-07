@@ -1658,11 +1658,19 @@
       </div>
     </div>
 
+    <!-- Bulk Paid Actions -->
+    <div id="bulk-paid-bar" style="display:none; align-items:center; gap:12px; padding:12px 16px; background:#f0f8f0; border:1.5px solid #a8d5a8; border-radius:6px; margin-bottom:12px;">
+      <span id="bulk-selected-count" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--green); font-weight:700;">0 selected</span>
+      <button onclick="bulkMarkPaid()" style="padding:8px 18px; background:#2ecc71; border:none; color:white; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700; cursor:pointer;">✓ Mark Selected as Paid + Send Email</button>
+      <button onclick="clearBulkSelection()" style="padding:8px 14px; background:none; border:1.5px solid #aaa; color:#888; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; cursor:pointer;">Clear</button>
+    </div>
+
     <!-- Team Table -->
     <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
-      <table class="leaderboard-table" id="admin-table" style="min-width:640px;">
+      <table class="leaderboard-table" id="admin-table" style="min-width:660px;">
         <thead>
           <tr>
+            <th style="width:32px;"><input type="checkbox" id="select-all-unpaid" onchange="toggleSelectAllUnpaid(this)" title="Select all unpaid"></th>
             <th style="width:36px;">#</th>
             <th>Team Name</th>
             <th>Owner</th>
@@ -1852,7 +1860,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.5.8 · 2026-04-07 10:45 AM';
+const APP_VERSION = 'v2.6.0 · 2026-04-07 2:00 PM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -5628,6 +5636,8 @@ function renderAdminPanel() {
   renderAdminTable();
 }
 
+let bulkSelected = new Set();
+
 function renderAdminTable() {
   if (!document.getElementById('page-admin').classList.contains('active')) return;
   const q = (document.getElementById('admin-search')?.value || '').toLowerCase();
@@ -5642,7 +5652,6 @@ function renderAdminTable() {
     (t.owner || '').toLowerCase().includes(q)
   );
 
-  // Sort: unpaid first, then alphabetical
   teams.sort((a, b) => {
     if (a.paid !== b.paid) return a.paid ? 1 : -1;
     return a.name.localeCompare(b.name);
@@ -5650,7 +5659,7 @@ function renderAdminTable() {
 
   const tbody = document.getElementById('admin-tbody');
   if (teams.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#aaa;font-style:italic;">No teams found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:#aaa;font-style:italic;">No teams found.</td></tr>`;
     return;
   }
 
@@ -5658,10 +5667,15 @@ function renderAdminTable() {
     const golferNames = team.golfers.map(id => GOLFERS.find(g => g.id === id)?.name).filter(Boolean).join(', ');
     const statusColor = team.paid ? '#2ecc71' : '#e74c3c';
     const statusText = team.paid ? 'PAID' : 'UNPAID';
+    const checked = bulkSelected.has(team.id) ? 'checked' : '';
+    const checkbox = !team.paid
+      ? `<input type="checkbox" ${checked} onchange="toggleBulkSelect('${team.id}', this.checked)" style="cursor:pointer; width:15px; height:15px;">`
+      : `<span style="width:15px;display:inline-block;"></span>`;
     const actionBtn = team.paid
       ? `<button onclick="togglePaidStatus('${team.id}', false)" style="font-size:0.72rem;padding:4px 10px;background:none;border:1.5px solid #e74c3c;color:#e74c3c;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;">Mark Unpaid</button>`
       : `<button onclick="togglePaidStatus('${team.id}', true)" style="font-size:0.72rem;padding:4px 10px;background:#2ecc71;border:none;color:white;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;font-weight:700;">✓ Mark Paid</button>`;
     return `<tr>
+      <td>${checkbox}</td>
       <td style="color:#aaa;font-family:'DM Mono',monospace;font-size:0.78rem;">${i + 1}</td>
       <td><strong>${team.name}</strong></td>
       <td style="font-size:0.85rem;">${team.owner_name || '–'}</td>
@@ -5674,6 +5688,75 @@ function renderAdminTable() {
       </td>
     </tr>`;
   }).join('');
+
+  updateBulkBar();
+}
+
+function toggleBulkSelect(teamId, checked) {
+  if (checked) bulkSelected.add(teamId);
+  else bulkSelected.delete(teamId);
+  updateBulkBar();
+}
+
+function toggleSelectAllUnpaid(checkbox) {
+  const unpaidTeams = allTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME && !t.paid);
+  if (checkbox.checked) unpaidTeams.forEach(t => bulkSelected.add(t.id));
+  else bulkSelected.clear();
+  renderAdminTable();
+}
+
+function clearBulkSelection() {
+  bulkSelected.clear();
+  const cb = document.getElementById('select-all-unpaid');
+  if (cb) cb.checked = false;
+  renderAdminTable();
+}
+
+function updateBulkBar() {
+  const bar = document.getElementById('bulk-paid-bar');
+  const count = document.getElementById('bulk-selected-count');
+  if (!bar) return;
+  if (bulkSelected.size > 0) {
+    bar.style.display = 'flex';
+    count.textContent = `${bulkSelected.size} team${bulkSelected.size !== 1 ? 's' : ''} selected`;
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+async function bulkMarkPaid() {
+  if (bulkSelected.size === 0) return;
+  const ids = [...bulkSelected];
+  const now = new Date().toISOString();
+
+  const { error } = await sb.from('teams').update({ paid: true, paid_at: now }).in('id', ids);
+  if (error) { showToast('Error marking teams as paid.', 'error'); return; }
+
+  // Update local state
+  ids.forEach(id => {
+    const team = allTeams.find(t => t.id === id);
+    if (team) { team.paid = true; team.paid_at = now; }
+  });
+
+  // Group by owner email and send one email per user
+  const byOwner = {};
+  ids.forEach(id => {
+    const team = allTeams.find(t => t.id === id);
+    if (!team) return;
+    if (!byOwner[team.owner]) byOwner[team.owner] = { name: team.owner_name, teams: [] };
+    byOwner[team.owner].teams.push(team);
+  });
+
+  let emailsSent = 0;
+  for (const [email, { name, teams }] of Object.entries(byOwner)) {
+    await sendPaymentConfirmationEmail(email, name, teams);
+    emailsSent++;
+  }
+
+  showToast(`${ids.length} team${ids.length !== 1 ? 's' : ''} marked paid · ${emailsSent} email${emailsSent !== 1 ? 's' : ''} sent ✓`, 'success');
+  bulkSelected.clear();
+  renderAdminPanel();
+  updateStats();
 }
 
 async function deleteTeam(btn) {
@@ -5697,9 +5780,27 @@ async function togglePaidStatus(teamId, paid) {
   if (error) { showToast('Error updating payment status.', 'error'); return; }
   team.paid = paid;
   team.paid_at = paid ? new Date().toISOString() : null;
+  if (paid) await sendPaymentConfirmationEmail(team.owner, team.owner_name, [team]);
   showToast(`"${team.name}" marked ${paid ? 'paid ✓' : 'unpaid'}`, paid ? 'success' : '');
   renderAdminPanel();
   updateStats();
+}
+
+async function sendPaymentConfirmationEmail(email, name, teams) {
+  try {
+    const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGd3ZXJxc2xmc2Z3bGprdXRxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjE3MjgwMiwiZXhwIjoyMDg3NzQ4ODAyfQ.iHx2sEYntApKU1iyGlhFilUfNoPm-R653TNXsUrZAOk';
+    const teamList = teams.map(t => {
+      const golfers = t.golfers.map(id => GOLFERS.find(g => g.id === id)?.name).filter(Boolean).join(', ');
+      return { name: t.name, golfers };
+    });
+    await fetch('https://faxgwerqslfsfwljkutq.supabase.co/functions/v1/send-payment-confirmation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SERVICE_ROLE_KEY}` },
+      body: JSON.stringify({ email, name, teams: teamList, tournament: TOURNAMENT_NAME })
+    });
+  } catch(e) {
+    console.warn('Email send failed:', e);
+  }
 }
 
 function exportResults() {
