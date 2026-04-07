@@ -1597,6 +1597,15 @@
     <div style="background:var(--white); border:1.5px solid #e0dbd0; border-radius:8px; padding:20px; margin-bottom:24px;">
       <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:16px;">📲 Push Notifications</div>
       <div style="display:flex; flex-direction:column; gap:12px;">
+
+        <!-- Admin device subscription toggle -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#f8f6f0; border:1.5px solid #e0dbd0; border-radius:6px;">
+          <div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700; color:var(--green); letter-spacing:1px;">MY DEVICE NOTIFICATIONS</div>
+            <div id="admin-push-status-text" style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#888; margin-top:2px;">Checking...</div>
+          </div>
+          <button id="admin-push-toggle-btn" onclick="toggleAdminPush()" style="padding:9px 20px; border-radius:4px; border:none; font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700; letter-spacing:1px; cursor:pointer; background:var(--green); color:var(--gold);">...</button>
+        </div>
         <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
           <div style="flex:1; min-width:200px;">
             <div style="font-size:0.75rem; font-family:'DM Mono',monospace; color:#888; letter-spacing:1px; margin-bottom:6px;">TITLE</div>
@@ -1818,7 +1827,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.4.0 · 2026-04-07 7:45 AM';
+const APP_VERSION = 'v2.4.1 · 2026-04-07 8:00 AM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -5555,6 +5564,7 @@ function adminLogout() {
 
 function renderAdminPanel() {
   if (!adminLoggedIn) return;
+  updateAdminPushUI();
   // Populate tournament settings inputs
   const tsName = document.getElementById('ts-name');
   const tsPar  = document.getElementById('ts-par');
@@ -6053,6 +6063,49 @@ async function unsubscribeFromPush() {
     if (sub) await sub.unsubscribe();
     await sb.from('push_subscriptions').delete().eq('user_email', currentUser.email);
   } catch(err) { console.error(err); }
+}
+
+async function updateAdminPushUI() {
+  const btn = document.getElementById('admin-push-toggle-btn');
+  const status = document.getElementById('admin-push-status-text');
+  if (!btn || !status) return;
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    status.textContent = 'Push not supported in this browser';
+    btn.style.display = 'none';
+    return;
+  }
+  const reg = await navigator.serviceWorker.ready;
+  const sub = await reg.pushManager.getSubscription();
+  const isOn = !!sub && Notification.permission === 'granted';
+  status.textContent = isOn ? '✓ Enabled on this device' : 'Not enabled on this device';
+  btn.textContent = isOn ? 'DISABLE' : 'ENABLE';
+  btn.style.background = isOn ? '#c0392b' : 'var(--green)';
+}
+
+async function toggleAdminPush() {
+  const btn = document.getElementById('admin-push-toggle-btn');
+  const status = document.getElementById('admin-push-status-text');
+  btn.disabled = true;
+  btn.textContent = '...';
+  const reg = await navigator.serviceWorker.ready;
+  const sub = await reg.pushManager.getSubscription();
+  if (sub) {
+    await unsubscribeFromPush();
+    status.textContent = 'Disabled';
+    showToast('Push notifications disabled', 'info');
+  } else {
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') {
+      status.textContent = 'Permission denied — check browser settings';
+      btn.disabled = false;
+      await updateAdminPushUI();
+      return;
+    }
+    const ok = await subscribeToPush();
+    showToast(ok ? '📲 Push notifications enabled!' : 'Failed to enable — check console', ok ? 'success' : 'error');
+  }
+  btn.disabled = false;
+  await updateAdminPushUI();
 }
 
 function updateMasterPushUI(enabled) {
