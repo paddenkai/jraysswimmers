@@ -812,7 +812,7 @@
 <!-- STATS BAR -->
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><div class="stat-val" id="stat-entries">0</div><div class="stat-label">Teams Entered</div></div>
-  <div class="stat"><div class="stat-val" id="stat-pot">$0</div><div class="stat-label">Total Pot</div></div>
+  <div class="stat" style="display:none;"><div class="stat-val" id="stat-pot">$0</div><div class="stat-label">Total Pot</div></div>
   <div class="stat" id="stat-cut-wrap" style="display:none;"><div class="stat-val" id="stat-countdown">–</div><div class="stat-label">Current Cut Line</div></div>
   <div class="stat" id="stat-leader-wrap" style="display:none;">
     <div class="stat-val" id="stat-leader">–</div>
@@ -1830,7 +1830,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.4.2 · 2026-04-07 8:15 AM';
+const APP_VERSION = 'v2.4.4 · 2026-04-07 8:35 AM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
