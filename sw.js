@@ -1,5 +1,5 @@
-const CACHE_NAME = 'jrays-swimmers-v48';
-const SHELL_ASSETS = ['/', '/index.html'];
+const CACHE_NAME = 'jrays-swimmers-v52';
+const SHELL_ASSETS = ['/', '/index.html', '/Azalea.otf'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL_ASSETS)));

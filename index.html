@@ -14,6 +14,15 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="J.Ray's Swimmers">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Azalea';
+    src: url('./Azalea.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -840,7 +849,7 @@
         <div style="text-align:center; margin-bottom:44px;">
 
           <!-- Tournament title -->
-          <div style="font-family:'EB Garamond',serif; font-size:clamp(2.4rem,6vw,4rem); font-weight:600; color:var(--gold); letter-spacing:4px; text-transform:uppercase; line-height:1; margin-bottom:10px;">The Masters</div>
+          <div style="font-family:'Azalea', 'EB Garamond',serif; font-size:clamp(2.4rem,6vw,4rem); font-weight:400; color:var(--gold); letter-spacing:6px; text-transform:uppercase; line-height:1; margin-bottom:10px;">The Masters</div>
           <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(201,168,76,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Augusta National · April 9–12, 2026</div>
 
           <!-- Countdown timer -->
@@ -900,13 +909,13 @@
           </div>
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Most Earnings Wins</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at Augusta National. Highest total takes the pot.</div>
+            <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Follow Live</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update every 60 seconds. Track the leaderboard and see your team's earnings in real time.</div>
           </div>
 
           <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Follow Live</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update every 60 seconds. Get score alerts for your teams, track the leaderboard, and install the app to your home screen for push notifications.</div>
+            <div style="font-family:'EB Garamond',serif; font-weight:600; font-size:1.05rem; color:var(--gold); margin-bottom:8px; white-space:nowrap;">Most Earnings Wins</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at Augusta National. Highest total takes the pot.</div>
           </div>
 
         </div>
@@ -1843,7 +1852,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.4.8 · 2026-04-07 9:20 AM';
+const APP_VERSION = 'v2.5.2 · 2026-04-07 10:15 AM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
