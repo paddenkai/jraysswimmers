@@ -1818,7 +1818,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.3.8 · 2026-04-06 6:40 PM';
+const APP_VERSION = 'v2.3.9 · 2026-04-06 6:45 PM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -3529,8 +3529,9 @@ async function confirmAndSubmit() {
 async function notifyAdminNewTeam(rows) {
   try {
     const ADMIN_EMAIL = 'kai.padden11@gmail.com';
-    const { data: subs } = await sb.from('push_subscriptions').select('*').eq('user_email', ADMIN_EMAIL);
-    if (!subs || subs.length === 0) return;
+    const { data: subs, error: subError } = await sb.from('push_subscriptions').select('*').eq('user_email', ADMIN_EMAIL);
+    console.log('[notifyAdmin] subs found:', subs?.length, subError);
+    if (!subs || subs.length === 0) { console.warn('[notifyAdmin] No subscription found for admin'); return; }
 
     const teamNames = rows.map(r => r.name).join(', ');
     const ownerName = rows[0]?.owner_name || rows[0]?.owner || 'Someone';
@@ -3539,8 +3540,8 @@ async function notifyAdminNewTeam(rows) {
     const body = `${ownerName} just submitted ${count} team${count !== 1 ? 's' : ''}: ${teamNames}`;
 
     const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGd3ZXJxc2xmc2Z3bGprdXRxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjE3MjgwMiwiZXhwIjoyMDg3NzQ4ODAyfQ.iHx2sEYntApKU1iyGlhFilUfNoPm-R653TNXsUrZAOk';
-    // Pass only admin's subscription so edge function sends to just this device
-    await fetch('https://faxgwerqslfsfwljkutq.supabase.co/functions/v1/send-push-notifications', {
+    console.log('[notifyAdmin] Calling edge function with body:', { title, body, subCount: subs.length });
+    const res = await fetch('https://faxgwerqslfsfwljkutq.supabase.co/functions/v1/send-push-notifications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -3551,6 +3552,8 @@ async function notifyAdminNewTeam(rows) {
         targetSubscriptions: subs.map(s => s.subscription)
       })
     });
+    const resJson = await res.json().catch(() => ({}));
+    console.log('[notifyAdmin] Edge function response:', res.status, resJson);
   } catch(e) {
     console.warn('Admin notification failed:', e);
   }
