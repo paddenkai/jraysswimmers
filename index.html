@@ -1399,6 +1399,20 @@
           </label>
         </div>
 
+
+        <!-- Auto Lockdown Timer -->
+        <div style="background:#fff8f0; border:1.5px solid var(--gold); border-radius:6px; padding:16px 18px;">
+          <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:4px;">⏱ Auto Lockdown</div>
+          <div style="font-size:0.78rem; color:#888; margin-bottom:12px;">At this date/time: Registration closes, Pick Editing closes, Team Picks revealed automatically</div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <input type="datetime-local" id="lockdown-datetime"
+              style="padding:8px 12px; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.82rem; background:#fff; color:var(--dark); flex:1; min-width:200px;"
+              onchange="saveLockdownTime()">
+            <button onclick="clearLockdownTime()" style="padding:8px 14px; background:none; border:1.5px solid #d4d0c8; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; color:#888; cursor:pointer; white-space:nowrap;">Clear</button>
+          </div>
+          <div id="lockdown-status" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:#888; margin-top:8px;"></div>
+        </div>
+
         <!-- Registration Toggle -->
         <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
           <div>
@@ -1860,7 +1874,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.6.1 · 2026-04-07 4:20 PM';
+const APP_VERSION = 'v2.6.3 · 2026-04-07 8:35 PM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -2045,6 +2059,78 @@ async function loadSubList() {
       <span style="color:var(--dark);">${s.user_email || '–'}</span>
       <span style="color:#aaa; font-size:0.7rem;">${s.updated_at ? new Date(s.updated_at).toLocaleDateString() : ''}</span>
     </div>`).join('');
+}
+
+// ─── AUTO LOCKDOWN TIMER ───
+let lockdownInterval = null;
+
+async function saveLockdownTime() {
+  const input = document.getElementById('lockdown-datetime');
+  if (!input.value) return;
+  // Convert local datetime to UTC ISO string
+  const localDate = new Date(input.value);
+  const isoString = localDate.toISOString();
+  const { error } = await sb.from('admin_settings').upsert({
+    id: 1,
+    lockdown_at: isoString,
+    updated_at: new Date().toISOString()
+  });
+  if (error) { showToast('Error saving lockdown time.', 'error'); return; }
+  showToast('Lockdown scheduled ✓', 'success');
+  startLockdownCountdown(localDate);
+}
+
+async function clearLockdownTime() {
+  const { error } = await sb.from('admin_settings').upsert({
+    id: 1,
+    lockdown_at: null,
+    updated_at: new Date().toISOString()
+  });
+  if (error) { showToast('Error clearing lockdown.', 'error'); return; }
+  const input = document.getElementById('lockdown-datetime');
+  if (input) input.value = '';
+  const status = document.getElementById('lockdown-status');
+  if (status) status.textContent = '';
+  if (lockdownInterval) { clearInterval(lockdownInterval); lockdownInterval = null; }
+  showToast('Lockdown cleared', '');
+}
+
+function startLockdownCountdown(targetDate) {
+  if (lockdownInterval) clearInterval(lockdownInterval);
+  lockdownInterval = setInterval(() => {
+    const diff = targetDate - new Date();
+    const status = document.getElementById('lockdown-status');
+    if (!status) return;
+    if (diff <= 0) {
+      clearInterval(lockdownInterval);
+      lockdownInterval = null;
+      status.textContent = '✓ Lockdown fired — server will handle within 1 minute';
+      return;
+    }
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    status.textContent = `Server will lock in ${h}h ${m}m ${s}s`;
+  }, 1000);
+}
+
+async function startLockdownTimer() {
+  // Load lockdown_at from Supabase and start countdown display
+  const { data } = await sb.from('admin_settings').select('lockdown_at').eq('id', 1).single();
+  if (!data?.lockdown_at) return;
+  const lockdownAt = new Date(data.lockdown_at);
+  const ldInput = document.getElementById('lockdown-datetime');
+  if (ldInput) {
+    // Convert UTC to local datetime-local format
+    const offset = lockdownAt.getTimezoneOffset() * 60000;
+    const local = new Date(lockdownAt - offset);
+    ldInput.value = local.toISOString().slice(0, 16);
+  }
+  if (lockdownAt > new Date()) startLockdownCountdown(lockdownAt);
+  else {
+    const status = document.getElementById('lockdown-status');
+    if (status) status.textContent = '✓ Lockdown time has passed';
+  }
 }
 
 async function saveCountdownSettings() {
@@ -3074,6 +3160,33 @@ function startChatNotificationListener() {
         if (currentUser && payload.new.user_email === currentUser.email) return;
         if (!document.getElementById('page-chat')?.classList.contains('active')) {
           showChatBadge();
+        }
+      })
+      .subscribe();
+  } catch(e) {}
+
+  // Listen for admin_settings changes (lockdown firing server-side)
+  try {
+    sb.channel('admin_settings_channel')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'admin_settings' }, payload => {
+        const d = payload.new;
+        adminSettings.registrationOpen = d.registration_open;
+        adminSettings.allowEditing = d.allow_editing;
+        adminSettings.showPicks = d.show_picks;
+        adminSettings.showCutLine = d.show_cut_line;
+        adminSettings.scoresLive = d.scores_live;
+        if (d.scores_live && !fetchInterval) startLiveFetching();
+        updateNav();
+        renderLeaderboard();
+        renderMyTeams();
+        if (adminLoggedIn) {
+          updateToggleUI('toggle-registration', d.registration_open);
+          updateToggleUI('toggle-editing', d.allow_editing);
+          updateToggleUI('toggle-picks', d.show_picks);
+          updateToggleUI('toggle-scores-live', d.scores_live);
+          if (document.getElementById('toggle-registration')) document.getElementById('toggle-registration').checked = d.registration_open;
+          if (document.getElementById('toggle-editing')) document.getElementById('toggle-editing').checked = d.allow_editing;
+          if (document.getElementById('toggle-picks')) document.getElementById('toggle-picks').checked = d.show_picks;
         }
       })
       .subscribe();
@@ -5606,6 +5719,7 @@ function adminLogout() {
 function renderAdminPanel() {
   if (!adminLoggedIn) return;
   updateAdminPushUI();
+  startLockdownTimer(); // loads lockdown_at from Supabase
   // Populate tournament settings inputs
   const tsName = document.getElementById('ts-name');
   const tsPar  = document.getElementById('ts-par');
@@ -5953,6 +6067,7 @@ document.addEventListener('click', function(e) {
 })();
 
 initApp();
+startLockdownTimer();
 // ═══════════════════════════════════════════════════════
 // HEAD TO HEAD
 // ═══════════════════════════════════════════════════════
