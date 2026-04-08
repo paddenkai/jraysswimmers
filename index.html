@@ -513,10 +513,13 @@
 
   /* Tournament leaderboard — white board Masters style */
   #tournament-table { background: #fff; }
-  #tournament-table td { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 10px 8px; vertical-align: middle; }
-  #tournament-table tr:hover td { background: #f9f7f2 !important; }
+  #tournament-table tr:not(.scorecard-expand-row) td { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 10px 8px; vertical-align: middle; }
+  #tournament-table tr:not(.scorecard-expand-row):hover td { background: #f9f7f2 !important; }
   #tournament-table th { background: #fff !important; color: #1a4731 !important; -webkit-text-fill-color: #1a4731 !important; border-bottom: 2px solid #1a4731 !important; padding: 9px 8px; font-size: 0.7rem; letter-spacing: 1px; }
-  #tournament-table tr td:first-child { font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 700; color: #222; text-align: center; }
+  #tournament-table .scorecard-expand-row td { background: transparent !important; padding: 0 !important; border: none !important; }
+  #tournament-table .scorecard-expand-row tr td { background: transparent !important; }
+  #tournament-table .scorecard-expand-row tr:hover td { background: transparent !important; }
+  #tournament-table .scorecard-expand-row table tr td { background: inherit !important; }
   .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.9rem; }
   .rank-1 { background: var(--gold); color: var(--dark); }
   .rank-2 { background: #c0c0c0; color: var(--dark); }
@@ -1881,7 +1884,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.7.3 · 2026-04-07 11:40 PM';
+const APP_VERSION = 'v2.7.8 · 2026-04-08 1:00 AM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -4029,7 +4032,7 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = [4,5,4,3,4,3,6,5,4, 4,4,4,3,5,5,3,4,4]; // Augusta National par 72
+const HOLE_PARS = [4,5,4,3,4,3,4,5,4, 4,4,3,5,4,5,3,4,4]; // Augusta National par 72
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
   if (!expandRow) return;
@@ -4056,41 +4059,50 @@ function toggleScorecard(playerKey, clickedRow) {
     const back  = blankHoles.slice(9, 18);
     const frontPars = front.map(h => h.par);
     const backPars  = back.map(h => h.par);
-    const thStyle  = `padding:4px 2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.68rem; color:#aaa; min-width:26px;`;
-    const subStyle = `padding:2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.68rem; color:#bbb; min-width:26px;`;
     const golfer = GOLFERS.find(g => normalizeName(g.name) === playerKey);
-    const teeInfo = golfer?.teeTime ? `Tee time: ${golfer.teeTime} PST · R1` : 'Round 1';
+    const teeInfo = golfer?.teeTime ? `${golfer.teeTime} PST · R1` : 'Round 1';
+    const hdrStyle = `padding:7px 4px;text-align:center;font-family:'DM Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,0.85);min-width:34px;`;
+    const parStyle = `padding:6px 4px;text-align:center;font-family:'DM Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,0.7);min-width:34px;font-weight:700;`;
+    const sepStyle = `padding:7px 8px;text-align:center;font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:700;color:#c9a84c;border-left:1px solid rgba(255,255,255,0.25);min-width:40px;`;
     expandRow.querySelector('td').innerHTML = `
-      <div style="padding:10px 12px 14px;">
-        <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#aaa; margin-bottom:10px; letter-spacing:0.5px;">${teeInfo}</div>
-        <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
-          <table style="border-collapse:collapse; width:100%;">
-            <thead>
-              <tr>
-                <td style="${thStyle}"></td>
-                ${front.map(h => `<td style="${thStyle}">${h.hole}</td>`).join('')}
-                <td style="${thStyle} font-weight:700; color:#888;">OUT</td>
-                ${back.map(h => `<td style="${thStyle}">${h.hole}</td>`).join('')}
-                <td style="${thStyle} font-weight:700; color:#888;">IN</td>
-              </tr>
-              <tr>
-                <td style="${subStyle}">PAR</td>
-                ${frontPars.map(p => `<td style="${subStyle}">${p}</td>`).join('')}
-                <td style="${subStyle} font-weight:600;">${frontPars.reduce((a,b)=>a+b,0)}</td>
-                ${backPars.map(p => `<td style="${subStyle}">${p}</td>`).join('')}
-                <td style="${subStyle} font-weight:600;">${backPars.reduce((a,b)=>a+b,0)}</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding:5px 6px; font-family:'DM Mono',monospace; font-size:0.68rem; color:#888;">SCORE</td>
-                ${Array.from({length:9}, () => `<td style="padding:5px 2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.8rem; min-width:26px; color:#ddd;">·</td>`).join('')}
-                <td style="padding:5px 6px; text-align:center; font-family:'DM Mono',monospace; font-size:0.8rem; font-weight:700; color:var(--dark); background:#ece8df;">–</td>
-                ${Array.from({length:9}, () => `<td style="padding:5px 2px; text-align:center; font-family:'DM Mono',monospace; font-size:0.8rem; min-width:26px; color:#ddd;">·</td>`).join('')}
-                <td style="padding:5px 6px; text-align:center; font-family:'DM Mono',monospace; font-size:0.8rem; font-weight:700; color:var(--dark); background:#ece8df;">–</td>
-              </tr>
-            </tbody>
-          </table>
+      <div style="padding:8px 12px 12px; background:#1e3a2f;">
+        <div style="background:#1a4731; border-radius:6px 6px 0 0; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #c9a84c;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="background:#c9a84c; color:#1a4731; font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:2px; letter-spacing:1px;">–</span>
+            <span style="font-family:'DM Mono',monospace; font-weight:700; font-size:0.9rem; color:#fff; letter-spacing:1px;">${(golfer?.name || playerKey).toUpperCase()}</span>
+          </div>
+          <div style="font-family:'DM Mono',monospace; color:rgba(255,255,255,0.4); font-size:0.72rem; letter-spacing:1px;">${teeInfo}</div>
+        </div>
+        <div style="background:#1a4731; border-radius:0 0 6px 6px; overflow:hidden;">
+          <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+            <table style="border-collapse:collapse; width:100%; min-width:520px; background:#1a4731;">
+              <thead>
+                <tr style="background:#0d2318 !important;">
+                  <td style="${hdrStyle} text-align:left; padding-left:10px; background:#0d2318;"></td>
+                  ${front.map(h => `<td style="${hdrStyle} background:#0d2318;">${h.hole}</td>`).join('')}
+                  <td style="${sepStyle} font-size:0.7rem; color:rgba(255,255,255,0.6); background:#0d2318;">OUT</td>
+                  ${back.map(h => `<td style="${hdrStyle} background:#0d2318;">${h.hole}</td>`).join('')}
+                  <td style="${sepStyle} font-size:0.7rem; color:rgba(255,255,255,0.6); background:#0d2318;">IN</td>
+                </tr>
+                <tr style="background:#162e20 !important;">
+                  <td style="${parStyle} text-align:left; padding-left:10px; background:#162e20;">PAR</td>
+                  ${frontPars.map(p => `<td style="${parStyle} background:#162e20;">${p}</td>`).join('')}
+                  <td style="${sepStyle} color:rgba(255,255,255,0.6); background:#162e20;">${frontPars.reduce((a,b)=>a+b,0)}</td>
+                  ${backPars.map(p => `<td style="${parStyle} background:#162e20;">${p}</td>`).join('')}
+                  <td style="${sepStyle} color:rgba(255,255,255,0.6); background:#162e20;">${backPars.reduce((a,b)=>a+b,0)}</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:#1a4731 !important;">
+                  <td style="padding:8px 8px; font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(255,255,255,0.5); background:#1a4731;">SCORE</td>
+                  ${Array.from({length:9}, () => `<td style="padding:7px 4px; text-align:center; font-family:'DM Mono',monospace; font-size:0.85rem; min-width:34px; color:rgba(255,255,255,0.35); background:#1a4731;">·</td>`).join('')}
+                  <td style="${sepStyle} background:#1a4731;">–</td>
+                  ${Array.from({length:9}, () => `<td style="padding:7px 4px; text-align:center; font-family:'DM Mono',monospace; font-size:0.85rem; min-width:34px; color:rgba(255,255,255,0.35); background:#1a4731;">·</td>`).join('')}
+                  <td style="${sepStyle} background:#1a4731;">–</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>`;
     expandRow.style.display = '';
