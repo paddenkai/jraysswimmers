@@ -1874,7 +1874,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.6.3 · 2026-04-07 8:35 PM';
+const APP_VERSION = 'v2.6.5 · 2026-04-07 8:50 PM';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -3314,7 +3314,7 @@ async function showPage(name) {
   if (name === 'leaderboard') renderLeaderboard();
   if (name === 'admin') { renderAdminPanel(); loadPushSubCount(); }
   if (name === 'myteams') { await loadTeams(); renderMyTeams(); renderProfile(); await loadScoreAlertsFromSupabase(); clearProfileBadge(); }
-  if (name === 'tournament') renderTournament();
+  if (name === 'tournament') { renderTournament(); updateTeamHighlightSelector(); }
   if (name === 'stats') { await loadTeams(); renderStats('picks'); }
   if (name === 'history') { renderHistoryPage(); }
   if (name === 'chat') { initChat(); hideChatBadge(); }
@@ -4247,24 +4247,41 @@ function renderTournament() {
   }
 
   if (!playStarted) {
-    // Sort GOLFERS by tee time and display
-    const sortedGolfers = [...GOLFERS].filter(g => g.teeTime).sort((a, b) => {
-      // Parse "H:MM AM/PM" for sorting
-      const toMins = t => {
-        const [time, ampm] = t.split(' ');
-        let [h, m] = time.split(':').map(Number);
-        if (ampm === 'PM' && h !== 12) h += 12;
-        if (ampm === 'AM' && h === 12) h = 0;
-        return h * 60 + m;
-      };
-      return toMins(a.teeTime) - toMins(b.teeTime);
-    });
-    tbody.innerHTML = sortedGolfers.map(g => {
+    updateTeamHighlightSelector();
+    const selectedTeamId = document.getElementById('team-highlight-select')?.value;
+    const selectedTeam = (selectedTeamId && selectedTeamId !== '') ? allTeams.find(t => String(t.id) === String(selectedTeamId)) : null;
+    const highlightedNames = new Set(
+      selectedTeam ? selectedTeam.golfers.map(id => {
+        const g = GOLFERS.find(g => Number(g.id) === Number(id));
+        return g ? normalizeName(g.name) : null;
+      }).filter(Boolean) : []
+    );
+
+    const toMins = t => {
+      const [time, ampm] = t.split(' ');
+      let [h, m] = time.split(':').map(Number);
+      if (ampm === 'PM' && h !== 12) h += 12;
+      if (ampm === 'AM' && h === 12) h = 0;
+      return h * 60 + m;
+    };
+
+    const allGolfers = [...GOLFERS].filter(g => g.teeTime);
+    const starred = allGolfers.filter(g => window._watchList?.has(normalizeName(g.name)) || highlightedNames.has(normalizeName(g.name)));
+    const rest = allGolfers.filter(g => !window._watchList?.has(normalizeName(g.name)) && !highlightedNames.has(normalizeName(g.name)));
+    starred.sort((a, b) => toMins(a.teeTime) - toMins(b.teeTime));
+    rest.sort((a, b) => toMins(a.teeTime) - toMins(b.teeTime));
+    const sortedGolfers = [...starred, ...rest];
+
+    tbody.innerHTML = sortedGolfers.map((g, i) => {
       const key = normalizeName(g.name);
       const safeKey = key.replace(/'/g, "\\'");
-      return `<tr onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer;">
+      const isStarred = window._watchList?.has(key);
+      const isHighlighted = highlightedNames.has(key);
+      const divider = i === starred.length && starred.length > 0 && rest.length > 0
+        ? `<tr><td colspan="6" style="background:#e0dbd0; height:2px; padding:0;"></td></tr>` : '';
+      return `${divider}<tr onclick="toggleScorecard('${safeKey}', this)" style="cursor:pointer; ${isHighlighted ? 'background:rgba(201,168,76,0.08);' : ''}">
         <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#aaa;">–</td>
-        <td><strong>${g.name}</strong></td>
+        <td><span onclick="event.stopPropagation(); toggleWatch('${safeKey}')" id="star-${safeKey}" style="cursor:pointer; margin-right:6px; font-size:0.9rem; color:${isStarred ? 'var(--gold)' : '#ddd'};">★</span><strong style="${isHighlighted ? 'color:var(--green);' : ''}">${g.name}</strong></td>
         <td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">${g.teeTime} PST</td>
         <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#bbb;">–</td>
       </tr>
