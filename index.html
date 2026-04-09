@@ -1884,7 +1884,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = 'v2.7.8 · 2026-04-08 1:00 AM';
+const APP_VERSION = '2026-04-09-1200';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -2606,7 +2606,7 @@ function parseESPNAPI(data) {
       const projectedMissedCut = !isPostCut && cutScore !== null && p.scoreNum > cutScore && !p.inProgress && p.roundsPlayed >= 1;
       const missedCut = p.cut; // only official cut matters for filtering; projectedMissedCut is visual only
       const hasStarted = p.inProgress || p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
-      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : (isPostCut && missedCut) ? 0 : projectedMissedCut ? 0 : getPayoutForPosition(pos, tiedCount);
+      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : (isPostCut && missedCut) ? 25000 : projectedMissedCut ? 0 : getPayoutForPosition(pos, tiedCount);
       const posDisplay = p.wd ? 'WD' : (missedCut && isPostCut) ? 'MC' : (p.posDisplay || (!hasStarted ? '–' : '–'));
 
       liveScores[key] = {
@@ -2873,7 +2873,7 @@ function showHistoryDetail(tName) {
     const golferRows = [...(snap.golfers || snap.golferSnap || [])].sort((a,b) => { const pa = a.wd ? 998 : a.cut ? 997 : parseInt((a.position||'999').replace(/^T/,''))||999; const pb = b.wd ? 998 : b.cut ? 997 : parseInt((b.position||'999').replace(/^T/,''))||999; return pa-pb; }).map(sg => {
       const parts = sg.name.trim().split(' ');
       const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : sg.name;
-      const isZero = sg.cut || sg.wd || sg.earnings === 0;
+      const isZero = sg.wd || sg.earnings === 0;
       const posLabel = sg.wd ? 'WD' : (sg.cut ? 'MC' : (sg.position && sg.position !== '–' ? sg.position : ''));
       const posStr = posLabel ? `<span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.65rem; margin-right:4px;">${posLabel}</span>` : '';
       const earningsStr = isZero ? `<span style="color:var(--green-mid);">$0</span>` : `<span style="color:var(--green);">$${Math.round(sg.earnings || 0).toLocaleString()}</span>`;
@@ -3911,8 +3911,8 @@ function renderLeaderboard() {
         if (!g) return '';
         const parts = g.name.trim().split(' ');
         const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : g.name;
-        const earned = g.earnings > 0 ? `<span style="color:var(--green); margin-left:6px;">$${Math.round(g.earnings).toLocaleString()}</span>` :
-                       (g.cutMissed || g.withdrawn || g.liveData?.wd) ? `<span style="color:var(--green-mid); margin-left:6px;">$0</span>` : '';
+        const earned = g.earnings > 0 ? `<span style="color:${g.cutMissed ? 'var(--green-mid)' : 'var(--green)'}; margin-left:6px;">$${Math.round(g.earnings).toLocaleString()}</span>` :
+                       (g.withdrawn || g.liveData?.wd) ? `<span style="color:var(--green-mid); margin-left:6px;">$0</span>` : '';
         const pos = g.liveData?.posDisplay;
         const isWD = g.liveData?.wd || g.withdrawn;
         const posStr = !isWD && hasLiveData && pos && pos !== '–'
@@ -5017,9 +5017,9 @@ function renderMyTeams() {
       ${!team.paid ? '<div style="padding:8px 20px; background:#fff8f0; border-bottom:1px solid #f0e8d8; font-size:0.75rem; color:#e67e22; font-family:\'DM Mono\',monospace; letter-spacing:0.5px;">⏳ Awaiting payment confirmation</div>' : ''}
       <div class="team-card-body">
         ${golfers.map(g => {
-          const isZero = g.cutMissed || g.withdrawn || (g.liveData?.wd);
-          const earningsStr = g.earnings > 0 ? '$'+g.earnings.toLocaleString() : isZero ? '$0' : (g.teeTime ? g.teeTime+' PST' : '–');
-          const earningsColor = g.earnings > 0 ? 'var(--green-mid)' : isZero ? 'var(--green-mid)' : '#aaa';
+          const isZero = g.withdrawn || (g.liveData?.wd);
+          const earningsStr = g.earnings > 0 ? '$'+g.earnings.toLocaleString() : isZero ? '$0' : (g.cutMissed ? '$25,000' : (g.teeTime ? g.teeTime+' PST' : '–'));
+          const earningsColor = g.earnings > 0 || g.cutMissed ? 'var(--green-mid)' : isZero ? 'var(--green-mid)' : '#aaa';
           return `<div class="golfer-list-item"><span>${g.name}</span><span class="golfer-list-earnings" style="color:${earningsColor};">${earningsStr}</span></div>`;
         }).join('')}
       </div>
@@ -5265,13 +5265,13 @@ function renderCareerStats(myTeams) {
       }).filter(Boolean)).map(sg => {
         const parts = sg.name.trim().split(' ');
         const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : sg.name;
-        const isZero = sg.cut || sg.wd || sg.earnings === 0;
+        const isZero = sg.wd || sg.earnings === 0;
         const posLabel = sg.wd ? 'WD' : (sg.cut ? 'MC' : (sg.position && sg.position !== '–' ? sg.position : ''));
         const posStr = posLabel ? `<span style="color:var(--gold); font-family:'DM Mono',monospace; font-size:0.68rem; margin-right:5px;">${posLabel}</span>` : '';
         const golferNameColor = th ? 'rgba(255,255,255,0.75)' : '#555';
         const earningsColor = th ? th.accent : 'var(--green)';
         const zeroColor = th ? 'rgba(255,255,255,0.3)' : 'var(--green-mid)';
-        const earningsStr = isZero && sg.earnings === 0 ? `<span style="color:${zeroColor};">$0</span>` : `<span style="color:${earningsColor};">$${Math.round(sg.earnings || 0).toLocaleString()}</span>`;
+        const earningsStr = isZero && sg.earnings === 0 ? `<span style="color:${zeroColor};">$0</span>` : `<span style="color:${sg.cut ? zeroColor : earningsColor};">$${Math.round(sg.earnings || 0).toLocaleString()}</span>`;
         return `<div style="display:flex; justify-content:space-between; align-items:center; padding:3px 0; font-size:0.78rem;">
           <span style="color:${golferNameColor}; font-family:'Libre Baskerville',serif;">${posStr}${shortName}</span>
           <span style="font-family:'DM Mono',monospace; font-size:0.75rem;">${earningsStr}</span>
@@ -6248,7 +6248,7 @@ function renderH2H() {
     const g = golferData[gid];
     if (!g) return '';
     const pos = g.wd ? 'WD' : g.cut ? 'MC' : g.pos;
-    const earn = g.wd || g.cut ? 0 : g.earnings;
+    const earn = g.wd ? 0 : g.earnings;
     const earnStr = hasLive ? (earn > 0 ? `$${Math.round(earn).toLocaleString()}` : '$0') : '–';
     const earnClass = earn > 0 ? 'h2h-earn' : 'h2h-earn zero';
     const ownerStr = ownerTeams ? `<span class="h2h-owner-tag">${ownerTeams.map(t=>t.name).join(', ')}</span>` : '';
@@ -6266,7 +6266,7 @@ function renderH2H() {
     const uIds = t.golfers.filter(gid => unique.includes(gid));
     const earn = uIds.reduce((s, gid) => {
       const g = golferData[gid];
-      return s + (g && !g.wd && !g.cut ? g.earnings : 0);
+      return s + (g && !g.wd ? g.earnings : 0);
     }, 0);
     return { team: t, golferIds: uIds, earn };
   });
@@ -6308,8 +6308,8 @@ function renderH2H() {
           const uIds = team.golfers.filter(gid => unique.includes(gid))
             .sort((a, b) => {
               const ga = golferData[a], gb = golferData[b];
-              const ea = (ga && !ga.wd && !ga.cut) ? ga.earnings : 0;
-              const eb = (gb && !gb.wd && !gb.cut) ? gb.earnings : 0;
+              const ea = (ga && !ga.wd) ? ga.earnings : 0;
+              const eb = (gb && !gb.wd) ? gb.earnings : 0;
               return eb - ea;
             });
           return `<div>
@@ -6318,7 +6318,7 @@ function renderH2H() {
               const g = golferData[gid];
               if (!g) return '';
               const pos = g.wd ? 'WD' : g.cut ? 'MC' : g.pos;
-              const earn = g.wd || g.cut ? 0 : g.earnings;
+              const earn = g.wd ? 0 : g.earnings;
               const earnStr = hasLive ? (earn > 0 ? `$${Math.round(earn).toLocaleString()}` : '$0') : '–';
               return `<div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.78rem;">
                 <span style="font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--gold); margin-right:5px;">${pos !== '–' ? pos : ''}</span>
