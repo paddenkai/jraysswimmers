@@ -1884,7 +1884,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-04-09-1200';
+const APP_VERSION = '2026-04-09-1300';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -2588,10 +2588,11 @@ function parseESPNAPI(data) {
     // Projected cut line — only used during round 2, not after cut is official
     // Masters 2026 rule: top 50 + ties
     let cutScore = null;
-    if (!isPostCut && madecut.length >= 65) {
+    if (!isPostCut) {
       const startedPlayers = madecut.filter(p => p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-'));
-      if (startedPlayers.length >= 10) { // need enough data to project meaningfully
-        cutScore = madecut[64].scoreNum;
+      const sortedStarted = [...startedPlayers].sort((a, b) => a.scoreNum - b.scoreNum);
+      if (sortedStarted.length >= 10) { // need enough data to project meaningfully
+        cutScore = sortedStarted[Math.min(CUT_RULE - 1, sortedStarted.length - 1)].scoreNum;
       }
     }
 
