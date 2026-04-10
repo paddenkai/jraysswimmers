@@ -1562,8 +1562,8 @@
         <!-- Cut Rule -->
         <div style="padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
           <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:6px;">Cut Rule (top N + ties)</div>
-          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Number of players who make the cut — e.g. 65 = top 65 + ties</div>
-          <input id="ts-cut" type="number" min="50" max="80" placeholder="65"
+          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Number of players who make the cut — e.g. 50 = top 50 + ties</div>
+          <input id="ts-cut" type="number" min="50" max="80" placeholder="50"
             style="width:100px; padding:9px 12px; border:1.5px solid #ccc; border-radius:5px; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--dark); background:white;">
         </div>
 
@@ -1884,7 +1884,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-04-09-1300';
+const APP_VERSION = '2026-04-10-0100';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -1932,7 +1932,7 @@ async function loadAdminSettings() {
       try { const p = JSON.parse(data.tournament_pars); if (Array.isArray(p) && p.length === 18) PARS = p; } catch(e) {}
     }
     if (data.cut_rule) {
-      CUT_RULE = data.cut_rule;
+      CUT_RULE = Math.min(data.cut_rule, 50); // Masters cuts at 50+ties
     }
     // Populate inputs if admin panel is already visible
     const tsName = document.getElementById('ts-name');
@@ -2395,7 +2395,7 @@ const GOLFERS = [
   { id: 64, name: "Sungjae Im", wgr: 71, earnings: 0, teeTime: "8:03 AM" },
   { id: 65, name: "Michael Brennan", wgr: 47, earnings: 0, teeTime: "9:44 AM" },
   { id: 66, name: "Max Homa", wgr: 163, earnings: 0, teeTime: "4:50 AM" },
-  { id: 67, name: "John Keefer", wgr: 64, earnings: 0, teeTime: "4:40 AM" },
+  { id: 67, name: "Johnny Keefer", wgr: 64, earnings: 0, teeTime: "4:40 AM" },
   { id: 68, name: "Sergio Garcia", wgr: 345, earnings: 0, teeTime: "9:27 AM" },
   { id: 69, name: "Dustin Johnson", wgr: null, earnings: 0, teeTime: "6:43 AM" },
   { id: 70, name: "Andrew Novak", wgr: 48, earnings: 0, teeTime: "8:15 AM" },
@@ -2466,8 +2466,9 @@ function parseESPNAPI(data) {
     // First pass: collect all players with their scores
     const players = [];
     competitors.forEach(comp => {
-      const name = comp.athlete?.displayName || '';
-      if (!name) return;
+      const rawName = comp.athlete?.displayName || '';
+      if (!rawName) return;
+      const name = rawName.replace(/\s*\(a\)\s*$/i, '').trim(); // strip amateur suffix
       const scoreStr = comp.score || 'E';
       const scoreNum = scoreStr === 'E' ? 0 : parseInt(scoreStr) || 0;
 
@@ -2520,6 +2521,9 @@ function parseESPNAPI(data) {
 
       // We'll finalize cut detection after we know maxRounds below
       const inProgress = statusName === 'STATUS_IN_PROGRESS';
+      // Only include players in our field — skip ESPN extras that would inflate position counts
+      const inOurField = GOLFERS.some(g => normalizeName(g.name) === normalizeName(name));
+      if (!inOurField) return;
       players.push({ name, scoreStr, scoreNum, cut: espnCut, wd: espnWD, thru, today, teeTimeDisplay, inProgress, roundsPlayed: linescores.filter(r => (r.linescores || []).length > 0).length, roundsData });
     });
 
@@ -2569,19 +2573,26 @@ function parseESPNAPI(data) {
     const missedCutPlayers = players.filter(p => p.cut);
 
     // Assign positions only among started players who made the cut
+    const AMATEUR_NAMES = ['Jackson Herrington','Ethan Fang','Brandon Holtz','Fifa Laopakdee','Mateo Pulcini','Mason Howell'];
     const startedMadecut = madecut.filter(p => p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-'));
+    // Position counter excludes amateurs — they occupy a slot but don't count toward pro ordinals
+    let proPos = 0; // running count of pros only
     let i = 0;
     while (i < startedMadecut.length) {
       const score = startedMadecut[i].scoreNum;
       let j = i;
       while (j < startedMadecut.length && startedMadecut[j].scoreNum === score) j++;
-      const tiedCount = j - i;
-      const pos = i + 1;
+      const groupSize = j - i;
+      const prosInGroup = startedMadecut.slice(i, j).filter(p => !AMATEUR_NAMES.includes(p.name)).length;
+      const amateursInGroup = groupSize - prosInGroup;
+      const pos = proPos + 1; // position based on pros only
+      const proTiedCount = Math.max(1, prosInGroup); // tie count excluding amateurs
       for (let k = i; k < j; k++) {
         startedMadecut[k].pos = pos;
-        startedMadecut[k].tiedCount = tiedCount;
-        startedMadecut[k].posDisplay = tiedCount > 1 ? `T${pos}` : `${pos}`;
+        startedMadecut[k].tiedCount = proTiedCount;
+        startedMadecut[k].posDisplay = proTiedCount > 1 ? `T${pos}` : `${pos}`;
       }
+      proPos += prosInGroup;
       i = j;
     }
 
@@ -2603,12 +2614,14 @@ function parseESPNAPI(data) {
     [...madecut, ...missedCutPlayers].forEach(p => {
       const key = normalizeName(p.name);
       const pos = p.pos || 999;
-      const tiedCount = p.tiedCount || 1;
+      const AMATEUR_NAMES = ['Jackson Herrington','Ethan Fang','Brandon Holtz','Fifa Laopakdee','Mateo Pulcini','Mason Howell'];
+      const isAmateurPlayer = AMATEUR_NAMES.includes(p.name);
+      const tiedCount = p.tiedCount || 1; // already excludes amateurs from position loop
       const projectedMissedCut = !isPostCut && cutScore !== null && p.scoreNum > cutScore && !p.inProgress && p.roundsPlayed >= 1;
       const missedCut = p.cut; // only official cut matters for filtering; projectedMissedCut is visual only
       const hasStarted = p.inProgress || p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-') || p.wd;
-      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : (isPostCut && missedCut) ? 25000 : projectedMissedCut ? 0 : getPayoutForPosition(pos, tiedCount);
-      const posDisplay = p.wd ? 'WD' : (missedCut && isPostCut) ? 'MC' : (p.posDisplay || (!hasStarted ? '–' : '–'));
+      const earnings = (!hasStarted) ? 0 : p.wd ? 0 : missedCut ? 25000 : projectedMissedCut ? 25000 : getPayoutForPosition(pos, tiedCount);
+      const posDisplay = p.wd ? 'WD' : missedCut ? 'MC' : (p.posDisplay || (!hasStarted ? '–' : '–'));
 
       liveScores[key] = {
         pos, posDisplay, hasStarted,
@@ -2622,7 +2635,8 @@ function parseESPNAPI(data) {
       if (golfer) {
         golfer.liveData = liveScores[key];
         golfer.cutMissed = missedCut || projectedMissedCut;
-        if (!golfer.name.includes('(Amateur)')) golfer.earnings = earnings;
+        const AMATEUR_NAMES = ['Jackson Herrington','Ethan Fang','Brandon Holtz','Fifa Laopakdee','Mateo Pulcini','Mason Howell'];
+        if (!AMATEUR_NAMES.includes(golfer.name)) golfer.earnings = earnings;
         // Stamp static tee time onto liveScores entry so renderer always has it
         if (golfer.teeTime) {
           liveScores[key].teeTime = golfer.teeTime + ' PST';
@@ -4376,7 +4390,9 @@ function renderTournament() {
     const rowBg = isHighlighted ? 'rgba(201,168,76,0.13)' : isWatched ? 'rgba(201,168,76,0.06)' : '#ffffff';
     const borderLeft = isHighlighted ? '4px solid var(--gold)' : isWatched ? '4px solid rgba(201,168,76,0.5)' : '4px solid transparent';
     const safeKey = key.replace(/'/g, "\\'");
-    const displayName = (d.name || key).toUpperCase();
+    const AMATEUR_NAMES = ['Jackson Herrington','Ethan Fang','Brandon Holtz','Fifa Laopakdee','Mateo Pulcini','Mason Howell'];
+    const isAmateur = golfer && AMATEUR_NAMES.includes(golfer.name);
+    const displayName = (d.name || key).toUpperCase() + (isAmateur ? ' (A)' : '');
     const tee = golfer?.teeTime ? golfer.teeTime + ' PST' : null;
     const notStartedYet = !d.thru || d.thru === '–' || d.thru === '-';
     const todayCell = (tee && notStartedYet)
@@ -4393,7 +4409,7 @@ function renderTournament() {
       <td style="font-family:'DM Mono',monospace; font-weight:900; font-size:1rem; color:${scoreColor}; padding:10px 8px;">${d.score || '–'}</td>
       ${todayCell}
       <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#666; padding:10px 8px;">${d.thru || '–'}</td>
-      <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--gold); font-weight:700; padding:10px 8px;">${d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '–'}</td>
+      <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--gold); font-weight:700; padding:10px 8px;">${isAmateur ? '–' : (d.earnings > 0 ? '$'+Math.round(d.earnings).toLocaleString() : '–')}</td>
     </tr>
     <tr class="scorecard-expand-row" id="expand-${safeKey}" style="display:none;">
       <td colspan="6" style="padding:0; background:#f8f5ee; border-bottom:2px solid #e0dbd0;"></td>
@@ -4435,17 +4451,17 @@ function renderTournament() {
   });
   pairs.forEach(p => { if (p.main) tbody.appendChild(p.main); if (p.expand) tbody.appendChild(p.expand); });
 
-  // Insert projected cut line AFTER sort — find last player row with pos <= 65, insert cut row after it
+  // Insert projected cut line AFTER sort — find last player row with pos <= CUT_RULE, insert cut row after it
   if (!window._isPostCut && adminSettings.showCutLine) {
     const playerRows = Array.from(tbody.querySelectorAll('tr:not(.scorecard-expand-row)'));
     let lastInRow = null;
     for (const row of playerRows) {
       const posText = row.cells[0]?.innerText?.trim() || '';
       const posNum = parseInt(posText.replace(/^T/, ''));
-      if (!isNaN(posNum) && posNum <= 65) lastInRow = row;
+      if (!isNaN(posNum) && posNum <= CUT_RULE) lastInRow = row;
     }
     if (lastInRow) {
-      const cutScore = parseInt(sortedStarted[Math.min(64, sortedStarted.length-1)]?.[1]?.score) || 0;
+      const cutScore = parseInt(sortedStarted[Math.min(CUT_RULE - 1, sortedStarted.length-1)]?.[1]?.score) || 0;
       const cutLabel = cutScore === 0 ? 'E' : cutScore > 0 ? '+'+cutScore : ''+cutScore;
       const cutTr = document.createElement('tr');
       cutTr.innerHTML = `<td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${cutLabel} —</td>`;
@@ -5003,7 +5019,7 @@ function renderMyTeams() {
       return `${n}<sup style="font-size:0.55em;vertical-align:super;">${suffix}</sup>`;
     };
     const posLabel = !hasLiveData ? '' : pos ? (isTied ? `T${getOrdinal(pos)}` : getOrdinal(pos)) : '';
-    const posColor = pos === 1 && !isTied ? 'var(--gold)' : 'white';
+    const posColor = pos === 1 && !isTied ? 'var(--gold)' : '#FFB7C5';
     return `<div class="team-card">
       <div class="team-card-header">
         <div style="display:flex;align-items:center;gap:10px;">
@@ -5608,9 +5624,9 @@ function updateStats() {
 
   if (showCut) {
     const sorted = [...activePlayers].sort((a, b) => a.pos - b.pos);
-    const player65 = sorted[64];
-    if (player65) {
-      const cutScore = parseInt(player65.score) || 0;
+    const playerAtCut = sorted[CUT_RULE - 1];
+    if (playerAtCut) {
+      const cutScore = parseInt(playerAtCut.score) || 0;
       const display = cutScore === 0 ? 'E' : cutScore > 0 ? `+${cutScore}` : `${cutScore}`;
       countdownEl.textContent = display;
     } else {
