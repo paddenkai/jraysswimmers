@@ -1884,7 +1884,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-04-10-0100';
+const APP_VERSION = '2026-04-11-0030';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -2534,30 +2534,25 @@ function parseESPNAPI(data) {
     const isPostCut = maxRounds >= 3 || adminSettings.officialCut;
 
     if (isPostCut) {
-      // Load or build the locked MC list
-      let missedCutNames = JSON.parse(localStorage.getItem('officialCutMissed') || 'null');
-
-      if (!missedCutNames) {
-        // First time: calculate who missed the cut from current scores and lock it
-        function getTwoRoundScore(p) {
-          if (p.roundsData && p.roundsData.length >= 2) {
-            return p.roundsData.slice(0, 2).reduce((sum, r) => sum + (r.score === 'E' ? 0 : parseInt(r.score) || 0), 0);
-          }
-          return p.scoreNum;
+      // Always derive cut from ESPN's live STATUS_CUT flag — never lock to localStorage
+      // espnCut is already set per-player during parsing above, so p.cut is already correct.
+      // Just ensure anyone who completed 2 rounds and is above the cut score is also marked.
+      function getTwoRoundScore(p) {
+        if (p.roundsData && p.roundsData.length >= 2) {
+          return p.roundsData.slice(0, 2).reduce((sum, r) => sum + (r.score === 'E' ? 0 : parseInt(r.score) || 0), 0);
         }
-        const completedTwo = players.filter(p => p.roundsPlayed >= 2 && !p.wd);
-        const sorted = [...completedTwo].sort((a, b) => getTwoRoundScore(a) - getTwoRoundScore(b));
-        const cutScore = sorted.length >= CUT_RULE ? getTwoRoundScore(sorted[CUT_RULE - 1]) : null;
-        missedCutNames = players
-          .filter(p => p.wd || p.roundsPlayed < 2 || (cutScore !== null && getTwoRoundScore(p) > cutScore))
-          .map(p => normalizeName(p.name));
-        localStorage.setItem('officialCutMissed', JSON.stringify(missedCutNames));
+        return p.scoreNum;
       }
-
-      // Apply the locked list — never changes again until switch is toggled off
+      const completedTwo = players.filter(p => p.roundsPlayed >= 2 && !p.wd);
+      const sorted = [...completedTwo].sort((a, b) => getTwoRoundScore(a) - getTwoRoundScore(b));
+      const cutScore = sorted.length >= CUT_RULE ? getTwoRoundScore(sorted[CUT_RULE - 1]) : null;
+      // Trust ESPN's STATUS_CUT as primary signal; supplement with score-based detection
       players.forEach(p => {
-        p.cut = missedCutNames.includes(normalizeName(p.name));
+        if (p.wd) return;
+        if (cutScore !== null && p.roundsPlayed >= 2 && getTwoRoundScore(p) > cutScore) p.cut = true;
       });
+      // Clear any stale localStorage entry so other devices don't get stuck
+      try { localStorage.removeItem('officialCutMissed'); } catch(e) {}
     }
 
     // Sort non-cut players by score (lowest = best)
