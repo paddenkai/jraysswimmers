@@ -1268,6 +1268,9 @@
       </div>
       <div id="stats-summary" style="font-size:0.78rem; color:#888; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-bottom:8px;"></div>
       <div id="stats-hint" style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-bottom:16px;">↓ click any player's name to see which teams they're on</div>
+
+
+
       <div id="stats-table-wrap"></div>
     </div>
   </div>
@@ -1884,7 +1887,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-04-11-0000';
+const APP_VERSION = '2026-04-12-1125';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -3299,6 +3302,14 @@ function requireAuth(cb) {
 async function showPage(name) {
 
   if (typeof closeMobileNav === 'function') closeMobileNav();
+  // Close team finder panel when leaving stats page
+  if (name !== 'stats') {
+    const panel = document.getElementById('finder-panel');
+    if (panel) panel.remove();
+    const wrap = document.querySelector('#page-stats > div');
+    if (wrap) wrap.style.paddingRight = '';
+    finderSelected = [];
+  }
   // Guard admin before activating the page
   if (name === 'admin' && !adminLoggedIn) { openAdminLogin(); return; }
   if (name === 'admin') { setTimeout(buildHoleParInputs, 0); }
@@ -4858,7 +4869,111 @@ function toggleWatch(key) {
   renderTournament();
 }
 
+
+// ═══════════════════════════════════════════════════════
+// TEAM FINDER
+// ═══════════════════════════════════════════════════════
+let finderSelected = []; // array of golfer names
+
+function finderToggle(name) {
+  if (finderSelected.includes(name)) {
+    finderSelected = finderSelected.filter(n => n !== name);
+  } else if (finderSelected.length < 5) {
+    finderSelected.push(name);
+  }
+  renderStats(_currentStatSort || 'picks');
+  finderRenderPanel();
+}
+
+function finderRemove(name) {
+  finderSelected = finderSelected.filter(n => n !== name);
+  renderStats(_currentStatSort || 'picks');
+  finderRenderPanel();
+}
+
+function finderRenderPanel() {
+  let panel = document.getElementById('finder-panel');
+  if (finderSelected.length === 0) {
+    if (panel) panel.remove();
+    const wrap = document.querySelector('#page-stats > div');
+    if (wrap) wrap.style.paddingRight = '';
+    return;
+  }
+
+  const selectedIds = finderSelected.map(name => GOLFERS.find(g => g.name === name)?.id).filter(Boolean);
+  const matches = allTeams.filter(t =>
+    !t.seeded && (t.tournament || '') === TOURNAMENT_NAME &&
+    selectedIds.every(id => (t.golfers || []).includes(id))
+  ).sort((a, b) => getTeamEarnings(b) - getTeamEarnings(a));
+
+  const chips = finderSelected.map(name => {
+    const g = GOLFERS.find(g => g.name === name);
+    const score = g?.liveData?.score && g.liveData.score !== '–' ? ` ${g.liveData.score}` : '';
+    const parts = name.split(' ');
+    const shortName = parts.length > 1 ? parts[0][0] + '. ' + parts.slice(1).join(' ') : name;
+    return `<div style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 10px;font-size:0.72rem;color:white;">
+      <span>${shortName}${score ? ' <span style="color:var(--gold);">' + score + '</span>' : ''}</span>
+      <span onclick="finderRemove('${name.replace(/'/g,"\\'")}');" style="cursor:pointer;opacity:0.7;font-size:1rem;line-height:1;">×</span>
+    </div>`;
+  }).join('');
+
+  const rows = matches.length === 0
+    ? `<div style="padding:16px;font-size:0.82rem;color:#aaa;font-style:italic;text-align:center;">No teams have all these golfers</div>`
+    : matches.map((t, i) => {
+        const earnings = getTeamEarnings(t);
+        const earnStr = earnings > 0 ? '$' + Math.round(earnings).toLocaleString() : '–';
+        const golferNames = (t.golfers || []).map(id => {
+          const g = GOLFERS.find(g => g.id === id);
+          if (!g) return null;
+          const sel = finderSelected.includes(g.name);
+          return `<span style="${sel ? 'color:var(--gold);font-weight:700;' : 'color:var(--green);'}">${g.name.split(' ').pop()}</span>`;
+        }).filter(Boolean).join('<span style="color:#ddd;"> · </span>');
+        return `<div style="padding:10px 14px;border-bottom:1px solid #f0ece0;background:${i%2===0?'#fff':'#faf8f4'};">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+            <div style="font-family:'Libre Baskerville',serif;font-size:0.85rem;color:var(--green);font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.name}</div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--green);font-weight:700;white-space:nowrap;flex-shrink:0;">${earnStr}</div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.68rem;margin-top:3px;">${golferNames}</div>
+        </div>`;
+      }).join('');
+
+  const html = `
+    <div style="background:var(--green);padding:12px 14px 10px;border-radius:8px 8px 0 0;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:8px;">Team Finder</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">${chips}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--gold);font-weight:700;">${matches.length} team${matches.length!==1?'s':''}</span>
+        <button onclick="finderSelected=[];renderStats(_currentStatSort||'picks');finderRenderPanel();"
+          style="background:rgba(255,255,255,0.15);border:none;color:white;border-radius:4px;padding:3px 10px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.5px;">CLEAR</button>
+      </div>
+    </div>
+    <div style="overflow-y:auto;max-height:calc(60vh - 100px);background:white;">${rows}</div>`;
+
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'finder-panel';
+    panel.style.cssText = [
+      'position:fixed',
+      'top:80px',
+      'right:16px',
+      'width:280px',
+      'z-index:200',
+      'border-radius:8px',
+      'box-shadow:0 4px 24px rgba(0,0,0,0.18)',
+      'overflow:hidden',
+      'font-family:"DM Mono",monospace',
+    ].join(';');
+    document.body.appendChild(panel);
+  }
+  panel.innerHTML = html;
+  // Push stats table left so + buttons aren't hidden behind panel
+  const wrap = document.querySelector('#page-stats > div');
+  if (wrap) wrap.style.paddingRight = '300px';
+}
+
+let _currentStatSort = 'picks';
 function renderStats(sortBy = 'picks') {
+  _currentStatSort = sortBy;
   const wrap = document.getElementById('stats-table-wrap');
   if (!wrap) return;
 
@@ -4919,15 +5034,27 @@ function renderStats(sortBy = 'picks') {
           const bg = i % 2 === 0 ? '#fff' : '#f8f5ee';
           const golfer = GOLFERS.find(g => g.name === name);
           const isAmateur = golfer && golfer.name === 'Daniel Bennett';
-          return `<tr style="background:${bg}; border-bottom:1px solid #e8e4da;">
+          const isSelected = finderSelected.includes(name);
+          const canAdd = !isSelected && finderSelected.length < 5;
+          const btnStyle = isSelected
+            ? 'background:var(--green);color:white;border-color:var(--green);'
+            : canAdd ? 'background:white;color:var(--green);' : 'background:white;color:#ccc;border-color:#ddd;cursor:default;';
+          const btnLabel = isSelected ? '✓' : '+';
+          const btnClick = isAmateur ? '' : isSelected
+            ? `finderRemove('${name.replace(/'/g,"\\'")}');`
+            : canAdd ? `finderToggle('${name.replace(/'/g,"\\'")}');` : '';
+          return `<tr style="background:${isSelected ? 'rgba(26,71,49,0.06)' : bg}; border-bottom:1px solid #e8e4da; transition:background 0.15s;" id="stats-row-${i}">
             <td style="padding:10px 12px; font-family:'Libre Baskerville',serif; font-size:0.9rem; ${isAmateur ? 'color:#aaa; font-style:italic;' : ''}">
               <span onclick="openGolferTeams('${name}')" style="cursor:pointer; text-decoration:underline; text-decoration-color:#ccc; text-underline-offset:3px;">${name}</span>${isAmateur ? ' <span style="font-size:0.72rem; color:#bbb;">(a)</span>' : ''}
             </td>
             <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-weight:700; font-size:0.95rem; color:var(--green);">${count}</td>
             <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${pct}%</td>
-            <td style="padding:10px 12px; min-width:120px;">
-              <div style="background:#e8e4da; border-radius:3px; height:8px; overflow:hidden;">
-                <div style="background: #1a4731; height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
+            <td style="padding:10px 12px; min-width:100px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="flex:1; background:#e8e4da; border-radius:3px; height:8px; overflow:hidden;">
+                  <div style="background:#1a4731; height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
+                </div>
+                ${isAmateur ? '' : `<button onclick="${btnClick}" style="width:26px;height:26px;border-radius:50%;border:1.5px solid var(--green);font-size:1rem;line-height:1;cursor:${canAdd||isSelected?'pointer':'default'};transition:all 0.15s;flex-shrink:0;${btnStyle}">${btnLabel}</button>`}
               </div>
             </td>
           </tr>`;
@@ -4935,6 +5062,7 @@ function renderStats(sortBy = 'picks') {
       </tbody>
     </table>
     </div>`;
+  finderRenderPanel();
 }
 
 
