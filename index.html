@@ -1267,7 +1267,7 @@
         <button onclick="renderStats('alpha')" id="stats-sort-alpha" style="padding:8px 18px; font-size:0.82rem; font-family:'DM Mono',monospace; border:2px solid var(--green); border-radius:4px; cursor:pointer; letter-spacing:0.5px;">A–Z</button>
       </div>
       <div id="stats-summary" style="font-size:0.78rem; color:#888; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-bottom:8px;"></div>
-      <div id="stats-hint" style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-bottom:16px;">↓ click any player's name to see which teams they're on</div>
+      <div id="stats-hint" style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px; margin-bottom:16px;">↓ use the + button to select up to 5 golfers and see which teams have all of them</div>
 
 
 
@@ -1887,7 +1887,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-04-12-1125';
+const APP_VERSION = '2026-04-12-1145';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -4954,7 +4954,7 @@ function finderRenderPanel() {
     panel.id = 'finder-panel';
     panel.style.cssText = [
       'position:fixed',
-      'top:80px',
+      'top:200px',
       'right:16px',
       'width:280px',
       'z-index:200',
@@ -5044,17 +5044,17 @@ function renderStats(sortBy = 'picks') {
             ? `finderRemove('${name.replace(/'/g,"\\'")}');`
             : canAdd ? `finderToggle('${name.replace(/'/g,"\\'")}');` : '';
           return `<tr style="background:${isSelected ? 'rgba(26,71,49,0.06)' : bg}; border-bottom:1px solid #e8e4da; transition:background 0.15s;" id="stats-row-${i}">
-            <td style="padding:10px 12px; font-family:'Libre Baskerville',serif; font-size:0.9rem; ${isAmateur ? 'color:#aaa; font-style:italic;' : ''}">
-              <span onclick="openGolferTeams('${name}')" style="cursor:pointer; text-decoration:underline; text-decoration-color:#ccc; text-underline-offset:3px;">${name}</span>${isAmateur ? ' <span style="font-size:0.72rem; color:#bbb;">(a)</span>' : ''}
+            <td style="padding:10px 8px 10px 12px; font-family:'Libre Baskerville',serif; font-size:0.9rem; ${isAmateur ? 'color:#aaa; font-style:italic;' : ''}">
+              <div style="display:flex; align-items:center; gap:8px;">
+                ${isAmateur ? '' : `<button onclick="${btnClick}" style="width:24px;height:24px;border-radius:50%;border:1.5px solid var(--green);font-size:0.95rem;line-height:1;cursor:${canAdd||isSelected?'pointer':'default'};transition:all 0.15s;flex-shrink:0;${btnStyle}">${btnLabel}</button>`}
+                <span>${name}</span>${isAmateur ? ' <span style="font-size:0.72rem; color:#bbb;">(a)</span>' : ''}
+              </div>
             </td>
             <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-weight:700; font-size:0.95rem; color:var(--green);">${count}</td>
             <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${pct}%</td>
             <td style="padding:10px 12px; min-width:100px;">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <div style="flex:1; background:#e8e4da; border-radius:3px; height:8px; overflow:hidden;">
-                  <div style="background:#1a4731; height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
-                </div>
-                ${isAmateur ? '' : `<button onclick="${btnClick}" style="width:26px;height:26px;border-radius:50%;border:1.5px solid var(--green);font-size:1rem;line-height:1;cursor:${canAdd||isSelected?'pointer':'default'};transition:all 0.15s;flex-shrink:0;${btnStyle}">${btnLabel}</button>`}
+              <div style="background:#e8e4da; border-radius:3px; height:8px; overflow:hidden;">
+                <div style="background:#1a4731; height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
               </div>
             </td>
           </tr>`;
