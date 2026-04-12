@@ -1887,7 +1887,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-04-12-1145';
+const APP_VERSION = '2026-04-12-1200';
 
 let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -3307,7 +3307,7 @@ async function showPage(name) {
     const panel = document.getElementById('finder-panel');
     if (panel) panel.remove();
     const wrap = document.querySelector('#page-stats > div');
-    if (wrap) wrap.style.paddingRight = '';
+    if (wrap) { wrap.style.paddingRight = ''; wrap.style.paddingBottom = ''; }
     finderSelected = [];
   }
   // Guard admin before activating the page
@@ -4891,12 +4891,66 @@ function finderRemove(name) {
   finderRenderPanel();
 }
 
+function finderInitSwipe(panel) {
+  let startY = 0, startH = 0, isDragging = false;
+  const COLLAPSED_H = 90; // just header visible
+
+  // Add a drag handle
+  const handle = document.createElement('div');
+  handle.style.cssText = 'width:40px;height:4px;background:rgba(255,255,255,0.4);border-radius:2px;margin:8px auto 0;cursor:grab;';
+  panel.firstElementChild?.prepend(handle);
+
+  panel.addEventListener('touchstart', e => {
+    // Only drag from the green header area
+    if (e.target.closest('#finder-panel-body')) return;
+    startY = e.touches[0].clientY;
+    startH = panel.offsetHeight;
+    isDragging = true;
+    panel.style.transition = 'none';
+  }, { passive: true });
+
+  panel.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const dy = startY - e.touches[0].clientY; // positive = swipe up
+    const newH = Math.max(COLLAPSED_H, Math.min(window.innerHeight * 0.85, startH + dy));
+    panel.style.height = newH + 'px';
+    const body = document.getElementById('finder-panel-body');
+    if (body) body.style.maxHeight = (newH - 90) + 'px';
+  }, { passive: true });
+
+  panel.addEventListener('touchend', e => {
+    if (!isDragging) return;
+    isDragging = false;
+    panel.style.transition = 'height 0.3s ease';
+    const currentH = panel.offsetHeight;
+    const mid = window.innerHeight * 0.35;
+    if (currentH < mid) {
+      // Snap collapsed
+      panel.style.height = COLLAPSED_H + 'px';
+      const body = document.getElementById('finder-panel-body');
+      if (body) body.style.maxHeight = '0px';
+    } else {
+      // Snap expanded
+      const expandH = Math.min(window.innerHeight * 0.65, 500);
+      panel.style.height = expandH + 'px';
+      const body = document.getElementById('finder-panel-body');
+      if (body) body.style.maxHeight = (expandH - 90) + 'px';
+    }
+  }, { passive: true });
+
+  // Start expanded
+  const expandH = Math.min(window.innerHeight * 0.55, 420);
+  panel.style.height = expandH + 'px';
+  const body = document.getElementById('finder-panel-body');
+  if (body) body.style.maxHeight = (expandH - 90) + 'px';
+}
+
 function finderRenderPanel() {
   let panel = document.getElementById('finder-panel');
   if (finderSelected.length === 0) {
     if (panel) panel.remove();
     const wrap = document.querySelector('#page-stats > div');
-    if (wrap) wrap.style.paddingRight = '';
+    if (wrap) { wrap.style.paddingRight = ''; wrap.style.paddingBottom = ''; }
     return;
   }
 
@@ -4947,28 +5001,54 @@ function finderRenderPanel() {
           style="background:rgba(255,255,255,0.15);border:none;color:white;border-radius:4px;padding:3px 10px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.5px;">CLEAR</button>
       </div>
     </div>
-    <div style="overflow-y:auto;max-height:calc(60vh - 100px);background:white;">${rows}</div>`;
+    <div id="finder-panel-body" style="overflow-y:auto;max-height:calc(55vh - 100px);background:white;">${rows}</div>`;
 
   if (!panel) {
     panel = document.createElement('div');
     panel.id = 'finder-panel';
-    panel.style.cssText = [
-      'position:fixed',
-      'top:200px',
-      'right:16px',
-      'width:280px',
-      'z-index:200',
-      'border-radius:8px',
-      'box-shadow:0 4px 24px rgba(0,0,0,0.18)',
-      'overflow:hidden',
-      'font-family:"DM Mono",monospace',
-    ].join(';');
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      panel.style.cssText = [
+        'position:fixed',
+        'bottom:0',
+        'left:0',
+        'right:0',
+        'z-index:500',
+        'border-radius:16px 16px 0 0',
+        'box-shadow:0 -4px 24px rgba(0,0,0,0.22)',
+        'overflow:hidden',
+        'font-family:"DM Mono",monospace',
+        'touch-action:none',
+        'transition:transform 0.3s ease',
+      ].join(';');
+    } else {
+      panel.style.cssText = [
+        'position:fixed',
+        'top:200px',
+        'right:16px',
+        'width:280px',
+        'z-index:200',
+        'border-radius:8px',
+        'box-shadow:0 4px 24px rgba(0,0,0,0.18)',
+        'overflow:hidden',
+        'font-family:"DM Mono",monospace',
+      ].join(';');
+    }
     document.body.appendChild(panel);
+    if (isMobile) finderInitSwipe(panel);
   }
   panel.innerHTML = html;
-  // Push stats table left so + buttons aren't hidden behind panel
+  // Push stats table to avoid panel overlap
   const wrap = document.querySelector('#page-stats > div');
-  if (wrap) wrap.style.paddingRight = '300px';
+  if (wrap) {
+    if (window.innerWidth < 768) {
+      wrap.style.paddingRight = '';
+      wrap.style.paddingBottom = '160px';
+    } else {
+      wrap.style.paddingRight = '300px';
+      wrap.style.paddingBottom = '';
+    }
+  }
 }
 
 let _currentStatSort = 'picks';
