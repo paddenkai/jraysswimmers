@@ -9,7 +9,7 @@
 <title>J.Ray's Swimmers Pool</title>
 <!-- PWA -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#1a4731">
+<meta name="theme-color" content="#00205B">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="J.Ray's Swimmers">
@@ -27,16 +27,16 @@
 
 <style>
   :root {
-    --green: #1a4731;
-    --green-mid: #2d6a4f;
-    --green-light: #4a9068;
-    --gold: #c9a84c;
+    --green: #00205B;
+    --green-mid: #1a3a80;
+    --green-light: #2a52a0;
+    --gold: #C9A84C;
     --gold-light: #e0c068;
-    --gold-pale: #fdf8ee;
-    --cream: #faf6ee;
-    --dark: #0f2e1e;
+    --gold-pale: #f0f3fa;
+    --cream: #f0f3fa;
+    --dark: #000912;
     --white: #ffffff;
-    --shadow: rgba(26,71,49,0.25);
+    --shadow: rgba(0,32,91,0.25);
   }
 
   @keyframes pulse-dot {
@@ -50,7 +50,7 @@
   body {
     font-family: 'EB Garamond', 'Libre Baskerville', Georgia, serif;
     background: var(--cream);
-    color: #1a4731;
+    color: #00205B;
     min-height: 100vh;
     position: relative;
   }
@@ -58,7 +58,7 @@
 
   /* ─── HEADER ─── */
   header {
-    background: #1a4731;
+    background: #00205B;
     color: var(--cream);
     padding: 0;
     position: sticky;
@@ -119,7 +119,7 @@
 
   /* ─── HERO ─── */
   .hero {
-    background: linear-gradient(160deg, #0f2e1e 0%, #1a4731 60%, #0f2e1e 100%);
+    background: linear-gradient(160deg, #000912 0%, #00205B 60%, #000912 100%);
     color: var(--cream);
     padding: 80px 24px 70px;
     text-align: center;
@@ -164,7 +164,7 @@
   }
   .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 2; }
   .btn { display: inline-block; padding: 14px 28px; border-radius: 2px; font-family: 'EB Garamond', serif; font-size: 1rem; cursor: pointer; border: none; transition: all 0.2s; font-weight: 600; letter-spacing: 0.5px; }
-  .btn-gold { background: var(--gold); color: #1a4731; box-shadow: 0 4px 14px rgba(201,168,76,0.4); }
+  .btn-gold { background: var(--gold); color: #00205B; box-shadow: 0 4px 14px rgba(201,168,76,0.4); }
   .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,168,76,0.5); }
   .btn-gold:active { transform: translateY(0); }
   .btn-outline { background: transparent; color: var(--cream); border: 1.5px solid rgba(250,246,238,0.6); }
@@ -172,7 +172,7 @@
   .btn-outline:active { transform: translateY(0); }
 
   .stats-bar {
-    background: #1a4731;
+    background: #00205B;
     border-bottom: 1px solid rgba(201,168,76,0.3);
     padding: 14px 24px;
     display: flex;
@@ -197,7 +197,7 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
-  main:has(#page-home.active) { background: #1a4731; }
+  main:has(#page-home.active) { background: #00205B; }
 
   .section-header {
     display: flex;
@@ -219,7 +219,7 @@
   .page { display: none !important; }
   .page.active { display: block !important; }
   #page-chat.active {
-    background: #1a4731;
+    background: #00205B;
     margin: -40px -24px;
     padding-top: 40px;
     min-height: calc(100vh - 60px);
@@ -322,16 +322,16 @@
     padding-right: 4px;
   }
   .golfer-card {
-    border: 1.5px solid rgba(26,71,49,0.25);
+    border: 1.5px solid rgba(0,32,91,0.25);
     border-radius: 6px;
     padding: 9px 10px;
     cursor: pointer;
     transition: all 0.18s;
     background: #ffffff;
     position: relative;
-    box-shadow: 0 1px 3px rgba(26,71,49,0.08);
+    box-shadow: 0 1px 3px rgba(0,32,91,0.08);
   }
-  .golfer-card:hover { border-color: var(--gold); background: rgba(201,168,76,0.06); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(26,71,49,0.12); }
+  .golfer-card:hover { border-color: var(--gold); background: rgba(201,168,76,0.06); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,32,91,0.12); }
   .golfer-card.selected { border-color: #c0396b; background: rgba(192,57,107,0.07); box-shadow: 0 2px 6px rgba(192,57,107,0.18); }
   .golfer-card.selected::after { content: '✓'; position: absolute; top: 6px; right: 8px; color: #c0396b; font-weight: 700; font-size: 0.85rem; }
   .golfer-card.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
@@ -342,7 +342,7 @@
   .golfer-earnings { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--green-mid); margin-top: 2px; font-weight: 500; }
 
   .team-panel {
-    background: #1a4731;
+    background: #00205B;
     border: 1px solid rgba(201,168,76,0.3);
     border-radius: 4px;
     padding: 20px;
@@ -365,7 +365,7 @@
       position: sticky;
       top: 58px;
       z-index: 98;
-      background: #1a4731;
+      background: #00205B;
       color: var(--cream);
       padding: 14px 16px;
       border-radius: 4px;
@@ -496,7 +496,7 @@
   /* ─── LEADERBOARD ─── */
   .leaderboard-table { width: 100%; border-collapse: collapse; }
   .leaderboard-table th {
-    background: #1a4731;
+    background: #00205B;
     color: var(--gold);
     padding: 10px 14px;
     text-align: left;
@@ -506,16 +506,16 @@
     text-transform: uppercase;
     border-bottom: none;
   }
-  .leaderboard-table th:nth-child(1), .leaderboard-table th:nth-child(2), .leaderboard-table th:nth-child(3), .leaderboard-table th:nth-child(4), .leaderboard-table th:nth-child(5) { background: #1a4731; color: var(--gold); -webkit-text-fill-color: var(--gold); -webkit-background-clip: unset; background-clip: unset; }
-  .leaderboard-table td { padding: 11px 14px; border-bottom: 1px solid rgba(26,71,49,0.1); font-size: 0.9rem; vertical-align: middle; }
-  #page-leaderboard .leaderboard-table tr:nth-child(even) td { background: rgba(26,71,49,0.04); }
+  .leaderboard-table th:nth-child(1), .leaderboard-table th:nth-child(2), .leaderboard-table th:nth-child(3), .leaderboard-table th:nth-child(4), .leaderboard-table th:nth-child(5) { background: #00205B; color: var(--gold); -webkit-text-fill-color: var(--gold); -webkit-background-clip: unset; background-clip: unset; }
+  .leaderboard-table td { padding: 11px 14px; border-bottom: 1px solid rgba(0,32,91,0.1); font-size: 0.9rem; vertical-align: middle; }
+  #page-leaderboard .leaderboard-table tr:nth-child(even) td { background: rgba(0,32,91,0.04); }
   #page-leaderboard .leaderboard-table tr:hover td { background: rgba(201,168,76,0.08); }
 
   /* Tournament leaderboard — white board Masters style */
   #tournament-table { background: #fff; }
   #tournament-table tr:not(.scorecard-expand-row) td { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 10px 8px; vertical-align: middle; }
   #tournament-table tr:not(.scorecard-expand-row):hover td { background: #f9f7f2 !important; }
-  #tournament-table th { background: #fff !important; color: #1a4731 !important; -webkit-text-fill-color: #1a4731 !important; border-bottom: 2px solid #1a4731 !important; padding: 9px 8px; font-size: 0.7rem; letter-spacing: 1px; }
+  #tournament-table th { background: #fff !important; color: #00205B !important; -webkit-text-fill-color: #00205B !important; border-bottom: 2px solid #00205B !important; padding: 9px 8px; font-size: 0.7rem; letter-spacing: 1px; }
   #tournament-table .scorecard-expand-row td { background: transparent !important; padding: 0 !important; border: none !important; }
   #tournament-table .scorecard-expand-row tr td { background: transparent !important; }
   #tournament-table .scorecard-expand-row tr:hover td { background: transparent !important; }
@@ -569,7 +569,7 @@
   /* ─── LIVE CHANGE INDICATORS ─── */
   @keyframes earningsFlash {
     0%   { background: transparent; }
-    20%  { background: rgba(26,71,49,0.25); }
+    20%  { background: rgba(0,32,91,0.25); }
     100% { background: transparent; }
   }
   @keyframes firstPlacePulse {
@@ -659,7 +659,7 @@
 
   /* ─── PROFILE ─── */
   .profile-header {
-    background: #1a4731;
+    background: #00205B;
     border-radius: 8px;
     padding: 28px;
     display: flex;
@@ -726,7 +726,7 @@
       display: none;
       position: fixed;
       top: 57px; left: 0; right: 0;
-      background: #1a4731;
+      background: #00205B;
       flex-direction: column;
       align-items: stretch;
       gap: 0;
@@ -850,7 +850,7 @@
 
       <!-- Background -->
       <div style="position:absolute; inset:0; overflow:hidden;">
-        <div style="position:absolute; width:100%; height:80px; bottom:0; left:0; background: linear-gradient(180deg, transparent 0%, #1a4731 100%);"></div>
+        <div style="position:absolute; width:100%; height:80px; bottom:0; left:0; background: linear-gradient(180deg, transparent 0%, #00205B 100%);"></div>
       </div>
 
       <div style="position:relative; z-index:2; padding: 50px 40px 56px; max-width:900px; margin:0 auto; box-sizing:border-box; width:100%;">
@@ -859,29 +859,29 @@
         <div style="text-align:center; margin-bottom:44px;">
 
           <!-- Tournament title -->
-          <div style="font-family:'Azalea', 'EB Garamond',serif; font-size:clamp(2.4rem,6vw,4rem); font-weight:400; color:var(--gold); letter-spacing:6px; line-height:1; margin-bottom:10px;">The Masters</div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(201,168,76,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Augusta National · April 9–12, 2026</div>
+          <div style="font-family:'DM Mono',monospace; font-size:clamp(0.65rem,1.5vw,0.85rem); letter-spacing:8px; color:rgba(201,168,76,0.7); text-transform:uppercase; margin-bottom:6px;">2026 PGA Championship</div><div style="font-family:'Playfair Display',serif; font-size:clamp(2.6rem,6vw,4.2rem); font-weight:700; color:white; letter-spacing:2px; line-height:1.05; margin-bottom:10px; text-shadow:0 2px 20px rgba(0,0,0,0.4);">Aronimink<br><span style="color:var(--gold); font-size:0.75em; letter-spacing:4px; font-weight:400;">Golf Club</span></div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(201,168,76,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Newtown Square, Pennsylvania · May 11–17, 2026</div>
 
           <!-- Countdown timer -->
           <div id="masters-countdown" style="margin-bottom:16px; text-align:center;">
             <div style="display:flex; gap:16px; justify-content:center; align-items:flex-end;">
               <div style="text-align:center;">
-                <div id="cd-days" style="font-family:'Azalea',serif; font-size:clamp(3rem,8vw,5rem); font-weight:400; color:var(--gold); line-height:1;">–</div>
+                <div id="cd-days" style="font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5rem); font-weight:700; color:white; line-height:1;">–</div>
                 <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(201,168,76,0.5); letter-spacing:2px; margin-top:4px;">DAYS</div>
               </div>
               <div style="color:rgba(201,168,76,0.3); font-size:clamp(2rem,5vw,3.5rem); padding-bottom:18px; line-height:1;">:</div>
               <div style="text-align:center;">
-                <div id="cd-hours" style="font-family:'Azalea',serif; font-size:clamp(3rem,8vw,5rem); font-weight:400; color:var(--cream); line-height:1;">–</div>
+                <div id="cd-hours" style="font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5rem); font-weight:700; color:rgba(240,244,250,0.7); line-height:1;">–</div>
                 <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(201,168,76,0.5); letter-spacing:2px; margin-top:4px;">HRS</div>
               </div>
               <div style="color:rgba(201,168,76,0.3); font-size:clamp(2rem,5vw,3.5rem); padding-bottom:18px; line-height:1;">:</div>
               <div style="text-align:center;">
-                <div id="cd-mins" style="font-family:'Azalea',serif; font-size:clamp(3rem,8vw,5rem); font-weight:400; color:var(--cream); line-height:1;">–</div>
+                <div id="cd-mins" style="font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5rem); font-weight:700; color:rgba(240,244,250,0.7); line-height:1;">–</div>
                 <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(201,168,76,0.5); letter-spacing:2px; margin-top:4px;">MINS</div>
               </div>
               <div style="color:rgba(201,168,76,0.3); font-size:clamp(2rem,5vw,3.5rem); padding-bottom:18px; line-height:1;">:</div>
               <div style="text-align:center;">
-                <div id="cd-secs" style="font-family:'Azalea',serif; font-size:clamp(3rem,8vw,5rem); font-weight:400; color:var(--cream); line-height:1;">–</div>
+                <div id="cd-secs" style="font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5rem); font-weight:700; color:rgba(240,244,250,0.7); line-height:1;">–</div>
                 <div style="font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(201,168,76,0.5); letter-spacing:2px; margin-top:4px;">SECS</div>
               </div>
             </div>
@@ -889,7 +889,7 @@
 
           <!-- Tagline -->
           <div style="font-family:'Azalea',serif; font-size:clamp(1.1rem,2.5vw,1.5rem); color:rgba(250,246,238,0.75); margin-bottom:32px;">
-            It Only Takes One <span style="color:var(--gold);">Stroke.</span>
+            One Stroke. <span style="color:var(--gold);">One Champion.</span>
           </div>
 
           <div class="hero-btns" style="display:flex; gap:12px; justify-content:center; flex-direction:column; align-items:center; margin-bottom:16px;">
@@ -901,31 +901,31 @@
         <!-- Divider -->
         <div style="display:flex; align-items:center; gap:16px; margin-bottom:36px;">
           <div style="flex:1; height:1px; background:rgba(201,168,76,0.3);"></div>
-          <div style="font-family:'Azalea', 'DM Mono',monospace; font-size:0.95rem; letter-spacing:4px; color:rgba(201,168,76,0.7); text-transform:uppercase; white-space:nowrap;">How It Works</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:4px; color:rgba(201,168,76,0.6); text-transform:uppercase; white-space:nowrap;">How It Works</div>
           <div style="flex:1; height:1px; background:rgba(201,168,76,0.3);"></div>
         </div>
 
         <!-- Cards -->
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:1px; background:rgba(201,168,76,0.2); border:1px solid rgba(201,168,76,0.25); border-radius:4px; overflow:hidden;">
 
-          <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.15rem; color:var(--gold); margin-bottom:8px;">Draft Your Teams</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Pick 5 golfers from The Masters 2026 field. Enter as many teams as you want — more teams, more chances to win.</div>
+          <div style="background:rgba(0,32,91,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
+            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; letter-spacing:0.5px;">Draft Your Teams</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Pick 5 golfers from the PGA Championship 2026 field. Enter as many teams as you want — more teams, more chances to win.</div>
           </div>
 
-          <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.15rem; color:var(--gold); margin-bottom:8px;">Pay via Venmo</div>
+          <div style="background:rgba(0,32,91,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
+            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; letter-spacing:0.5px;">Pay via Venmo</div>
             <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $25 per team to <span style="color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.82rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
           </div>
 
-          <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.15rem; color:var(--gold); margin-bottom:8px;">Follow Live</div>
+          <div style="background:rgba(0,32,91,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
+            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; letter-spacing:0.5px;">Follow Live</div>
             <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Live scores update every 60 seconds. Track the leaderboard and see your team's earnings in real time.</div>
           </div>
 
-          <div style="background:rgba(26,71,49,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
-            <div style="font-family:'Azalea',serif; font-weight:400; font-size:1.15rem; color:var(--gold); margin-bottom:8px;">Most Earnings Wins</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at Augusta National. Highest total takes the pot.</div>
+          <div style="background:rgba(0,32,91,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
+            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; letter-spacing:0.5px;">Most Earnings Wins</div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;">Your score is the total prize money earned by your 5 golfers at Aronimink Golf Club. Highest total takes the pot.</div>
           </div>
 
         </div>
@@ -1065,7 +1065,7 @@
 
           <div style="position:relative; margin-bottom:14px;">
             <div id="payment-note-display" style="font-family:'DM Mono',monospace; font-size:0.82rem; background:white; border:1.5px dashed #c8e0c8; border-radius:6px; padding:10px 44px 10px 10px; text-align:center; color:var(--green); font-weight:600;"></div>
-            <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background: #1a4731; color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
+            <button onclick="copyPaymentNote()" id="copy-note-btn" style="position:absolute; right:8px; top:50%; transform:translateY(-60%); background: #00205B; color:white; border:none; border-radius:4px; padding:4px 8px; font-size:0.7rem; font-family:'DM Mono',monospace; cursor:pointer; letter-spacing:1px;">COPY</button>
           </div>
 
           <div id="venmo-mobile-btn" style="display:none;">
@@ -1105,25 +1105,25 @@
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <input type="text" id="leaderboard-search" placeholder="Search team or owner name..."
         oninput="renderLeaderboard()"
-        style="padding:9px 14px; border:1.5px solid rgba(26,71,49,0.25); border-radius:4px; font-family:'EB Garamond',serif; font-size:0.88rem; background:#ffffff; flex:1; min-width:200px;" />
+        style="padding:9px 14px; border:1.5px solid rgba(0,32,91,0.25); border-radius:4px; font-family:'EB Garamond',serif; font-size:0.88rem; background:#ffffff; flex:1; min-width:200px;" />
       <select id="leaderboard-sort" onchange="renderLeaderboard()"
-        style="padding:9px 12px; border:1.5px solid rgba(26,71,49,0.25); border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; background:#ffffff; color:var(--dark);">
+        style="padding:9px 12px; border:1.5px solid rgba(0,32,91,0.25); border-radius:4px; font-family:'DM Mono',monospace; font-size:0.78rem; background:#ffffff; color:var(--dark);">
         <option value="rank">Sort by Rank</option>
         <option value="team">Sort by Team Name</option>
         <option value="owner">Sort by Owner</option>
       </select>
       <button id="export-results-btn" onclick="exportResults()" style="display:none; background:var(--gold); color:var(--dark); border:none; border-radius:4px; padding:9px 16px; font-size:0.78rem; font-family:'DM Mono',monospace; font-weight:700; cursor:pointer; letter-spacing:1px; white-space:nowrap;">↓ Download Results</button>
     </div>
-    <div class="tourn-table-wrap" style="border:2px solid #1a4731; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+    <div class="tourn-table-wrap" style="border:2px solid #00205B; border-radius:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;">
       <table class="leaderboard-table" id="leaderboard-table">
         <thead>
           <tr>
-            <th style="width:50px; text-align:center; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">RANK</th>
-            <th style="text-align:left; padding-left:16px; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TEAM</th>
-            <th style="text-align:left; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">SWIMMER</th>
-            <th style="text-align:left; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">GOLFERS</th>
-            <th style="text-align:right; padding-right:16px; background:#1a4731; color:var(--gold); -webkit-text-fill-color:var(--gold);">TOTAL PROJECTED EARNINGS</th>
-            <th style="width:44px; background:#1a4731;"></th>
+            <th style="width:50px; text-align:center; background:#00205B; color:var(--gold); -webkit-text-fill-color:var(--gold);">RANK</th>
+            <th style="text-align:left; padding-left:16px; background:#00205B; color:var(--gold); -webkit-text-fill-color:var(--gold);">TEAM</th>
+            <th style="text-align:left; background:#00205B; color:var(--gold); -webkit-text-fill-color:var(--gold);">SWIMMER</th>
+            <th style="text-align:left; background:#00205B; color:var(--gold); -webkit-text-fill-color:var(--gold);">GOLFERS</th>
+            <th style="text-align:right; padding-right:16px; background:#00205B; color:var(--gold); -webkit-text-fill-color:var(--gold);">TOTAL PROJECTED EARNINGS</th>
+            <th style="width:44px; background:#00205B;"></th>
           </tr>
         </thead>
         <tbody id="leaderboard-body"></tbody>
@@ -1154,15 +1154,15 @@
             <option value="">None</option>
           </select>
         </div>
-        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background: #1a4731; color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default; pointer-events:none;" id="refresh-btn">↻ REFRESH NOW</button>
+        <button onclick="if(TOURNAMENT_ACTIVE) fetchESPNScores();" style="background: #00205B; color:var(--cream); border:none; padding:7px 14px; border-radius:4px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; opacity:0.4; cursor:default; pointer-events:none;" id="refresh-btn">↻ REFRESH NOW</button>
       </div>
     </div>
     <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 50 + ties</div>
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
     </div>
-    <div style="border:2px solid #1a4731; border-radius:4px; overflow:hidden;">
-      <div style="background:#1a4731; padding:14px 16px; text-align:center; width:100%;">
+    <div style="border:2px solid #00205B; border-radius:4px; overflow:hidden;">
+      <div style="background:#00205B; padding:14px 16px; text-align:center; width:100%;">
         <div style="font-family:'Azalea',serif; font-size:2rem; font-weight:400; color:var(--gold); letter-spacing:4px;">Leaderboard</div>
       </div>
       <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
@@ -1170,12 +1170,12 @@
         <table class="leaderboard-table" id="tournament-table" style="min-width:480px; width:100%;">
           <thead>
             <tr style="background:#fff;">
-              <th style="width:55px; background:#fff; color:#1a4731; text-align:center; border-bottom:2px solid #1a4731; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">POS</th>
-              <th style="background:#fff; color:#1a4731; border-bottom:2px solid #1a4731; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">PLAYER</th>
-              <th style="background:#fff; color:#1a4731; border-bottom:2px solid #1a4731; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">SCORE</th>
-              <th style="background:#fff; color:#1a4731; border-bottom:2px solid #1a4731; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">TODAY</th>
-              <th style="background:#fff; color:#1a4731; border-bottom:2px solid #1a4731; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">THRU</th>
-              <th style="background:#fff; color:#1a4731; border-bottom:2px solid #1a4731; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">EARNINGS</th>
+              <th style="width:55px; background:#fff; color:#00205B; text-align:center; border-bottom:2px solid #00205B; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">POS</th>
+              <th style="background:#fff; color:#00205B; border-bottom:2px solid #00205B; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">PLAYER</th>
+              <th style="background:#fff; color:#00205B; border-bottom:2px solid #00205B; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">SCORE</th>
+              <th style="background:#fff; color:#00205B; border-bottom:2px solid #00205B; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">TODAY</th>
+              <th style="background:#fff; color:#00205B; border-bottom:2px solid #00205B; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">THRU</th>
+              <th style="background:#fff; color:#00205B; border-bottom:2px solid #00205B; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:1px;">EARNINGS</th>
             </tr>
           </thead>
           <tbody id="tournament-body"></tbody>
@@ -1246,7 +1246,7 @@
           onfocus="this.style.borderColor='rgba(201,168,76,0.7)'" onblur="this.style.borderColor='rgba(201,168,76,0.3)'"
           onkeydown="if(event.key==='Enter') sendChatMessage()" />
         <button onclick="sendChatMessage()"
-          style="background:var(--gold); color:#1a4731; border:none; border-radius:24px; padding:12px 22px; font-family:'DM Mono',monospace; font-size:0.8rem; cursor:pointer; letter-spacing:1px; font-weight:600; box-shadow:0 4px 14px rgba(201,168,76,0.3); transition:transform 0.15s, box-shadow 0.15s; white-space:nowrap;"
+          style="background:var(--gold); color:#00205B; border:none; border-radius:24px; padding:12px 22px; font-family:'DM Mono',monospace; font-size:0.8rem; cursor:pointer; letter-spacing:1px; font-weight:600; box-shadow:0 4px 14px rgba(201,168,76,0.3); transition:transform 0.15s, box-shadow 0.15s; white-space:nowrap;"
           onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(201,168,76,0.4)'"
           onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px rgba(201,168,76,0.3)'">
           SEND ↑
@@ -1376,19 +1376,19 @@
 
     <!-- Summary Stats -->
     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:24px;">
-      <div style="background: #1a4731; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: #00205B; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--gold);" id="admin-stat-total">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">TOTAL ENTRIES</div>
       </div>
-      <div style="background: #1a4731; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: #00205B; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:#2ecc71;" id="admin-stat-paid">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">PAID</div>
       </div>
-      <div style="background: #1a4731; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: #00205B; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:#e74c3c;" id="admin-stat-unpaid">0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">UNPAID</div>
       </div>
-      <div style="background: #1a4731; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
+      <div style="background: #00205B; color:var(--cream); border-radius:8px; padding:16px 20px; text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--gold);" id="admin-stat-collected">$0</div>
         <div style="font-size:0.7rem; font-family:'DM Mono',monospace; letter-spacing:1px; opacity:0.7; margin-top:4px;">COLLECTED</div>
       </div>
@@ -1565,8 +1565,8 @@
         <!-- Cut Rule -->
         <div style="padding:14px 16px; background:#f8f5ee; border-radius:6px; border:1.5px solid #e0dbd0;">
           <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:6px;">Cut Rule (top N + ties)</div>
-          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Number of players who make the cut — e.g. 50 = top 50 + ties</div>
-          <input id="ts-cut" type="number" min="50" max="80" placeholder="50"
+          <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">Number of players who make the cut — e.g. 70 = top 70 + ties</div>
+          <input id="ts-cut" type="number" min="50" max="80" placeholder="70"
             style="width:100px; padding:9px 12px; border:1.5px solid #ccc; border-radius:5px; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--dark); background:white;">
         </div>
 
@@ -1625,7 +1625,7 @@
     <div style="background:#fdf8ee; border:1.5px solid #b0c0e8; border-radius:8px; padding:16px 20px; margin-bottom:20px;">
       <div style="font-family:'Libre Baskerville',serif; font-weight:700; font-size:0.95rem; color:var(--dark); margin-bottom:4px;">🧹 Next Tournament — Safe Clear SQL</div>
       <div style="font-size:0.78rem; color:#888; margin-bottom:10px;">⚠️ Only run this AFTER locking results. Generates a SQL snippet that deletes only the current tournament's teams — never touches history.</div>
-      <button onclick="generateClearSQL()" style="background: #1a4731; color:white; border:none; border-radius:6px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; cursor:pointer;">GENERATE CLEAR SQL</button>
+      <button onclick="generateClearSQL()" style="background: #00205B; color:white; border:none; border-radius:6px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; cursor:pointer;">GENERATE CLEAR SQL</button>
       <pre id="clear-sql-output" style="display:none; margin-top:12px; background:#1e1e2e; color:#a8e6cf; padding:14px; border-radius:6px; font-size:0.72rem; overflow-x:auto; white-space:pre-wrap;"></pre>
     </div>
 
@@ -1732,17 +1732,17 @@
 
 <!-- MASTERS THEME AUDIO PLAYER -->
 <div id="music-player" style="position:fixed; bottom:20px; left:8px; z-index:999; display:flex; align-items:center; gap:8px;">
-  <button id="music-btn" onclick="toggleMusic()" title="Toggle Masters theme music"
-    style="background: #1a4731; border:1.5px solid var(--gold); color:var(--gold); width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.3); transition:all 0.2s; -webkit-tap-highlight-color:transparent;">
+  <button id="music-btn" onclick="toggleMusic()" title="Toggle PGA Championship theme music"
+    style="background: #00205B; border:1.5px solid var(--gold); color:var(--gold); width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.3); transition:all 0.2s; -webkit-tap-highlight-color:transparent;">
     🔇
   </button>
-  <div id="music-label" style="background: #1a4731; border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+  <div id="music-label" style="background: #00205B; border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
     ♪ Masters Theme
   </div>
 </div>
 <div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
   <audio id="bg-audio" loop>
-    <source src="./The_Masters_Full_Theme.mp3" type="audio/mpeg">
+    <source src="./PGA_Championship_Theme.mp3" type="audio/mpeg">
   </audio>
 </div>
 
@@ -1887,12 +1887,12 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-04-12-1300';
+const APP_VERSION = '2026-04-14-1940';
 
-let TOURNAMENT_NAME = 'The Masters 2026'; // must match tournament column in DB — overridden by admin_settings
+let TOURNAMENT_NAME = 'PGA Championship 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
-let CUT_RULE        = 50;  // top N + ties — overridden by admin_settings
-let PARS            = [4,5,4,3,4,3,6,5,4, 4,4,4,3,5,5,3,4,4]; // Augusta National par 72 — overridden by admin_settings
+let CUT_RULE        = 70;  // top N + ties — overridden by admin_settings
+let PARS            = [4,4,4,4,3,4,4,3,5, 4,4,4,4,3,4,5,3,4]; // Aronimink Golf Club par 70 — overridden by admin_settings
 
 // Admin-controlled settings (persisted in Supabase)
 let adminSettings = {
@@ -1935,7 +1935,7 @@ async function loadAdminSettings() {
       try { const p = JSON.parse(data.tournament_pars); if (Array.isArray(p) && p.length === 18) PARS = p; } catch(e) {}
     }
     if (data.cut_rule) {
-      CUT_RULE = Math.min(data.cut_rule, 50); // Masters cuts at 50+ties
+      CUT_RULE = data.cut_rule;
     }
     // Populate inputs if admin panel is already visible
     const tsName = document.getElementById('ts-name');
@@ -2918,7 +2918,7 @@ function showHistoryDetail(tName) {
   }).join('');
 
   const th2 = getTournamentTheme(tName);
-  const thHeaderBg = th2?.headerBg || '#1a4731';
+  const thHeaderBg = th2?.headerBg || '#00205B';
   const thHeaderColor = th2?.headerColor || 'var(--gold)';
   const thRowBg = th2?.cardBg || 'rgba(201,168,76,0.06)';
   const thGolferBg = th2?.cardBg || 'rgba(0,51,98,0.04)';
@@ -3921,13 +3921,13 @@ function renderLeaderboard() {
     const rowBg = isMyTeam ? 'rgba(201,168,76,0.18)' : '';
     const barPct = hasLiveData && maxEarnings > 0 ? Math.round((earnings / maxEarnings) * 100) : 0;
     // Heat map: gold at 100%, warm green → teal → blue as pct drops
-    const barColor = barPct === 100 ? '#c9a84c' : barPct >= 90 ? '#4a9068' : barPct >= 75 ? '#2a9d8f' : barPct >= 55 ? '#2196a6' : '#4a90c4';
+    const barColor = barPct === 100 ? '#c9a84c' : barPct >= 90 ? '#2a52a0' : barPct >= 75 ? '#2a9d8f' : barPct >= 55 ? '#2196a6' : '#4a90c4';
     const isLeader = barPct === 100;
-    const earningsBar = hasLiveData ? `<div style="height:${isLeader ? '6' : '3'}px; background:rgba(26,71,49,0.08); border-radius:2px; margin-top:4px; overflow:hidden; ${isLeader ? 'box-shadow:0 0 6px rgba(201,168,76,0.6);' : ''}">
+    const earningsBar = hasLiveData ? `<div style="height:${isLeader ? '6' : '3'}px; background:rgba(0,32,91,0.08); border-radius:2px; margin-top:4px; overflow:hidden; ${isLeader ? 'box-shadow:0 0 6px rgba(201,168,76,0.6);' : ''}">
       <div style="height:100%; width:${barPct}%; background:${barColor}; border-radius:2px; transition:width 0.6s ease; ${isLeader ? 'box-shadow:0 0 8px rgba(201,168,76,0.8);' : ''}"></div>
     </div>` : '';
 
-    return `<tr class="${isMyTeam ? 'my-team-row' : ''}" style="border-top:2px solid rgba(26,71,49,0.18); background:${rowBg};">
+    return `<tr class="${isMyTeam ? 'my-team-row' : ''}" style="border-top:2px solid rgba(0,32,91,0.18); background:${rowBg};">
       <td style="text-align:center; border-left:4px solid ${leftBorderColor};">${rankDisplay}</td>
       <td style="text-align:left; padding-left:16px;"><strong>${team.name}</strong>${isMyTeam ? ' <span style="font-size:0.7rem;color:var(--gold);font-family:DM Mono,monospace;">YOU</span>' : ''}</td>
       <td style="text-align:left;"><div style="font-size:0.88rem;">${team.owner_name || team.name}</div></td>
@@ -4091,16 +4091,16 @@ function toggleScorecard(playerKey, clickedRow) {
     const sepStyle = `padding:7px 8px;text-align:center;font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:700;color:#c9a84c;border-left:1px solid rgba(255,255,255,0.25);min-width:40px;`;
     expandRow.querySelector('td').innerHTML = `
       <div style="padding:8px 12px 12px; background:#1e3a2f;">
-        <div style="background:#1a4731; border-radius:6px 6px 0 0; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #c9a84c;">
+        <div style="background:#00205B; border-radius:6px 6px 0 0; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #c9a84c;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <span style="background:#c9a84c; color:#1a4731; font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:2px; letter-spacing:1px;">–</span>
+            <span style="background:#c9a84c; color:#00205B; font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:2px; letter-spacing:1px;">–</span>
             <span style="font-family:'DM Mono',monospace; font-weight:700; font-size:0.9rem; color:#fff; letter-spacing:1px;">${(golfer?.name || playerKey).toUpperCase()}</span>
           </div>
           <div style="font-family:'DM Mono',monospace; color:rgba(255,255,255,0.4); font-size:0.72rem; letter-spacing:1px;">${teeInfo}</div>
         </div>
-        <div style="background:#1a4731; border-radius:0 0 6px 6px; overflow:hidden;">
+        <div style="background:#00205B; border-radius:0 0 6px 6px; overflow:hidden;">
           <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
-            <table style="border-collapse:collapse; width:100%; min-width:520px; background:#1a4731;">
+            <table style="border-collapse:collapse; width:100%; min-width:520px; background:#00205B;">
               <thead>
                 <tr style="background:#0d2318 !important;">
                   <td style="${hdrStyle} text-align:left; padding-left:10px; background:#0d2318;"></td>
@@ -4118,12 +4118,12 @@ function toggleScorecard(playerKey, clickedRow) {
                 </tr>
               </thead>
               <tbody>
-                <tr style="background:#1a4731 !important;">
-                  <td style="padding:8px 8px; font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(255,255,255,0.5); background:#1a4731;">SCORE</td>
-                  ${Array.from({length:9}, () => `<td style="padding:7px 4px; text-align:center; font-family:'DM Mono',monospace; font-size:0.85rem; min-width:34px; color:rgba(255,255,255,0.35); background:#1a4731;">·</td>`).join('')}
-                  <td style="${sepStyle} background:#1a4731;">–</td>
-                  ${Array.from({length:9}, () => `<td style="padding:7px 4px; text-align:center; font-family:'DM Mono',monospace; font-size:0.85rem; min-width:34px; color:rgba(255,255,255,0.35); background:#1a4731;">·</td>`).join('')}
-                  <td style="${sepStyle} background:#1a4731;">–</td>
+                <tr style="background:#00205B !important;">
+                  <td style="padding:8px 8px; font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(255,255,255,0.5); background:#00205B;">SCORE</td>
+                  ${Array.from({length:9}, () => `<td style="padding:7px 4px; text-align:center; font-family:'DM Mono',monospace; font-size:0.85rem; min-width:34px; color:rgba(255,255,255,0.35); background:#00205B;">·</td>`).join('')}
+                  <td style="${sepStyle} background:#00205B;">–</td>
+                  ${Array.from({length:9}, () => `<td style="padding:7px 4px; text-align:center; font-family:'DM Mono',monospace; font-size:0.85rem; min-width:34px; color:rgba(255,255,255,0.35); background:#00205B;">·</td>`).join('')}
+                  <td style="${sepStyle} background:#00205B;">–</td>
                 </tr>
               </tbody>
             </table>
@@ -4160,8 +4160,8 @@ function toggleScorecard(playerKey, clickedRow) {
       const diff = isNaN(score) ? null : score - par;
       if (h.score === null) return `<td style="padding:5px 3px;text-align:center;font-family:'DM Mono',monospace;font-size:0.75rem;color:rgba(255,255,255,0.2);min-width:28px;">·</td>`;
       let display;
-      if (diff <= -2)     display = `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#c9a84c;outline:2px solid #fff;outline-offset:1px;color:#1a4731;font-size:0.72rem;font-weight:700;">${score}</span>`;
-      else if (diff === -1) display = `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#c9a84c;color:#1a4731;font-size:0.72rem;font-weight:700;">${score}</span>`;
+      if (diff <= -2)     display = `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#c9a84c;outline:2px solid #fff;outline-offset:1px;color:#00205B;font-size:0.72rem;font-weight:700;">${score}</span>`;
+      else if (diff === -1) display = `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#c9a84c;color:#00205B;font-size:0.72rem;font-weight:700;">${score}</span>`;
       else if (diff === 0)  display = `<span style="color:#fff;font-size:0.8rem;font-weight:700;">${score}</span>`;
       else if (diff === 1)  display = `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:2px solid #e74c3c;color:#e74c3c;font-size:0.72rem;font-weight:700;">${score}</span>`;
       else                  display = `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:3px double #e74c3c;color:#e74c3c;font-size:0.72rem;font-weight:700;">${score}</span>`;
@@ -4173,7 +4173,7 @@ function toggleScorecard(playerKey, clickedRow) {
     const sepStyle = `padding:5px 6px;text-align:center;font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:700;color:#c9a84c;border-left:1px solid rgba(255,255,255,0.12);min-width:36px;`;
 
     return `
-      <div style="background:#1a4731;border-radius:6px;overflow:hidden;margin-top:4px;">
+      <div style="background:#00205B;border-radius:6px;overflow:hidden;margin-top:4px;">
         <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
           <table style="border-collapse:collapse;width:100%;min-width:520px;">
             <thead>
@@ -4205,10 +4205,10 @@ function toggleScorecard(playerKey, clickedRow) {
         </div>
         <div style="display:flex;gap:14px;padding:8px 10px;border-top:1px solid rgba(255,255,255,0.1);flex-wrap:wrap;">
           <span style="display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(255,255,255,0.45);">
-            <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#c9a84c;outline:2px solid #fff;outline-offset:1px;color:#1a4731;font-size:0.55rem;font-weight:700;">3</span>Eagle+
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#c9a84c;outline:2px solid #fff;outline-offset:1px;color:#00205B;font-size:0.55rem;font-weight:700;">3</span>Eagle+
           </span>
           <span style="display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(255,255,255,0.45);">
-            <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#c9a84c;color:#1a4731;font-size:0.55rem;font-weight:700;">4</span>Birdie
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#c9a84c;color:#00205B;font-size:0.55rem;font-weight:700;">4</span>Birdie
           </span>
           <span style="display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(255,255,255,0.45);">
             <span style="color:#fff;font-size:0.75rem;font-weight:700;">4</span>Par
@@ -4234,9 +4234,9 @@ function toggleScorecard(playerKey, clickedRow) {
 
   expandRow.querySelector('td').innerHTML = `
     <div style="padding:8px 12px 12px; background:#1e3a2f;">
-      <div style="background:#1a4731; border-radius:6px 6px 0 0; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #c9a84c;">
+      <div style="background:#00205B; border-radius:6px 6px 0 0; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #c9a84c;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <span style="background:#c9a84c; color:#1a4731; font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:2px; letter-spacing:1px;">${d.posDisplay || '–'}</span>
+          <span style="background:#c9a84c; color:#00205B; font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:2px; letter-spacing:1px;">${d.posDisplay || '–'}</span>
           <span style="font-family:'DM Mono',monospace; font-weight:700; font-size:0.9rem; color:#fff; letter-spacing:1px;">${(d.name || playerKey).toUpperCase()}</span>
         </div>
         <div style="display:flex; align-items:center; gap:16px;">
@@ -4359,7 +4359,7 @@ function renderTournament() {
         <td style="font-family:'DM Mono',monospace; font-size:0.82rem; font-weight:700; color:#aaa; text-align:center;">–</td>
         <td style="white-space:nowrap; padding:10px 8px;">
           <span onclick="event.stopPropagation(); toggleWatch('${safeKey}')" id="star-${safeKey}" style="cursor:pointer; margin-right:5px; font-size:0.85rem; color:${isStarred ? '#c9a84c' : '#ccc'};">★</span>
-          <span style="font-family:'DM Mono',monospace; font-weight:700; font-size:0.88rem; letter-spacing:0.3px; color:${isHighlighted || isStarred ? '#1a4731' : '#111'};">${g.name.toUpperCase()}</span>
+          <span style="font-family:'DM Mono',monospace; font-weight:700; font-size:0.88rem; letter-spacing:0.3px; color:${isHighlighted || isStarred ? '#00205B' : '#111'};">${g.name.toUpperCase()}</span>
         </td>
         <td colspan="3" style="font-family:'DM Mono',monospace; font-size:0.78rem; color:#aaa; letter-spacing:0.5px;">${g.teeTime} PST</td>
         <td style="font-family:'DM Mono',monospace; font-size:0.82rem; color:#bbb;">–</td>
@@ -4395,8 +4395,8 @@ function renderTournament() {
     const isWatched = window._watchList?.has(key);
     const isUnder = typeof d.score === 'string' && d.score.startsWith('-');
     const isEven = d.score === 'E';
-    const scoreColor = isUnder ? '#cc0000' : isEven ? '#1a4731' : '#222';
-    const todayColorFn = v => v && v.startsWith('-') ? '#cc0000' : v === 'E' ? '#1a4731' : '#222';
+    const scoreColor = isUnder ? '#cc0000' : isEven ? '#00205B' : '#222';
+    const todayColorFn = v => v && v.startsWith('-') ? '#cc0000' : v === 'E' ? '#00205B' : '#222';
     const rowBg = isHighlighted ? 'rgba(201,168,76,0.13)' : isWatched ? 'rgba(201,168,76,0.06)' : '#ffffff';
     const borderLeft = isHighlighted ? '4px solid var(--gold)' : isWatched ? '4px solid rgba(201,168,76,0.5)' : '4px solid transparent';
     const safeKey = key.replace(/'/g, "\\'");
@@ -4436,7 +4436,7 @@ function renderTournament() {
   activeRows = sortedStarted.map(renderRow).join('') + sortedUnstarted.map(renderRow).join('');
 
   const cutDivider = (cutPlayers.length && window._isPostCut)
-    ? `<tr><td colspan="6" style="background:#1a4731; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:rgba(201,168,76,0.8); letter-spacing:2px; text-align:center;">${cutLabel}</td></tr>`
+    ? `<tr><td colspan="6" style="background:#00205B; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:rgba(201,168,76,0.8); letter-spacing:2px; text-align:center;">${cutLabel}</td></tr>`
     : '';
 
   // Exclude watched from main list to avoid duplicates
@@ -4474,7 +4474,7 @@ function renderTournament() {
       const cutScore = parseInt(sortedStarted[Math.min(CUT_RULE - 1, sortedStarted.length-1)]?.[1]?.score) || 0;
       const cutLabel = cutScore === 0 ? 'E' : cutScore > 0 ? '+'+cutScore : ''+cutScore;
       const cutTr = document.createElement('tr');
-      cutTr.innerHTML = `<td colspan="6" style="background:#f0ece0; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#999; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${cutLabel} —</td>`;
+      cutTr.innerHTML = `<td colspan="6" style="background:#e8ecf5; padding:6px 14px; font-size:0.72rem; font-family:'DM Mono',monospace; color:#5a6fa0; letter-spacing:1px; text-align:center;">— PROJECTED CUT · ${cutLabel} —</td>`;
       lastInRow.insertAdjacentElement('afterend', cutTr);
     }
   }
@@ -4575,7 +4575,7 @@ function getUserTextColor(bg) {
   // Return dark or light text depending on bg luminance
   const hex = bg.replace('#','');
   const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
-  return (0.299*r + 0.587*g + 0.114*b) > 160 ? '#1a4731' : '#ffffff';
+  return (0.299*r + 0.587*g + 0.114*b) > 160 ? '#00205B' : '#ffffff';
 }
 
 function appendChatMessage(msg) {
@@ -5100,7 +5100,7 @@ function renderStats(sortBy = 'picks') {
     <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
     <table style="width:100%; min-width:400px; border-collapse:collapse;">
       <thead>
-        <tr style="border-bottom:2px solid var(--green);">
+        <tr style="border-bottom:2px solid var(--green-mid);">
           <th style="text-align:left; padding:8px 12px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; color:#888;">GOLFER</th>
           <th style="text-align:center; padding:8px 12px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; color:#888;">PICKS</th>
           <th style="text-align:center; padding:8px 12px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:1px; color:#888;">% PICKED</th>
@@ -5123,7 +5123,7 @@ function renderStats(sortBy = 'picks') {
           const btnClick = isAmateur ? '' : isSelected
             ? `finderRemove('${name.replace(/'/g,"\\'")}');`
             : canAdd ? `finderToggle('${name.replace(/'/g,"\\'")}');` : '';
-          return `<tr style="background:${isSelected ? 'rgba(26,71,49,0.06)' : bg}; border-bottom:1px solid #e8e4da; transition:background 0.15s;" id="stats-row-${i}">
+          return `<tr style="background:${isSelected ? 'rgba(0,32,91,0.06)' : bg}; border-bottom:1px solid #e8e4da; transition:background 0.15s;" id="stats-row-${i}">
             <td style="padding:10px 8px 10px 12px; font-family:'Libre Baskerville',serif; font-size:0.9rem; ${isAmateur ? 'color:#aaa; font-style:italic;' : ''}">
               <div style="display:flex; align-items:center; gap:8px;">
                 ${isAmateur ? '' : `<button onclick="${btnClick}" style="width:24px;height:24px;border-radius:50%;border:1.5px solid var(--green);font-size:0.95rem;line-height:1;cursor:${canAdd||isSelected?'pointer':'default'};transition:all 0.15s;flex-shrink:0;${btnStyle}">${btnLabel}</button>`}
@@ -5134,7 +5134,7 @@ function renderStats(sortBy = 'picks') {
             <td style="text-align:center; padding:10px 12px; font-family:'DM Mono',monospace; font-size:0.82rem; color:#888;">${pct}%</td>
             <td style="padding:10px 12px; min-width:100px;">
               <div style="background:#e8e4da; border-radius:3px; height:8px; overflow:hidden;">
-                <div style="background:#1a4731; height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
+                <div style="background:#00205B; height:100%; width:${barWidth}%; border-radius:3px; transition:width 0.3s;"></div>
               </div>
             </td>
           </tr>`;
@@ -5744,7 +5744,7 @@ function toggleEditProfile() {
     swatchContainer.innerHTML = USER_COLOR_PALETTE.map(color => `
       <div onclick="selectUserColor('${color}')" id="swatch-${color.replace('#','')}"
         style="width:32px; height:32px; border-radius:50%; background:${color}; cursor:pointer;
-               border: 3px solid ${color === currentColor ? '#1a4731' : 'transparent'};
+               border: 3px solid ${color === currentColor ? '#00205B' : 'transparent'};
                box-shadow: ${color === currentColor ? '0 0 0 2px ' + color : 'none'};
                transition: transform 0.15s;"
         onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
@@ -5759,7 +5759,7 @@ function selectUserColor(color) {
   USER_COLOR_PALETTE.forEach(c => {
     const el = document.getElementById('swatch-' + c.replace('#',''));
     if (!el) return;
-    el.style.border = c === color ? '3px solid #1a4731' : '3px solid transparent';
+    el.style.border = c === color ? '3px solid #00205B' : '3px solid transparent';
     el.style.boxShadow = c === color ? '0 0 0 2px ' + c : 'none';
   });
   // Store temporarily
@@ -6813,7 +6813,7 @@ async function initPushNotifications() {
 
   <!-- Duplicate lineup confirm modal -->
   <div id="duplicate-lineup-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; padding:20px;">
-    <div style="background: #1a4731; border-radius:12px; padding:32px 28px; max-width:400px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.4); text-align:center;">
+    <div style="background: #00205B; border-radius:12px; padding:32px 28px; max-width:400px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.4); text-align:center;">
       <div style="font-size:2rem; margin-bottom:12px;">⚠️</div>
       <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--gold-light); margin-bottom:12px;">Duplicate Lineup</div>
       <div id="duplicate-lineup-msg" style="font-size:0.92rem; color:rgba(255,255,255,0.85); line-height:1.6; margin-bottom:28px; font-family:'DM Mono',monospace;"></div>
