@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jrays-swimmers-v109';
+const CACHE_NAME = 'jrays-swimmers-v116';
 const SHELL_ASSETS = ['/', '/index.html', '/Azalea.otf', '/PGA_Championship_Theme.mp3'];
 
 self.addEventListener('install', event => {

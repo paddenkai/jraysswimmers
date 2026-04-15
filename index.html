@@ -859,8 +859,8 @@
         <div style="text-align:center; margin-bottom:44px;">
 
           <!-- Tournament title -->
-          <div style="font-family:'DM Mono',monospace; font-size:clamp(0.65rem,1.5vw,0.85rem); letter-spacing:8px; color:rgba(201,168,76,0.7); text-transform:uppercase; margin-bottom:6px;">2026 PGA Championship</div><div style="font-family:'Playfair Display',serif; font-size:clamp(2.6rem,6vw,4.2rem); font-weight:700; color:white; letter-spacing:2px; line-height:1.05; margin-bottom:10px; text-shadow:0 2px 20px rgba(0,0,0,0.4);">Aronimink<br><span style="color:var(--gold); font-size:0.75em; letter-spacing:4px; font-weight:400;">Golf Club</span></div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(201,168,76,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Newtown Square, Pennsylvania · May 11–17, 2026</div>
+          <div style="font-family:'DM Mono',monospace; font-size:clamp(0.65rem,1.5vw,0.85rem); letter-spacing:8px; color:rgba(201,168,76,0.7); text-transform:uppercase; margin-bottom:6px;">Aronimink Golf Club</div><div style="font-family:'Playfair Display',serif; font-size:clamp(2.6rem,6vw,4.2rem); font-weight:700; letter-spacing:2px; line-height:1.0; margin-bottom:10px; text-shadow:0 2px 20px rgba(0,0,0,0.4);"><div style="color:white;">PGA</div><div style="color:var(--gold);">Championship</div></div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(201,168,76,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Newtown Square, Pennsylvania · May 14–17, 2026</div>
 
           <!-- Countdown timer -->
           <div id="masters-countdown" style="margin-bottom:16px; text-align:center;">
@@ -889,7 +889,7 @@
 
           <!-- Tagline -->
           <div style="font-family:'Azalea',serif; font-size:clamp(1.1rem,2.5vw,1.5rem); color:rgba(250,246,238,0.75); margin-bottom:32px;">
-            One Stroke. <span style="color:var(--gold);">One Champion.</span>
+            It Only Takes One <span style="color:var(--gold);">Stroke.</span>
           </div>
 
           <div class="hero-btns" style="display:flex; gap:12px; justify-content:center; flex-direction:column; align-items:center; margin-bottom:16px;">
@@ -1737,7 +1737,7 @@
     🔇
   </button>
   <div id="music-label" style="background: #00205B; border:1px solid rgba(201,168,76,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-    ♪ Masters Theme
+    ♪ PGA Theme
   </div>
 </div>
 <div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
@@ -1887,7 +1887,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-04-14-1940';
+const APP_VERSION = '2026-04-14-2030';
 
 let TOURNAMENT_NAME = 'PGA Championship 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -1905,7 +1905,7 @@ let adminSettings = {
   showHistory: true,
   officialCut: localStorage.getItem('officialCut') === '1',
   showCountdown: true,
-  countdownTarget: '2026-04-10T12:00:00Z',
+  countdownTarget: '2026-05-14T08:00:00Z',
 };
 
 async function loadAdminSettings() {
@@ -2998,7 +2998,7 @@ async function initApp() {
 let _countdownInterval = null;
 function startCountdown() {
   if (_countdownInterval) { clearInterval(_countdownInterval); _countdownInterval = null; }
-  const teeTime = new Date(adminSettings.countdownTarget || '2026-04-10T12:00:00Z');
+  const teeTime = new Date(adminSettings.countdownTarget || '2026-05-14T08:00:00Z');
   function tick() {
     const now = new Date();
     const diff = teeTime - now;
@@ -6290,7 +6290,7 @@ function startMusic() {
       musicPlaying = true;
       updateMusicBtn();
       const label = document.getElementById('music-label');
-      label.textContent = '♪ Masters Theme';
+      label.textContent = '♪ PGA Theme';
       label.style.opacity = '1';
       setTimeout(() => { label.style.opacity = '0'; }, 3500);
     }).catch(err => {
@@ -6323,7 +6323,7 @@ function updateMusicBtn() {
 window.addEventListener('load', () => {
   setTimeout(() => {
     const label = document.getElementById('music-label');
-    label.textContent = '♪ Click for Masters theme';
+    label.textContent = '♪ Click for PGA theme';
     label.style.opacity = '1';
     setTimeout(() => { label.style.opacity = '0'; }, 4000);
   }, 1500);
