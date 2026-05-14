@@ -1291,7 +1291,8 @@
         <div class="profile-name" id="profile-name" style="font-size:1.3rem;color:white;">–</div>
         <div class="profile-email" id="profile-email" style="font-size:0.85rem; opacity:0.8; color:white;">–</div>
       </div>
-      <div style="display:flex;gap:20px;align-items:center;">
+      <div style="display:flex;gap:16px;align-items:center;">
+
         <div style="text-align:center;">
           <div class="profile-stat-val" id="profile-teams" style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold);">0</div>
           <div style="font-size:0.62rem;font-family:'DM Mono',monospace;letter-spacing:1px;color:rgba(255,255,255,0.6);">TEAMS</div>
@@ -1307,7 +1308,23 @@
     <!-- Master Push Notification Toggle — mobile only -->
     
 
-    <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--green); margin-bottom:16px;">My Teams</div>
+
+    <!-- Browse Swimmers -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--green);">My Teams</div>
+      <div style="position:relative;">
+        <div style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1.5px; color:var(--green-mid); text-transform:uppercase; margin-bottom:4px; text-align:right;">Browse Swimmers</div>
+        <div style="position:relative;">
+          <input id="swimmer-search" type="text" placeholder="Search by name..." oninput="renderSwimmerBrowser(); document.getElementById('swimmer-dropdown').style.display=this.value?'block':'none'"
+            onblur="setTimeout(()=>document.getElementById('swimmer-dropdown').style.display='none',200)"
+            style="width:160px; padding:6px 12px 6px 28px; border:1.5px solid rgba(0,32,91,0.2); border-radius:20px; font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--dark); background:white; outline:none; letter-spacing:0.3px;">
+          <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.75rem; pointer-events:none;">🔍</span>
+          <div id="swimmer-dropdown" style="display:none; position:absolute; top:calc(100% + 6px); right:0; width:230px; background:white; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.15); border:1px solid rgba(0,32,91,0.1); overflow:hidden; z-index:100; max-height:280px; overflow-y:auto;">
+            <div id="swimmer-browser-list" style="padding:6px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="teams-grid" id="my-teams-grid"></div>
     <div id="my-teams-empty" class="empty-state" style="display:none;">
@@ -1341,6 +1358,7 @@
       <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--green); margin-bottom:16px;">Tournament History</div>
       <div id="tournament-history-list"></div>
     </div>
+
 
 
     <div id="edit-profile-panel" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
@@ -1887,7 +1905,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-05-11-1300';
+const APP_VERSION = '2026-05-11-1500';
 
 let TOURNAMENT_NAME = 'PGA Championship 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -3445,7 +3463,7 @@ async function showPage(name) {
   if (name === 'history') { renderHistoryPage(); }
   if (name === 'chat') { initChat(); hideChatBadge(); }
   if (name === 'builder') { await loadTeams(); renderBuilder(); }
-  if (name === 'profile') { renderProfile(); renderAllAlertFeeds(); clearProfileBadge(); }
+  if (name === 'profile') { renderProfile(); renderAllAlertFeeds(); clearProfileBadge(); renderSwimmerBrowser(); }
   if (name === 'payment') { renderPaymentSummary(); }
   updateStats();
 }
@@ -4021,7 +4039,7 @@ function renderLeaderboard() {
     return `<tr class="${isMyTeam ? 'my-team-row' : ''}" style="border-top:2px solid rgba(0,32,91,0.18); background:${rowBg};">
       <td style="text-align:center; border-left:4px solid ${leftBorderColor};">${rankDisplay}</td>
       <td style="text-align:left; padding-left:16px;"><strong>${team.name}</strong>${isMyTeam ? ' <span style="font-size:0.7rem;color:var(--gold);font-family:DM Mono,monospace;">YOU</span>' : ''}</td>
-      <td style="text-align:left;"><div style="font-size:0.88rem;">${team.owner_name || team.name}</div></td>
+      <td style="text-align:left;"><div style="font-size:0.88rem; cursor:pointer; text-decoration:underline; text-decoration-color:rgba(0,32,91,0.3); text-underline-offset:3px;" onclick="openUserProfile('${team.owner}', '${(team.owner_name||team.name).replace(/'/g,'\\\'')}')">${team.owner_name || team.name}</div></td>
       <td style="text-align:left;"><div class="team-golfers-mini">${adminSettings.showPicks || (currentUser && team.owner === currentUser.email) ? [...team.golfers].sort((a,b) => { const ga=GOLFERS.find(g=>g.id===a), gb=GOLFERS.find(g=>g.id===b); const getPosSort = g => { if (!g.liveData?.posDisplay || g.liveData?.posDisplay === '–') return 999; if (g.liveData?.wd || g.withdrawn) return 998; if (g.cutMissed) return 997; const p = g.liveData.posDisplay.replace(/^T/,''); const n = parseInt(p); return isNaN(n) ? 996 : n; }; return getPosSort(ga||{}) - getPosSort(gb||{}); }).map((id, i, arr) => {
         const g = GOLFERS.find(g => g.id === id);
         if (!g) return '';
@@ -5464,6 +5482,170 @@ async function saveEditPicks() {
 
 
 // ═══════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════
+// USER PROFILE MODAL
+// ══════════════════════════════════════════════════════
+
+function openUserProfile(email, name) {
+  if (currentUser && email === currentUser.email) {
+    showPage('profile');
+    return;
+  }
+  const modal = document.getElementById('user-profile-modal');
+  const content = document.getElementById('user-profile-content');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  const userTeams = allTeams.filter(t => t.owner === email && t.paid);
+  const currentTeams = userTeams.filter(t => (t.tournament || '') === TOURNAMENT_NAME);
+  const userColor = getUserColor(email);
+  const initials = (name || email).charAt(0).toUpperCase();
+
+  // Best rank
+  const sorted = allTeams.filter(t => t.paid && (t.tournament||'') === TOURNAMENT_NAME).sort((a,b) => getTeamEarnings(b) - getTeamEarnings(a));
+  const bestIdx = sorted.findIndex(t => t.owner === email);
+  const bestRank = bestIdx >= 0 ? '#' + (bestIdx + 1) : '–';
+  const totalEarnings = currentTeams.reduce((s, t) => s + getTeamEarnings(t), 0);
+
+  // Career stats from locked results
+  const lockedTeams = userTeams.filter(t => t.results);
+  const tournaments = {};
+  lockedTeams.forEach(t => {
+    const tName = t.results?.tournament || t.tournament || 'Unknown';
+    if (!tournaments[tName]) tournaments[tName] = [];
+    tournaments[tName].push(t);
+  });
+  let wins = 0;
+  let bestFinish = Infinity;
+  Object.values(tournaments).forEach(tTeams => {
+    const allT = allTeams.filter(t => t.paid && (t.tournament||'') === (tTeams[0].results?.tournament || tTeams[0].tournament));
+    const allSorted = [...allT].sort((a,b) => getTeamEarnings(b) - getTeamEarnings(a));
+    tTeams.forEach(t => {
+      const rank = t.results ? t.results.poolRank : allSorted.findIndex(s => s.id === t.id) + 1;
+      if (rank > 0 && rank < bestFinish) bestFinish = rank;
+      if (rank === 1) wins++;
+    });
+  });
+
+  // Current teams HTML
+  const teamsHTML = currentTeams.length === 0
+    ? `<div style="color:#aaa; font-size:0.85rem; font-style:italic; padding:12px 0;">No teams entered this tournament</div>`
+    : currentTeams.map(t => {
+        const earn = getTeamEarnings(t);
+        const earnStr = earn > 0 ? '$' + Math.round(earn).toLocaleString() : '–';
+        const golferNames = adminSettings.showPicks
+          ? (t.golfers || []).map(id => GOLFERS.find(g=>g.id===id)?.name).filter(Boolean).join(', ')
+          : '(picks hidden)';
+        return `<div style="background:white; border:1px solid rgba(0,32,91,0.12); border-radius:8px; padding:12px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+          <div>
+            <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:0.95rem; color:var(--green); margin-bottom:3px;">${t.name}</div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.68rem; color:#888;">${golferNames}</div>
+          </div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--gold); font-weight:700; white-space:nowrap;">${earnStr}</div>
+        </div>`;
+      }).join('');
+
+  // History HTML
+  const histHTML = Object.keys(tournaments).length === 0 ? '' : `
+    <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(0,32,91,0.1);">
+      <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:2px; color:var(--green-mid); text-transform:uppercase; margin-bottom:10px;">Tournament History</div>
+      ${Object.entries(tournaments).map(([tName, tTeams]) => {
+        const allT = allTeams.filter(t => t.paid && (t.tournament||'') === tName);
+        const allS = [...allT].sort((a,b) => getTeamEarnings(b) - getTeamEarnings(a));
+        let best = Infinity;
+        tTeams.forEach(t => {
+          const r = t.results ? t.results.poolRank : allS.findIndex(s=>s.id===t.id)+1;
+          if (r>0&&r<best) best=r;
+        });
+        const tEarn = tTeams.reduce((s,t) => s+(t.results?t.results.teamEarnings:getTeamEarnings(t)),0);
+        return `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(0,32,91,0.07);">
+          <div>
+            <div style="font-family:'Libre Baskerville',serif; font-size:0.85rem; font-weight:600; color:var(--dark);">${tName}</div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.7rem; color:#aaa;">${tTeams.length} team${tTeams.length!==1?'s':''}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--gold); font-weight:700;">${best===Infinity?'–':'#'+best}</div>
+            <div style="font-family:'DM Mono',monospace; font-size:0.7rem; color:#888;">$${Math.round(tEarn).toLocaleString()}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  content.innerHTML = `
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+      <div style="width:52px; height:52px; border-radius:50%; background:${userColor}; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; color:white; flex-shrink:0;">${initials}</div>
+      <div>
+        <div style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--dark);">${name}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:#aaa;">${currentTeams.length} team${currentTeams.length!==1?'s':''} this tournament</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px;">
+      <div style="background:var(--green); border-radius:8px; padding:12px; text-align:center;">
+        <div style="font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:700; color:var(--gold);">${bestRank}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1px; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-top:2px;">Best Rank</div>
+      </div>
+      <div style="background:var(--green); border-radius:8px; padding:12px; text-align:center;">
+        <div style="font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:700; color:var(--gold);">${wins}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1px; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-top:2px;">Wins</div>
+      </div>
+      <div style="background:var(--green); border-radius:8px; padding:12px; text-align:center;">
+        <div style="font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:700; color:var(--gold);">${totalEarnings > 0 ? '$'+Math.round(totalEarnings).toLocaleString() : '–'}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:1px; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-top:2px;">Earnings</div>
+      </div>
+    </div>
+    <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:2px; color:var(--green-mid); text-transform:uppercase; margin-bottom:10px;">This Tournament</div>
+    ${teamsHTML}
+    ${histHTML}`;
+}
+
+function closeUserProfile() {
+  document.getElementById('user-profile-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Close on backdrop click
+document.getElementById('user-profile-modal')?.addEventListener('click', function(e) {
+  if (e.target === this) closeUserProfile();
+});
+
+function renderSwimmerBrowser() {
+  const q = (document.getElementById('swimmer-search')?.value || '').toLowerCase();
+  const list = document.getElementById('swimmer-browser-list');
+  if (!list) return;
+
+  // Get unique owners from current tournament
+  const owners = {};
+  allTeams.filter(t => t.paid && (t.tournament||'') === TOURNAMENT_NAME).forEach(t => {
+    if (!owners[t.owner]) owners[t.owner] = { name: t.owner_name || t.owner.split('@')[0], email: t.owner, count: 0 };
+    owners[t.owner].count++;
+  });
+
+  let filtered = Object.values(owners).filter(o =>
+    !q || o.name.toLowerCase().includes(q) || o.email.toLowerCase().includes(q)
+  ).sort((a,b) => a.name.localeCompare(b.name));
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="color:#aaa; font-size:0.85rem; font-style:italic;">No swimmers found</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(o => {
+    const isMe = currentUser && o.email === currentUser.email;
+    const color = getUserColor(o.email);
+    const initials = o.name.charAt(0).toUpperCase();
+    return `<div onclick="openUserProfile('${o.email}', '${o.name.replace(/'/g, "\''")}'); document.getElementById('swimmer-search').value=''; document.getElementById('swimmer-dropdown').style.display='none';"
+      style="display:flex; align-items:center; gap:8px; padding:8px 10px; cursor:pointer; border-radius:6px; transition:background 0.12s;"
+      onmouseover="this.style.background='rgba(0,32,91,0.06)'" onmouseout="this.style.background='transparent'">
+      <div style="width:28px; height:28px; border-radius:50%; background:${color}; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; color:white; flex-shrink:0;">${initials}</div>
+      <div style="min-width:0;">
+        <div style="font-family:'Libre Baskerville',serif; font-size:0.82rem; font-weight:600; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${o.name}${isMe ? ' <span style="color:var(--gold); font-size:0.6rem; font-family:DM Mono,monospace;">YOU</span>' : ''}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; color:#aaa;">${o.count} team${o.count!==1?'s':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function renderProfile() {
   console.log('renderProfile called, currentUser:', currentUser);
   if (!currentUser) {
@@ -7090,5 +7272,13 @@ async function triggerNativeInstall() {
   <div id="version-tag" style="display:none; position:fixed; bottom:8px; right:12px; font-family:'DM Mono',monospace; font-size:0.65rem; color:#aaa; letter-spacing:0.5px; pointer-events:none; z-index:9999;">
     J.Ray's Swimmers <span id="version-tag-text"></span>
   </div>
+
+<!-- User Profile Modal -->
+<div id="user-profile-modal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,9,18,0.7); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:16px;">
+  <div style="background:var(--cream); border-radius:12px; max-width:540px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.35); position:relative;">
+    <button onclick="closeUserProfile()" style="position:absolute; top:14px; right:16px; background:rgba(0,32,91,0.08); border:none; border-radius:50%; width:32px; height:32px; font-size:1.1rem; cursor:pointer; color:var(--green); z-index:1;">×</button>
+    <div id="user-profile-content" style="padding:28px;"></div>
+  </div>
+</div>
 </body>
 </html>
