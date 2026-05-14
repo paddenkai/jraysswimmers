@@ -1905,7 +1905,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-05-11-1500';
+const APP_VERSION = '2026-05-13-2010';
 
 let TOURNAMENT_NAME = 'PGA Championship 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -2903,11 +2903,39 @@ function getTournamentTheme(tName) {
       accent: '#0077b6',
       cardBg: 'rgba(0,51,98,0.04)',
       hover: 'rgba(0,51,98,0.08)',
-      poolPayout: null,
+      poolPayout: 270,
       headerBg: '#001e3d',
       headerColor: '#48cae4',
       rankBg: '#001e3d',
       rankColor: '#48cae4',
+    },
+    'Valero Texas Open 2026': {
+      bg: '#f5f0e8',
+      border: 'rgba(139,90,43,0.15)',
+      title: '#5c3d11',
+      sub: '#8b5a2b',
+      accent: '#8b5a2b',
+      cardBg: 'rgba(139,90,43,0.04)',
+      hover: 'rgba(139,90,43,0.08)',
+      poolPayout: 170,
+      headerBg: '#5c3d11',
+      headerColor: '#d4a96a',
+      rankBg: '#5c3d11',
+      rankColor: '#d4a96a',
+    },
+    'The Masters Tournament 2026': {
+      bg: '#f8fdf8',
+      border: 'rgba(26,71,49,0.15)',
+      title: '#1a4731',
+      sub: '#2d6a4f',
+      accent: '#1a4731',
+      cardBg: 'rgba(26,71,49,0.04)',
+      hover: 'rgba(26,71,49,0.08)',
+      poolPayout: 7225,
+      headerBg: '#1a4731',
+      headerColor: '#c9a84c',
+      rankBg: '#1a4731',
+      rankColor: '#c9a84c',
     },
   };
   return themes[tName] || null;
