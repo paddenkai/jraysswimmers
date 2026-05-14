@@ -1905,7 +1905,7 @@ const CONFIG = {
   TEAM_SIZE: 5,
 };
 
-const APP_VERSION = '2026-05-13-2010';
+const APP_VERSION = '2026-05-13-2050';
 
 let TOURNAMENT_NAME = 'PGA Championship 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 72;  // overridden by admin_settings
@@ -5530,12 +5530,6 @@ function openUserProfile(email, name) {
   const userColor = getUserColor(email);
   const initials = (name || email).charAt(0).toUpperCase();
 
-  // Best rank
-  const sorted = allTeams.filter(t => t.paid && (t.tournament||'') === TOURNAMENT_NAME).sort((a,b) => getTeamEarnings(b) - getTeamEarnings(a));
-  const bestIdx = sorted.findIndex(t => t.owner === email);
-  const bestRank = bestIdx >= 0 ? '#' + (bestIdx + 1) : '–';
-  const totalEarnings = currentTeams.reduce((s, t) => s + getTeamEarnings(t), 0);
-
   // Career stats from locked results
   const lockedTeams = userTeams.filter(t => t.results);
   const tournaments = {};
@@ -5547,14 +5541,22 @@ function openUserProfile(email, name) {
   let wins = 0;
   let bestFinish = Infinity;
   Object.values(tournaments).forEach(tTeams => {
-    const allT = allTeams.filter(t => t.paid && (t.tournament||'') === (tTeams[0].results?.tournament || tTeams[0].tournament));
-    const allSorted = [...allT].sort((a,b) => getTeamEarnings(b) - getTeamEarnings(a));
     tTeams.forEach(t => {
-      const rank = t.results ? t.results.poolRank : allSorted.findIndex(s => s.id === t.id) + 1;
+      const rank = t.results?.poolRank;
       if (rank > 0 && rank < bestFinish) bestFinish = rank;
       if (rank === 1) wins++;
     });
   });
+
+  // Best rank — use locked poolRank from history, fall back to current tournament live rank
+  const bestRank = bestFinish < Infinity ? '#' + bestFinish : '–';
+  // Total pool winnings — sum of pool payouts for tournaments they won
+  const totalEarnings = Object.entries(tournaments).reduce((sum, [tName, tTeams]) => {
+    const won = tTeams.some(t => t.results?.poolRank === 1);
+    if (!won) return sum;
+    const th = getTournamentTheme(tName);
+    return sum + (th?.poolPayout || 0);
+  }, 0);
 
   // Current teams HTML
   const teamsHTML = currentTeams.length === 0
@@ -5586,16 +5588,13 @@ function openUserProfile(email, name) {
           const r = t.results ? t.results.poolRank : allS.findIndex(s=>s.id===t.id)+1;
           if (r>0&&r<best) best=r;
         });
-        const tEarn = tTeams.reduce((s,t) => s+(t.results?t.results.teamEarnings:getTeamEarnings(t)),0);
+        const tEarn = null; // don't show golf prize money in pool history
         return `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(0,32,91,0.07);">
           <div>
             <div style="font-family:'Libre Baskerville',serif; font-size:0.85rem; font-weight:600; color:var(--dark);">${tName}</div>
             <div style="font-family:'DM Mono',monospace; font-size:0.7rem; color:#aaa;">${tTeams.length} team${tTeams.length!==1?'s':''}</div>
           </div>
-          <div style="text-align:right;">
-            <div style="font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--gold); font-weight:700;">${best===Infinity?'–':'#'+best}</div>
-            <div style="font-family:'DM Mono',monospace; font-size:0.7rem; color:#888;">$${Math.round(tEarn).toLocaleString()}</div>
-          </div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--gold); font-weight:700;">${best===Infinity?'–':'#'+best}</div>
         </div>`;
       }).join('')}
     </div>`;
