@@ -1139,7 +1139,7 @@
   <div id="page-tournament" class="page">
     <div class="section-header">
       <div class="section-title">Live Scores</div>
-      <div class="section-sub">Live Masters 2026 scores</div>
+      <div class="section-sub">Live PGA Championship 2026 scores</div>
     </div>
     <div style="margin-bottom:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -2542,7 +2542,7 @@ const GOLFERS = [
 // ESPN LIVE SCORE FETCHING
 // Uses ESPN's public JSON API directly — no CORS proxy needed
 // ═══════════════════════════════════════════════════════
-const ESPN_API_URL = 'https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
+const ESPN_API_URL = 'https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard?limit=200&event=401811947&calendarYear=2026';
 
 async function fetchESPNScores() {
   try {
@@ -2572,7 +2572,7 @@ function parseESPNAPI(data) {
   try {
     const events = data.events || [];
     if (!events.length) { console.warn('No events in ESPN API response'); return; }
-    const event = events[0];
+    const event = events.find(e => e.id === '401811947') || events[0];
     const competitions = event.competitions || [];
     if (!competitions.length) return;
     const competition = competitions[0];
