@@ -845,6 +845,17 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="page">
 
+    <!-- LOGGED OUT: simple private view -->
+    <div id="home-guest" style="min-height:calc(100vh - 120px); display:none; flex-direction:column; align-items:center; justify-content:center; padding:60px 24px; text-align:center;">
+      <div style="font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:8px; color:rgba(218,26,49,0.6); text-transform:uppercase; margin-bottom:14px;">Private Pool</div>
+      <div style="font-family:'Playfair Display',serif; font-size:clamp(2.2rem,6vw,3.5rem); font-weight:700; color:white; line-height:1.1; margin-bottom:8px;">J.Ray's Swimmers</div>
+      <div style="font-family:'EB Garamond',serif; font-size:1.1rem; color:rgba(250,246,238,0.5); margin-bottom:40px;">Members only.</div>
+      <button class="btn btn-gold" onclick="openAuthModal()" style="padding:14px 40px; font-size:1rem;">Sign In</button>
+    </div>
+
+    <!-- LOGGED IN: full homepage -->
+    <div id="home-member">
+
     <!-- HERO + HOW IT WORKS as one unified block -->
     <div style="margin: -40px -24px 36px; position:relative; overflow:hidden; width:calc(100% + 48px); box-sizing:border-box;">
 
@@ -959,7 +970,8 @@
       }
     </style>
 
-  </div>
+  </div><!-- end home-member -->
+  </div><!-- end page-home -->
 
   <!-- TEAM BUILDER -->
   <div id="page-builder" class="page">
@@ -3436,6 +3448,7 @@ async function login() {
   closeModal('auth-modal');
   updateNav();
   renderProfile();
+  showPage('home');
   showToast('Welcome back, ' + currentUser.name + '!', 'success');
   setTimeout(initPushNotifications, 1000);
 }
@@ -3460,6 +3473,7 @@ async function register() {
   closeModal('auth-modal');
   updateNav();
   renderProfile();
+  showPage('home');
   showToast('Account created! Welcome, ' + name + '!', 'success');
   setTimeout(initPushNotifications, 1000);
 }
@@ -3501,6 +3515,13 @@ async function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById('page-' + name);
   if (el) el.classList.add('active');
+  // Toggle guest vs member home view
+  if (name === 'home') {
+    const guest = document.getElementById('home-guest');
+    const member = document.getElementById('home-member');
+    if (guest) guest.style.display = currentUser ? 'none' : 'flex';
+    if (member) member.style.display = currentUser ? 'block' : 'none';
+  }
   // Highlight active nav button
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   const navMap = { home: 'nav-home', leaderboard: 'nav-leaderboard', history: 'nav-history', tournament: 'nav-tournament', builder: 'nav-enter', myteams: 'nav-myteams', profile: 'nav-myteams', admin: 'nav-admin' };
@@ -3553,12 +3574,14 @@ function updateNav() {
   document.getElementById('nav-login').style.display = loggedIn ? 'none' : '';
   document.getElementById('nav-logout').style.display = loggedIn ? '' : 'none';
   document.getElementById('nav-myteams').style.display = loggedIn ? '' : 'none';
-  document.getElementById('nav-enter').style.display = adminSettings.registrationOpen ? '' : 'none';
+  document.getElementById('nav-leaderboard').style.display = loggedIn ? '' : 'none';
+  document.getElementById('nav-chat').style.display = loggedIn ? '' : 'none';
+  document.getElementById('nav-enter').style.display = (loggedIn && adminSettings.registrationOpen) ? '' : 'none';
   const homeBtn = document.getElementById('home-team-btn');
   if (homeBtn) homeBtn.textContent = adminSettings.registrationOpen ? 'Build Your Team →' : 'View Your Team →';
-  document.getElementById('nav-tournament').style.display = adminSettings.scoresLive ? '' : 'none';
-  document.getElementById('nav-stats').style.display = (adminSettings.scoresLive && adminSettings.showPicks) ? '' : 'none';
-  document.getElementById('nav-history').style.display = adminSettings.showHistory ? '' : 'none';
+  document.getElementById('nav-tournament').style.display = (loggedIn && adminSettings.scoresLive) ? '' : 'none';
+  document.getElementById('nav-stats').style.display = (loggedIn && adminSettings.scoresLive && adminSettings.showPicks) ? '' : 'none';
+  document.getElementById('nav-history').style.display = (loggedIn && adminSettings.showHistory) ? '' : 'none';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -5685,11 +5708,11 @@ function renderSwimmerBrowser() {
   const list = document.getElementById('swimmer-browser-list');
   if (!list) return;
 
-  // Get unique owners from current tournament
+  // Get unique owners from ALL teams across ALL tournaments (not just current)
   const owners = {};
-  allTeams.filter(t => t.paid && (t.tournament||'') === TOURNAMENT_NAME).forEach(t => {
+  allTeams.forEach(t => {
     if (!owners[t.owner]) owners[t.owner] = { name: t.owner_name || t.owner.split('@')[0], email: t.owner, count: 0 };
-    owners[t.owner].count++;
+    if (t.paid) owners[t.owner].count++;
   });
 
   let filtered = Object.values(owners).filter(o =>
@@ -5711,7 +5734,7 @@ function renderSwimmerBrowser() {
       <div style="width:28px; height:28px; border-radius:50%; background:${color}; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; color:white; flex-shrink:0;">${initials}</div>
       <div style="min-width:0;">
         <div style="font-family:'Libre Baskerville',serif; font-size:0.82rem; font-weight:600; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${o.name}${isMe ? ' <span style="color:var(--gold); font-size:0.6rem; font-family:DM Mono,monospace;">YOU</span>' : ''}</div>
-        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; color:#aaa;">${o.count} team${o.count!==1?'s':''}</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; color:#aaa;">${o.count} team${o.count!==1?'s':''} all-time</div>
       </div>
     </div>`;
   }).join('');
