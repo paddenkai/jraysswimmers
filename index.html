@@ -3086,6 +3086,7 @@ async function initApp() {
     await loadAdminSettings();
     await loadTeams();
     updateNav();
+    showPage('home'); // re-run now that we know auth state
 
     // Handle invite link — ?join in URL jumps straight to builder
     const urlParams = new URLSearchParams(window.location.search);
