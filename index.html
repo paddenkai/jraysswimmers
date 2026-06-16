@@ -557,7 +557,7 @@
   .tournament-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 700px) { .tournament-grid { grid-template-columns: 1fr; } }
   .tourn-table-wrap { overflow-x: auto; }
-  .live-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(218,26,49,0.15); border: 1px solid var(--gold); color: var(--green); font-family: 'DM Mono', monospace; font-size: 0.72rem; padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; }
+  .live-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(206,170,120,0.15); border: 1px solid var(--gold); color: var(--green); font-family: 'DM Mono', monospace; font-size: 0.72rem; padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; }
   .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
   .score-under { color: var(--green); font-weight: 700; }
@@ -631,7 +631,7 @@
   }
   .h2h-total-bar .label { font-size: 0.65rem; letter-spacing: 1px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
   .h2h-total-bar .amount { font-size: 0.92rem; font-weight: 700; color: var(--gold); }
-  .h2h-total-bar.winner { background: rgba(218,26,49,0.15); border: 1px solid rgba(218,26,49,0.3); }
+  .h2h-total-bar.winner { background: rgba(206,170,120,0.15); border: 1px solid rgba(206,170,120,0.3); }
   .h2h-total-bar.winner .amount { color: var(--gold); }
   #btn-h2h-add-hint-label { font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(255,255,255,0.3); }
 
@@ -809,17 +809,17 @@
         <span class="ham-line"></span>
         <span class="ham-line"></span>
       </button>
-      <span id="mobile-chat-badge" style="display:none; position:absolute; top:2px; right:2px; width:11px; height:11px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(218,26,49,0.9); border:2px solid var(--green); animation:pulse-dot 1.5s infinite; pointer-events:none; z-index:9999;"></span>
+      <span id="mobile-chat-badge" style="display:none; position:absolute; top:2px; right:2px; width:11px; height:11px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(206,170,120,0.9); border:2px solid var(--green); animation:pulse-dot 1.5s infinite; pointer-events:none; z-index:9999;"></span>
     </div>
     <nav id="nav">
       <button id="mobile-nav-close" onclick="closeMobileNav()">✕</button>
       <button onclick="showPage('home')" id="nav-home">Home</button>
-      <button id="nav-myteams" onclick="requireAuth(() => showPage('myteams'))" style="display:none; position:relative;">Profile<span id="profile-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(218,26,49,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
+      <button id="nav-myteams" onclick="requireAuth(() => showPage('myteams'))" style="display:none; position:relative;">Profile<span id="profile-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(206,170,120,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
       <button id="nav-enter" onclick="requireAuth(() => showPage('builder'))">Enter a Team</button>
       <button onclick="showPage('leaderboard')" id="nav-leaderboard">Pool Standings</button>
       <button onclick="showPage('tournament')" id="nav-tournament">Live Scores</button>
       <button onclick="showPage('stats')" id="nav-stats" style="display:none;">Player Stats</button>
-      <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(218,26,49,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
+      <button onclick="showPage('chat')" id="nav-chat" style="position:relative;">Chat<span id="chat-badge" style="display:none; position:absolute; top:-5px; right:0px; width:10px; height:10px; background:var(--gold); border-radius:50%; box-shadow:0 0 8px rgba(206,170,120,0.9); border:1.5px solid var(--green); animation:pulse-dot 1.5s infinite;"></span></button>
       <button onclick="showPage('history')" id="nav-history">History</button>
       <button id="nav-admin" onclick="openAdminLogin()" style="display:none; color:var(--gold); position:relative;">Admin<span id="admin-badge" style="display:none; position:absolute; top:-4px; right:-2px; width:9px; height:9px; background:#e05555; border-radius:50%; box-shadow:0 0 6px rgba(224,85,85,0.9); animation:pulse-dot 1.5s infinite;"></span></button>
       <button id="nav-login" onclick="openAuthModal()">Sign In</button>
@@ -845,17 +845,6 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="page">
 
-    <!-- LOGGED OUT: simple private view -->
-    <div id="home-guest" style="min-height:calc(100vh - 120px); display:none; flex-direction:column; align-items:center; justify-content:center; padding:60px 24px; text-align:center;">
-      <div style="font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:8px; color:rgba(218,26,49,0.6); text-transform:uppercase; margin-bottom:14px;">Private Pool</div>
-      <div style="font-family:'Playfair Display',serif; font-size:clamp(2.2rem,6vw,3.5rem); font-weight:700; color:white; line-height:1.1; margin-bottom:8px;">J.Ray's Swimmers</div>
-      <div style="font-family:'EB Garamond',serif; font-size:1.1rem; color:rgba(250,246,238,0.5); margin-bottom:40px;">Members only.</div>
-      <button class="btn btn-gold" onclick="openAuthModal()" style="padding:14px 40px; font-size:1rem;">Sign In</button>
-    </div>
-
-    <!-- LOGGED IN: full homepage -->
-    <div id="home-member">
-
     <!-- HERO + HOW IT WORKS as one unified block -->
     <div style="margin: -40px -24px 36px; position:relative; overflow:hidden; width:calc(100% + 48px); box-sizing:border-box;">
 
@@ -871,7 +860,7 @@
 
           <!-- Tournament title -->
           <div style="font-family:'DM Mono',monospace; font-size:clamp(0.65rem,1.5vw,0.85rem); letter-spacing:8px; color:rgba(218,26,49,0.7); text-transform:uppercase; margin-bottom:6px;">Shinnecock Hills Golf Club</div><div style="font-family:'Playfair Display',serif; font-size:clamp(2.6rem,6vw,4.2rem); font-weight:700; letter-spacing:2px; line-height:1.0; margin-bottom:10px; text-shadow:0 2px 20px rgba(0,0,0,0.4);"><div style="color:white;">U.S.</div><div style="color:var(--gold);">Open</div></div>
-          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(218,26,49,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Newtown Square, Pennsylvania · May 14–17, 2026</div>
+          <div style="font-family:'DM Mono',monospace; font-size:0.72rem; color:rgba(218,26,49,0.5); letter-spacing:4px; text-transform:uppercase; margin-bottom:6px;">Southampton, New York · June 18–21, 2026</div>
 
           <!-- Countdown timer -->
           <div id="masters-countdown" style="margin-bottom:16px; text-align:center;">
@@ -970,8 +959,7 @@
       }
     </style>
 
-  </div><!-- end home-member -->
-  </div><!-- end page-home -->
+  </div>
 
   <!-- TEAM BUILDER -->
   <div id="page-builder" class="page">
@@ -1170,7 +1158,7 @@
       </div>
     </div>
     <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-      <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 60 + ties</div>
+      <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 50 + ties</div>
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
     </div>
     <div style="border:2px solid #00205B; border-radius:4px; overflow:hidden;">
@@ -1767,12 +1755,12 @@
     🔇
   </button>
   <div id="music-label" style="background: #00205B; border:1px solid rgba(218,26,49,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-    ♪ US Open Theme
+    ♪ PGA Theme
   </div>
 </div>
 <div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
   <audio id="bg-audio" loop>
-    <source src="./PGA_Championship_Theme.mp3" type="audio/mpeg">
+    <source src="./USOpen_Theme.mp3" type="audio/mpeg">
   </audio>
 </div>
 
@@ -1935,7 +1923,7 @@ let adminSettings = {
   showHistory: true,
   officialCut: localStorage.getItem('officialCut') === '1',
   showCountdown: true,
-  countdownTarget: '2026-05-14T08:00:00Z',
+  countdownTarget: '2026-06-18T08:00:00Z',
 };
 
 async function loadAdminSettings() {
@@ -2275,93 +2263,72 @@ const TOURNAMENT_ACTIVE = true; // controlled via adminSettings.scoresLive toggl
 // Live scores fetched from ESPN via proxy — updates every 60s during tournament week
 
 // ═══════════════════════════════════════════════════════
-// MASTERS PAYOUT TABLE (from J.Ray's Data sheet)
-// PAYOUT_TABLE[pos][tiedCount] → earnings
+// U.S. Open 2026 PAYOUT TABLE
+// PAYOUT_TABLE[pos][tiedCount] → earnings (averaged across tied positions)
 // pos is 1-indexed, tiedCount: 1=solo, 2=2tied, etc.
 // ═══════════════════════════════════════════════════════
 const PAYOUT_TABLE = {
-  1: [0, 3420000, 2919667, 2419334, 2108836, 1874274, 1677678, 1530599, 1414469, 1318970, 1237914],
-  2: [0, 2419334, 1919000, 1671782, 1487842, 1329214, 1215699, 1127964, 1056341, 995460, 942097],
-  3: [0, 1418667, 1298006, 1177345, 1056684, 974972, 912736, 861628, 817476, 777960, 741690],
-  4: [0, 1177345, 1056684, 936022, 864048, 811550, 768788, 731591, 697872, 666470, 639076],
-  5: [0, 936022, 815361, 759616, 720101, 687077, 657299, 629375, 602611, 579269, 558321],
-  6: [0, 694700, 671414, 648127, 624840, 601554, 578268, 554981, 534674, 516355, 499426],
-  7: [0, 648127, 624840, 601554, 578268, 554981, 531694, 511814, 494062, 477728, 462388],
-  8: [0, 601554, 578268, 554981, 531694, 508408, 489095, 472052, 456428, 441751, 427736],
-  9: [0, 554981, 531694, 508408, 485122, 466603, 450468, 435696, 421776, 408422, 395693],
-  10: [0, 508408, 485122, 461835, 444508, 429566, 415816, 402746, 390102, 377994, 366487],
-  11: [0, 461835, 438548, 423209, 409856, 397297, 385136, 373202, 361692, 350718, 340118],
-  12: [0, 415262, 403896, 392529, 381162, 369796, 358430, 347386, 336829, 326594, 316587],
-  13: [0, 392529, 381162, 369796, 358430, 347063, 336074, 325624, 315511, 305623, 295892],
-  14: [0, 369796, 358430, 347063, 335696, 324783, 314473, 304508, 294759, 285154, 275650],
-  15: [0, 347063, 335696, 324330, 313530, 303408, 293627, 284040, 274574, 265189, 256620],
-  16: [0, 324330, 312964, 302352, 292495, 282940, 273536, 264218, 254955, 246570, 238802],
-  17: [0, 301597, 291362, 281883, 272592, 263377, 254200, 245044, 236850, 229299, 222196],
-  18: [0, 281128, 272026, 262924, 253822, 244720, 235618, 227601, 220261, 213374, 206802],
-  19: [0, 262924, 253822, 244720, 235618, 226517, 218680, 211566, 204904, 198544, 192394],
-  20: [0, 244720, 235618, 226517, 217415, 209831, 203006, 196616, 190496, 184557, 178745],
-  21: [0, 226517, 217415, 208313, 201109, 194664, 188598, 182750, 177037, 171414, 165855],
-  22: [0, 208313, 199211, 192639, 186700, 181015, 175455, 169968, 164526, 159114, 154193],
-  23: [0, 190109, 184802, 179496, 174190, 168884, 163577, 158271, 152964, 148180, 143760],
-  24: [0, 179496, 174190, 168884, 163577, 158271, 152964, 147658, 142939, 138611, 134556],
-  25: [0, 168884, 163578, 158271, 152964, 147658, 142352, 137716, 133500, 129563, 125822],
-  26: [0, 158271, 152964, 147658, 142352, 137045, 132522, 128445, 124648, 121037, 117680],
-  27: [0, 147658, 142352, 137045, 131739, 127372, 123474, 119845, 116383, 113170, 110254],
-  28: [0, 137045, 131739, 126433, 122300, 118637, 115209, 111915, 108859, 106098, 103544],
-  29: [0, 126433, 121126, 117385, 114036, 110842, 107727, 104833, 102230, 99822, 97550],
-  30: [0, 115820, 112862, 109903, 106944, 103986, 101233, 98773, 96496, 94341, 92298],
-  31: [0, 109903, 106944, 103986, 101028, 98315, 95931, 93735, 91656, 89684, 87813],
-  32: [0, 103986, 101028, 98069, 95418, 93137, 91041, 89050, 87157, 85358, 83625],
-  33: [0, 98069, 95110, 92562, 90425, 88452, 86560, 84753, 83030, 81363, 79735],
-  34: [0, 92152, 89809, 87877, 86047, 84259, 82534, 80881, 79275, 77698, 76143],
-  35: [0, 87466, 85739, 84012, 82286, 80610, 79003, 77435, 75892, 74364, 72868],
-  36: [0, 84012, 82286, 80559, 78896, 77310, 75763, 74238, 72727, 71246, 69806],
-  37: [0, 80559, 78832, 77191, 75635, 74114, 72609, 71115, 69650, 68228, 66835],
-  38: [0, 77105, 75506, 73994, 72502, 71019, 69540, 68092, 66686, 65310, 63953],
-  39: [0, 73908, 72438, 70968, 69498, 68028, 66590, 65198, 63835, 62492, 61162],
-  40: [0, 70968, 69498, 68028, 66558, 65126, 63746, 62396, 61065, 59745, 58477],
-  41: [0, 68028, 66558, 65087, 63666, 62302, 60968, 59650, 58342, 57089, 55873],
-  42: [0, 65087, 63617, 62212, 60871, 59556, 58254, 56959, 55722, 54523, 53351],
-  43: [0, 62147, 60774, 59465, 58173, 56887, 55604, 54384, 53202, 52047, 50909],
-  44: [0, 59401, 58124, 56848, 55572, 54295, 53090, 51924, 50784, 49661, 48591],
-  45: [0, 56848, 55572, 54295, 53019, 51827, 50678, 49553, 48443, 47390, 46377],
-  46: [0, 54295, 53019, 51743, 50572, 49444, 48337, 47243, 46208, 45214, 44248],
-  47: [0, 51743, 50466, 49331, 48232, 47146, 46067, 45053, 44079, 43131, 42203],
-  48: [0, 49190, 48126, 47061, 45996, 44932, 43938, 42984, 42055, 41143, 40242],
-  49: [0, 47061, 45996, 44932, 43868, 42887, 41950, 41036, 40137, 39248, 38452],
-  50: [0, 44932, 43868, 42803, 41844, 40927, 40031, 39148, 38271, 37495, 36788],
-  51: [0, 42803, 41738, 40815, 39926, 39051, 38184, 37320, 36565, 35884, 35253],
-  52: [0, 40674, 39820, 38967, 38113, 37260, 36406, 35674, 35019, 34414, 33845],
-  53: [0, 38967, 38114, 37260, 36406, 35552, 34841, 34211, 33632, 33086, 32564],
-  54: [0, 37260, 36406, 35552, 34699, 34016, 33418, 32869, 32351, 31853, 31369],
-  55: [0, 35552, 34698, 33845, 33205, 32650, 32138, 31650, 31177, 30715, 30303],
-  56: [0, 33845, 32992, 32422, 31924, 31455, 30999, 30552, 30110, 29720, 29366],
-  57: [0, 32138, 31711, 31284, 30857, 30430, 30003, 29576, 29204, 28868, 28557],
-  58: [0, 31284, 30857, 30430, 30003, 29576, 29150, 28785, 28459, 28160, 27878],
-  59: [0, 30430, 30003, 29576, 29150, 28723, 28368, 28056, 27769, 27500, 27242],
-  60: [0, 29576, 29150, 28723, 28296, 27956, 27660, 27389, 27133, 26888, 26658],
-  61: [0, 28723, 28296, 27869, 27551, 27277, 27024, 26784, 26552, 26334, 26124],
-  62: [0, 27869, 27442, 27160, 26915, 26685, 26461, 26242, 26035, 25835, 25646],
-  63: [0, 27015, 26806, 26597, 26388, 26180, 25971, 25773, 25581, 25399, 25234],
-  64: [0, 26597, 26388, 26180, 25971, 25762, 25566, 25376, 25197, 25036, 24891],
-  65: [0, 26180, 25971, 25762, 25554, 25360, 25173, 24997, 24841, 24701, 24573],
-  66: [0, 25762, 25554, 25345, 25154, 24972, 24800, 24650, 24516, 24395, 24297],
-  67: [0, 25345, 25136, 24952, 24774, 24607, 24465, 24338, 24224, 24134, 24063],
-  68: [0, 24927, 24756, 24584, 24423, 24289, 24171, 24063, 23983, 23920, 23870],
-  69: [0, 24584, 24412, 24255, 24129, 24019, 23920, 23848, 23795, 23753, 23720],
-  70: [0, 24240, 24090, 23978, 23878, 23787, 23726, 23682, 23649, 23624, 23603],
-  71: [0, 23940, 23846, 23758, 23673, 23623, 23589, 23565, 23547, 23533, 23521],
-  72: [0, 23753, 23666, 23584, 23543, 23519, 23502, 23490, 23482, 23475, 21127],
-  73: [0, 23580, 23500, 23473, 23460, 23452, 23447, 23443, 23440, 20836, 18752],
-  74: [0, 23420, 23420, 23420, 23420, 23420, 23420, 23420, 20492, 18216, 16394],
-  75: [0, 23420, 23420, 23420, 23420, 23420, 23420, 20074, 17565, 15613, 14052],
-  76: [0, 23420, 23420, 23420, 23420, 23420, 19517, 16729, 14638, 13011, 11710],
-  77: [0, 23420, 23420, 23420, 23420, 18736, 15613, 13383, 11710, 10409, 9368],
-  78: [0, 23420, 23420, 23420, 17565, 14052, 11710, 10037, 8782, 7807, 7026],
-  79: [0, 23420, 23420, 15613, 11710, 9368, 7807, 6691, 5855, 5204, 4684],
-  80: [0, 23420, 11710, 7807, 5855, 4684, 3903, 3346, 2928, 2602, 2342],
+  1: [0, 4300000, 3311000, 2689021, 2270026, 1984773, 1778670, 1620930, 1493825, 1388591, 1299949],
+  2: [0, 2322000, 1883531, 1593367, 1405967, 1274404, 1174419, 1092943, 1024665, 966610, 915777],
+  3: [0, 1445062, 1229051, 1100622, 1012505, 944902, 888100, 839331, 797186, 759530, 725950],
+  4: [0, 1013040, 928402, 868320, 819862, 776707, 738376, 704633, 673839, 646049, 620927],
+  5: [0, 843765, 795960, 755470, 717624, 683443, 653232, 625381, 600175, 577359, 556064],
+  6: [0, 748154, 711322, 675577, 643363, 615125, 588984, 565376, 544058, 524097, 505520],
+  7: [0, 674491, 639288, 608432, 581868, 557150, 534913, 514901, 496090, 478561, 462365],
+  8: [0, 604086, 575403, 550993, 527815, 506998, 488303, 470604, 454070, 438795, 424838],
+  9: [0, 546720, 524447, 502391, 482726, 465146, 448356, 432639, 418134, 404921, 392612],
+  10: [0, 502174, 480227, 461394, 444753, 428684, 413625, 399765, 387196, 375489, 364386],
+  11: [0, 458280, 441004, 425613, 410311, 395915, 382696, 370771, 359654, 349076, 338875],
+  12: [0, 423729, 409279, 394322, 380324, 367580, 356186, 345564, 335425, 325608, 316254],
+  13: [0, 394829, 379618, 365856, 353542, 342678, 332537, 322810, 313342, 304312, 295589],
+  14: [0, 364407, 351370, 339780, 329640, 320079, 310807, 301701, 292998, 284563, 276358],
+  15: [0, 338332, 327467, 318051, 308996, 300087, 291250, 282797, 274582, 266575, 258822],
+  16: [0, 316602, 307910, 299218, 290526, 281834, 273541, 265475, 257606, 249988, 242721],
+  17: [0, 299218, 290526, 281834, 273142, 264928, 256954, 249178, 241661, 234512, 227792],
+  18: [0, 281834, 273142, 264450, 256356, 248501, 240838, 233439, 226423, 219856, 213842],
+  19: [0, 264450, 255758, 247863, 240168, 232638, 225373, 218508, 212109, 206287, 200956],
+  20: [0, 247067, 239570, 232073, 224685, 217558, 210850, 204632, 199017, 193901, 189157],
+  21: [0, 232073, 224576, 217225, 210180, 203607, 197559, 192153, 187256, 182723, 178444],
+  22: [0, 217080, 209800, 202883, 196491, 190656, 185499, 180853, 176554, 172485, 168579],
+  23: [0, 202521, 195784, 189628, 184050, 179183, 174815, 170764, 166911, 163190, 159561],
+  24: [0, 189048, 183181, 177894, 173348, 169274, 165472, 161824, 158274, 154788, 151347],
+  25: [0, 177314, 172316, 168115, 164331, 160756, 157287, 153877, 150505, 147158, 143894],
+  26: [0, 167319, 163516, 160003, 156617, 153281, 149971, 146675, 143389, 140180, 137136],
+  27: [0, 159713, 156345, 153049, 149772, 146501, 143235, 139970, 136788, 133782, 130899],
+  28: [0, 152977, 149718, 146458, 143198, 139939, 136680, 133513, 130541, 127698, 124967],
+  29: [0, 146458, 143198, 139939, 136680, 133420, 130269, 127336, 124538, 121855, 119274],
+  30: [0, 139939, 136680, 133420, 130160, 127031, 124149, 121407, 118780, 116254, 113798],
+  31: [0, 133420, 130160, 126901, 123804, 120991, 118318, 115757, 113293, 110894, 108540],
+  32: [0, 126901, 123642, 120599, 117883, 115297, 112813, 110418, 108078, 105775, 103498],
+  33: [0, 120382, 117448, 114877, 112396, 109995, 107670, 105389, 103134, 100898, 98674],
+  34: [0, 114515, 112125, 109735, 107399, 105128, 102890, 100670, 98462, 96262, 94068],
+  35: [0, 109735, 107344, 105027, 102781, 100565, 98363, 96169, 93981, 91796, 89613],
+  36: [0, 104954, 102672, 100463, 98272, 96088, 93908, 91730, 89553, 87377, 85202],
+  37: [0, 100391, 98218, 96045, 93872, 91699, 89526, 87353, 85180, 83007, 80878],
+  38: [0, 96045, 93872, 91699, 89526, 87353, 85180, 83007, 80834, 78709, 76618],
+  39: [0, 91699, 89526, 87353, 85180, 83007, 80834, 78661, 76542, 74460, 72425],
+  40: [0, 87353, 85180, 83007, 80834, 78661, 76488, 74377, 72305, 70283, 68448],
+  41: [0, 83007, 80834, 78661, 76488, 74315, 72214, 70155, 68149, 66348, 64689],
+  42: [0, 78661, 76488, 74315, 72142, 70056, 68014, 66027, 64265, 62654, 61234],
+  43: [0, 74315, 72142, 69969, 67905, 65884, 63921, 62209, 60653, 59298, 58105],
+  44: [0, 69969, 67796, 65768, 63776, 61842, 60191, 58701, 57420, 56304, 55324],
+  45: [0, 65623, 63668, 61712, 59811, 58235, 56823, 55628, 54596, 53696, 52933],
+  46: [0, 61712, 59756, 57873, 56388, 55063, 53962, 53020, 52205, 51523, 50934],
+  47: [0, 57801, 55954, 54614, 53401, 52412, 51572, 50847, 50250, 49737, 49283],
+  48: [0, 54107, 53020, 51934, 51065, 50326, 49688, 49171, 48729, 48336, 47979],
+  49: [0, 51934, 50848, 50051, 49380, 48805, 48348, 47960, 47615, 47298, 47001],
+  50: [0, 49761, 49109, 48529, 48022, 47631, 47298, 46998, 46718, 46453, 46197],
+  51: [0, 48457, 47914, 47443, 47099, 46805, 46537, 46284, 46039, 45801, 45567],
+  52: [0, 47370, 46936, 46646, 46392, 46153, 45922, 45694, 45469, 45246, 45246],
+  53: [0, 46501, 46284, 46067, 45849, 45632, 45415, 45197, 44980, 44980, 44980],
+  54: [0, 46067, 45850, 45632, 45415, 45197, 44980, 44763, 44763, 44763, 44763],
+  55: [0, 45632, 45414, 45197, 44980, 44763, 44546, 44546, 44546, 44546, 44546],
+  56: [0, 45197, 44980, 44763, 44546, 44328, 44328, 44328, 44328, 44328, 44328],
+  57: [0, 44763, 44546, 44328, 44111, 44111, 44111, 44111, 44111, 44111, 44111],
+  58: [0, 44328, 44111, 43894, 43894, 43894, 43894, 43894, 43894, 43894, 43894],
+  59: [0, 43894, 43676, 43676, 43676, 43676, 43676, 43676, 43676, 43676, 43676],
+  60: [0, 43459, 43459, 43459, 43459, 43459, 43459, 43459, 43459, 43459, 43459],
 };
-
 function getPayoutForPosition(pos, tiedCount) {
   if (!pos || pos < 1 || pos === 999) return 0; // no position yet
   const row = PAYOUT_TABLE[pos];
@@ -2392,162 +2359,162 @@ let fetchInterval = null;
 // Feb 26 – Mar 1, 2026 · Purse: $9,600,000
 // ═══════════════════════════════════════════════════════
 const GOLFERS = [
-  { id: 1, name: "Scottie Scheffler", wgr: 1, earnings: 0, teeTime: '11:05 AM' },
-  { id: 2, name: "Rory McIlroy", wgr: 2, earnings: 0, teeTime: '5:40 AM' },
-  { id: 3, name: "Cameron Young", wgr: 3, earnings: 0, teeTime: '10:54 AM' },
-  { id: 4, name: "Matt Fitzpatrick", wgr: 4, earnings: 0, teeTime: '11:05 AM' },
-  { id: 5, name: "Collin Morikawa", wgr: 5, earnings: 0, teeTime: '10:32 AM' },
-  { id: 6, name: "Tommy Fleetwood", wgr: 6, earnings: 0, teeTime: '10:43 AM' },
-  { id: 7, name: "Justin Rose", wgr: 7, earnings: 0, teeTime: '11:05 AM' },
-  { id: 8, name: "J.J. Spaun", wgr: 8, earnings: 0, teeTime: '9:59 AM' },
-  { id: 9, name: "Russell Henley", wgr: 9, earnings: 0, teeTime: '10:10 AM' },
-  { id: 10, name: "Chris Gotterup", wgr: 10, earnings: 0, teeTime: '10:43 AM' },
-  { id: 11, name: "Xander Schauffele", wgr: 11, earnings: 0, teeTime: '5:29 AM' },
-  { id: 12, name: "Robert MacIntyre", wgr: 12, earnings: 0, teeTime: '10:43 AM' },
-  { id: 13, name: "Sepp Straka", wgr: 13, earnings: 0, teeTime: '10:49 AM' },
-  { id: 14, name: "Ben Griffin", wgr: 14, earnings: 0, teeTime: '3:45 AM' },
-  { id: 15, name: "Ludvig Åberg", wgr: 15, earnings: 0, teeTime: '5:18 AM' },
-  { id: 16, name: "Justin Thomas", wgr: 16, earnings: 0, teeTime: '10:54 AM' },
-  { id: 17, name: "Hideki Matsuyama", wgr: 17, earnings: 0, teeTime: '9:59 AM' },
-  { id: 18, name: "Alex Noren", wgr: 18, earnings: 0, teeTime: '5:02 AM' },
-  { id: 19, name: "Jacob Bridgeman", wgr: 19, earnings: 0, teeTime: '5:02 AM' },
-  { id: 20, name: "Jon Rahm", wgr: 20, earnings: 0, teeTime: '5:40 AM' },
-  { id: 21, name: "Harris English", wgr: 21, earnings: 0, teeTime: '4:51 AM' },
-  { id: 22, name: "Si Woo Kim", wgr: 22, earnings: 0, teeTime: '5:07 AM' },
-  { id: 23, name: "Akshay Bhatia", wgr: 23, earnings: 0, teeTime: '9:37 AM' },
-  { id: 24, name: "Patrick Reed", wgr: 24, earnings: 0, teeTime: '10:27 AM' },
-  { id: 25, name: "Kristoffer Reitan", wgr: 25, earnings: 0, teeTime: '5:13 AM' },
-  { id: 26, name: "Tyrrell Hatton", wgr: 26, earnings: 0, teeTime: '5:29 AM' },
-  { id: 27, name: "Viktor Hovland", wgr: 27, earnings: 0, teeTime: '10:32 AM' },
-  { id: 28, name: "Bryson DeChambeau", wgr: 28, earnings: 0, teeTime: '5:18 AM' },
-  { id: 29, name: "Nicolai Højgaard", wgr: 29, earnings: 0, teeTime: '4:07 AM' },
-  { id: 30, name: "Patrick Cantlay", wgr: 30, earnings: 0, teeTime: '4:56 AM' },
-  { id: 31, name: "Min Woo Lee", wgr: 31, earnings: 0, teeTime: '4:56 AM' },
-  { id: 32, name: "Keegan Bradley", wgr: 32, earnings: 0, teeTime: '10:54 AM' },
-  { id: 33, name: "Maverick McNealy", wgr: 33, earnings: 0, teeTime: '5:24 AM' },
-  { id: 34, name: "Kurt Kitayama", wgr: 34, earnings: 0, teeTime: '9:26 AM' },
-  { id: 35, name: "Sam Burns", wgr: 35, earnings: 0, teeTime: '4:34 AM' },
-  { id: 36, name: "Ryan Gerard", wgr: 36, earnings: 0, teeTime: '3:56 AM' },
-  { id: 37, name: "Rickie Fowler", wgr: 37, earnings: 0, teeTime: '5:18 AM' },
-  { id: 38, name: "Shane Lowry", wgr: 38, earnings: 0, teeTime: '10:32 AM' },
-  { id: 39, name: "Tom Hoge", wgr: 39, earnings: 0, teeTime: '4:12 AM' },
-  { id: 40, name: "Marco Penge", wgr: 40, earnings: 0, teeTime: '10:49 AM' },
-  { id: 41, name: "Jason Day", wgr: 41, earnings: 0, teeTime: '4:34 AM' },
-  { id: 42, name: "Daniel Berger", wgr: 42, earnings: 0, teeTime: '10:21 AM' },
-  { id: 43, name: "Matt McCarty", wgr: 43, earnings: 0, teeTime: '4:29 AM' },
-  { id: 44, name: "Aaron Rai", wgr: 44, earnings: 0, teeTime: '11:00 AM' },
-  { id: 45, name: "Michael Kim", wgr: 45, earnings: 0, teeTime: '5:46 AM' },
-  { id: 46, name: "Adam Scott", wgr: 46, earnings: 0, teeTime: '10:21 AM' },
-  { id: 47, name: "Gary Woodland", wgr: 47, earnings: 0, teeTime: '4:34 AM' },
-  { id: 48, name: "Nico Echavarria", wgr: 48, earnings: 0, teeTime: '9:26 AM' },
-  { id: 49, name: "Sam Stevens", wgr: 49, earnings: 0, teeTime: '11:11 AM' },
-  { id: 50, name: "Corey Conners", wgr: 50, earnings: 0, teeTime: '10:21 AM' },
-  { id: 51, name: "Jordan Spieth", wgr: 51, earnings: 0, teeTime: '5:40 AM' },
-  { id: 52, name: "Michael Brennan", wgr: 52, earnings: 0, teeTime: '4:18 AM' },
-  { id: 53, name: "Brian Harman", wgr: 53, earnings: 0, teeTime: '4:45 AM' },
-  { id: 54, name: "Andrew Novak", wgr: 54, earnings: 0, teeTime: '9:15 AM' },
-  { id: 55, name: "Pierceson Coody", wgr: 55, earnings: 0, teeTime: '10:27 AM' },
-  { id: 56, name: "Ryan Fox", wgr: 56, earnings: 0, teeTime: '5:35 AM' },
-  { id: 57, name: "Harry Hall", wgr: 57, earnings: 0, teeTime: '3:56 AM' },
-  { id: 58, name: "Nick Taylor", wgr: 58, earnings: 0, teeTime: '10:16 AM' },
-  { id: 59, name: "Ryo Hisatsune", wgr: 59, earnings: 0, teeTime: '5:46 AM' },
-  { id: 60, name: "Sami Valimaki", wgr: 60, earnings: 0, teeTime: '11:00 AM' },
-  { id: 61, name: "Thomas Detry", wgr: 61, earnings: 0, teeTime: '5:24 AM' },
-  { id: 62, name: "David Puig", wgr: 62, earnings: 0, teeTime: '3:50 AM' },
-  { id: 63, name: "Michael Thorbjornsen", wgr: 63, earnings: 0, teeTime: '9:37 AM' },
-  { id: 64, name: "Rasmus Højgaard", wgr: 64, earnings: 0, teeTime: '9:10 AM' },
-  { id: 65, name: "Jayden Schaper", wgr: 65, earnings: 0, teeTime: '11:11 AM' },
-  { id: 66, name: "Bud Cauley", wgr: 66, earnings: 0, teeTime: '5:02 AM' },
-  { id: 67, name: "Sungjae Im", wgr: 67, earnings: 0, teeTime: '9:32 AM' },
-  { id: 68, name: "Jordan Smith", wgr: 68, earnings: 0, teeTime: '10:16 AM' },
-  { id: 69, name: "Matt Wallace", wgr: 69, earnings: 0, teeTime: '9:43 AM' },
-  { id: 70, name: "Max Greyserman", wgr: 70, earnings: 0, teeTime: '5:13 AM' },
-  { id: 71, name: "Wyndham Clark", wgr: 71, earnings: 0, teeTime: '4:45 AM' },
-  { id: 72, name: "Casey Jarvis", wgr: 72, earnings: 0, teeTime: '9:32 AM' },
-  { id: 73, name: "Patrick Rodgers", wgr: 73, earnings: 0, teeTime: '10:49 AM' },
-  { id: 74, name: "Johnny Keefer", wgr: 74, earnings: 0, teeTime: '4:07 AM' },
-  { id: 75, name: "Aldrich Potgieter", wgr: 75, earnings: 0, teeTime: '3:50 AM' },
-  { id: 76, name: "Sahith Theegala", wgr: 76, earnings: 0, teeTime: '4:56 AM' },
-  { id: 77, name: "Rasmus Neergaard-Petersen", wgr: 77, earnings: 0, teeTime: '10:16 AM' },
-  { id: 78, name: "Alex Smalley", wgr: 78, earnings: 0, teeTime: '11:16 AM' },
-  { id: 79, name: "J.T. Poston", wgr: 79, earnings: 0, teeTime: '10:10 AM' },
-  { id: 80, name: "Max McGreevy", wgr: 80, earnings: 0, teeTime: '5:51 AM' },
-  { id: 81, name: "Haotong Li", wgr: 80, earnings: 0, teeTime: '10:05 AM' },
-  { id: 82, name: "Andrew Putnam", wgr: 82, earnings: 0, teeTime: '9:43 AM' },
-  { id: 83, name: "Alex Fitzpatrick", wgr: 83, earnings: 0, teeTime: '3:45 AM' },
-  { id: 84, name: "Austin Smotherman", wgr: 84, earnings: 0, teeTime: '11:22 AM' },
-  { id: 85, name: "Garrick Higgo", wgr: 85, earnings: 0, teeTime: '4:18 AM' },
-  { id: 86, name: "Taylor Pendrith", wgr: 86, earnings: 0, teeTime: '4:01 AM' },
-  { id: 87, name: "John Parry", wgr: 87, earnings: 0, teeTime: '9:15 AM' },
-  { id: 88, name: "Rico Hoey", wgr: 88, earnings: 0, teeTime: '4:07 AM' },
-  { id: 89, name: "Ricky Castillo", wgr: 90, earnings: 0, teeTime: '9:37 AM' },
-  { id: 90, name: "David Lipsky", wgr: 91, earnings: 0, teeTime: '9:21 AM' },
-  { id: 91, name: "Christiaan Bezuidenhout", wgr: 92, earnings: 0, teeTime: '10:38 AM' },
-  { id: 92, name: "Lucas Glover", wgr: 93, earnings: 0, teeTime: '4:40 AM' },
-  { id: 93, name: "Elvis Smylie", wgr: 94, earnings: 0, teeTime: '9:54 AM' },
-  { id: 94, name: "Daniel Hillier", wgr: 95, earnings: 0, teeTime: '5:51 AM' },
-  { id: 95, name: "Matti Schmid", wgr: 97, earnings: 0, teeTime: '11:22 AM' },
-  { id: 96, name: "Chris Kirk", wgr: 98, earnings: 0, teeTime: '5:13 AM' },
-  { id: 97, name: "Denny McCarthy", wgr: 99, earnings: 0, teeTime: '3:50 AM' },
-  { id: 98, name: "Stephan Jaeger", wgr: 100, earnings: 0, teeTime: '4:40 AM' },
-  { id: 99, name: "Adrien Saddier", wgr: 101, earnings: 0, teeTime: '4:51 AM' },
-  { id: 100, name: "Daniel Brown", wgr: 102, earnings: 0, teeTime: '4:51 AM' },
-  { id: 101, name: "Brian Campbell", wgr: 104, earnings: 0, teeTime: '10:38 AM' },
-  { id: 102, name: "Sudarshan Yellamaraju", wgr: 105, earnings: 0, teeTime: '11:27 AM' },
-  { id: 103, name: "Andy Sullivan", wgr: 106, earnings: 0, teeTime: '11:27 AM' },
-  { id: 104, name: "Angel Ayora", wgr: 107, earnings: 0, teeTime: '6:02 AM' },
-  { id: 105, name: "Tom McKibbin", wgr: 108, earnings: 0, teeTime: '4:40 AM' },
-  { id: 106, name: "Keith Mitchell", wgr: 109, earnings: 0, teeTime: '4:23 AM' },
-  { id: 107, name: "Chandler Blanchet", wgr: 112, earnings: 0, teeTime: '11:16 AM' },
-  { id: 108, name: "Ian Holt", wgr: 113, earnings: 0, teeTime: '4:23 AM' },
-  { id: 109, name: "Emiliano Grillo", wgr: 115, earnings: 0, teeTime: '10:27 AM' },
-  { id: 110, name: "Billy Horschel", wgr: 117, earnings: 0, teeTime: '4:23 AM' },
-  { id: 111, name: "Max Homa", wgr: 123, earnings: 0, teeTime: '9:59 AM' },
-  { id: 112, name: "Brooks Koepka", wgr: 125, earnings: 0, teeTime: '5:29 AM' },
-  { id: 113, name: "Jhonattan Vegas", wgr: 126, earnings: 0, teeTime: '4:29 AM' },
-  { id: 114, name: "Brandt Snedeker", wgr: 131, earnings: 0, teeTime: '5:57 AM' },
-  { id: 115, name: "William Mouw", wgr: 133, earnings: 0, teeTime: '4:01 AM' },
-  { id: 116, name: "Steven Fisk", wgr: 134, earnings: 0, teeTime: '9:21 AM' },
-  { id: 117, name: "Mikael Lindberg", wgr: 137, earnings: 0, teeTime: '6:02 AM' },
-  { id: 118, name: "Davis Riley", wgr: 141, earnings: 0, teeTime: '9:54 AM' },
-  { id: 119, name: "Travis Smyth", wgr: 145, earnings: 0, teeTime: '11:00 AM' },
-  { id: 120, name: "Joe Highsmith", wgr: 151, earnings: 0, teeTime: '5:07 AM' },
-  { id: 121, name: "Kazuki Higa", wgr: 152, earnings: 0, teeTime: '5:35 AM' },
-  { id: 122, name: "Adam Schenk", wgr: 155, earnings: 0, teeTime: '10:38 AM' },
-  { id: 123, name: "Joaquin Niemann", wgr: 167, earnings: 0, teeTime: '4:12 AM' },
-  { id: 124, name: "Kota Kaneko", wgr: 192, earnings: 0, teeTime: '5:57 AM' },
-  { id: 125, name: "Bernd Wiesberger", wgr: 203, earnings: 0, teeTime: '11:27 AM' },
-  { id: 126, name: "Cameron Smith", wgr: 239, earnings: 0, teeTime: '4:45 AM' },
-  { id: 127, name: "Jordan Gumberg", wgr: 315, earnings: 0, teeTime: '9:15 AM' },
-  { id: 128, name: "Dustin Johnson", wgr: 471, earnings: 0, teeTime: '9:10 AM' },
-  { id: 129, name: "Stewart Cink", wgr: null, earnings: 0, teeTime: '9:48 AM' },
-  { id: 130, name: "Martin Kaymer", wgr: null, earnings: 0, teeTime: '9:54 AM' },
-  { id: 131, name: "Derek Berg", wgr: null, earnings: 0, teeTime: '5:07 AM' },
-  { id: 132, name: "Francisco Bide", wgr: null, earnings: 0, teeTime: '3:56 AM' },
-  { id: 133, name: "Michael Block", wgr: null, earnings: 0, teeTime: '9:10 AM' },
-  { id: 134, name: "Tyler Collet", wgr: null, earnings: 0, teeTime: '5:57 AM' },
-  { id: 135, name: "Luke Donald", wgr: null, earnings: 0, teeTime: '9:48 AM' },
-  { id: 136, name: "Jesse Droemer", wgr: null, earnings: 0, teeTime: '9:48 AM' },
-  { id: 137, name: "Jason Dufner", wgr: null, earnings: 0, teeTime: '10:05 AM' },
-  { id: 138, name: "Bryce Fisher", wgr: null, earnings: 0, teeTime: '4:12 AM' },
-  { id: 139, name: "Chris Gabriele", wgr: null, earnings: 0, teeTime: '4:01 AM' },
-  { id: 140, name: "Mark Geddes", wgr: null, earnings: 0, teeTime: '9:21 AM' },
-  { id: 141, name: "Pádraig Harrington", wgr: null, earnings: 0, teeTime: '5:24 AM' },
-  { id: 142, name: "Zach Haynes", wgr: null, earnings: 0, teeTime: '11:16 AM' },
-  { id: 143, name: "Austin Hurt", wgr: null, earnings: 0, teeTime: '9:32 AM' },
-  { id: 144, name: "Jared Jones", wgr: null, earnings: 0, teeTime: '5:46 AM' },
-  { id: 145, name: "Michael Kartrude", wgr: null, earnings: 0, teeTime: '9:43 AM' },
-  { id: 146, name: "Ben Kern", wgr: null, earnings: 0, teeTime: '10:10 AM' },
-  { id: 147, name: "Ryan Lenahan", wgr: null, earnings: 0, teeTime: '5:35 AM' },
-  { id: 148, name: "Paul McClure", wgr: null, earnings: 0, teeTime: '6:02 AM' },
-  { id: 149, name: "Shaun Micheel", wgr: null, earnings: 0, teeTime: '4:18 AM' },
-  { id: 150, name: "Ben Polland", wgr: null, earnings: 0, teeTime: '9:26 AM' },
-  { id: 151, name: "Garrett Sapp", wgr: null, earnings: 0, teeTime: '11:11 AM' },
-  { id: 152, name: "Braden Shattuck", wgr: null, earnings: 0, teeTime: '3:45 AM' },
-  { id: 153, name: "Ryan Vermeer", wgr: null, earnings: 0, teeTime: '5:51 AM' },
-  { id: 154, name: "Jimmy Walker", wgr: null, earnings: 0, teeTime: '10:05 AM' },
-  { id: 155, name: "Timothy Wiseman", wgr: null, earnings: 0, teeTime: '11:22 AM' },
-  { id: 156, name: "Y.E. Yang", wgr: null, earnings: 0, teeTime: '4:29 AM' },
+  { id: 1,   name: "Scottie Scheffler",       wgr: 1,   earnings: 0 },
+  { id: 2,   name: "Rory McIlroy",             wgr: 2,   earnings: 0 },
+  { id: 3,   name: "Cameron Young",            wgr: 3,   earnings: 0 },
+  { id: 4,   name: "Matt Fitzpatrick",         wgr: 4,   earnings: 0 },
+  { id: 5,   name: "Russell Henley",           wgr: 5,   earnings: 0 },
+  { id: 6,   name: "Tommy Fleetwood",          wgr: 6,   earnings: 0 },
+  { id: 7,   name: "Justin Rose",              wgr: 7,   earnings: 0 },
+  { id: 8,   name: "Jon Rahm",                 wgr: 8,   earnings: 0 },
+  { id: 9,   name: "J.J. Spaun",              wgr: 9,   earnings: 0 },
+  { id: 10,  name: "Collin Morikawa",          wgr: 10,  earnings: 0 },
+  { id: 11,  name: "Chris Gotterup",           wgr: 11,  earnings: 0 },
+  { id: 12,  name: "Xander Schauffele",        wgr: 12,  earnings: 0 },
+  { id: 13,  name: "Ludvig Åberg",             wgr: 13,  earnings: 0 },
+  { id: 14,  name: "Aaron Rai",                wgr: 14,  earnings: 0 },
+  { id: 15,  name: "Ben Griffin",              wgr: 15,  earnings: 0 },
+  { id: 16,  name: "Justin Thomas",            wgr: 16,  earnings: 0 },
+  { id: 17,  name: "Robert MacIntyre",         wgr: 17,  earnings: 0 },
+  { id: 18,  name: "Si Woo Kim",               wgr: 18,  earnings: 0 },
+  { id: 19,  name: "Sepp Straka",              wgr: 19,  earnings: 0 },
+  { id: 20,  name: "Alex Noren",               wgr: 20,  earnings: 0 },
+  { id: 21,  name: "Tyrrell Hatton",           wgr: 21,  earnings: 0 },
+  { id: 22,  name: "Harris English",           wgr: 22,  earnings: 0 },
+  { id: 23,  name: "Ryan Gerard",              wgr: 23,  earnings: 0 },
+  { id: 24,  name: "Hideki Matsuyama",         wgr: 24,  earnings: 0 },
+  { id: 25,  name: "Jacob Bridgeman",          wgr: 25,  earnings: 0 },
+  { id: 26,  name: "Kristoffer Reitan",        wgr: 26,  earnings: 0 },
+  { id: 27,  name: "Patrick Reed",             wgr: 27,  earnings: 0 },
+  { id: 28,  name: "Viktor Hovland",           wgr: 28,  earnings: 0 },
+  { id: 29,  name: "Akshay Bhatia",            wgr: 29,  earnings: 0 },
+  { id: 30,  name: "Sam Burns",                wgr: 30,  earnings: 0 },
+  { id: 31,  name: "Kurt Kitayama",            wgr: 31,  earnings: 0 },
+  { id: 32,  name: "Bryson DeChambeau",        wgr: 32,  earnings: 0 },
+  { id: 33,  name: "Nicolai Højgaard",         wgr: 33,  earnings: 0 },
+  { id: 34,  name: "Wyndham Clark",            wgr: 34,  earnings: 0 },
+  { id: 35,  name: "Min Woo Lee",              wgr: 35,  earnings: 0 },
+  { id: 36,  name: "Patrick Cantlay",          wgr: 36,  earnings: 0 },
+  { id: 37,  name: "Maverick McNealy",         wgr: 37,  earnings: 0 },
+  { id: 38,  name: "J.T. Poston",              wgr: 38,  earnings: 0 },
+  { id: 39,  name: "Keegan Bradley",           wgr: 39,  earnings: 0 },
+  { id: 40,  name: "Bud Cauley",               wgr: 40,  earnings: 0 },
+  { id: 41,  name: "Rickie Fowler",            wgr: 41,  earnings: 0 },
+  { id: 42,  name: "Alex Smalley",             wgr: 42,  earnings: 0 },
+  { id: 43,  name: "Jake Knapp",               wgr: 43,  earnings: 0 },
+  { id: 44,  name: "Shane Lowry",              wgr: 44,  earnings: 0 },
+  { id: 45,  name: "Gary Woodland",            wgr: 45,  earnings: 0 },
+  { id: 46,  name: "Daniel Berger",            wgr: 46,  earnings: 0 },
+  { id: 47,  name: "Jason Day",                wgr: 47,  earnings: 0 },
+  { id: 48,  name: "Adam Scott",               wgr: 48,  earnings: 0 },
+  { id: 49,  name: "Michael Kim",              wgr: 50,  earnings: 0 },
+  { id: 50,  name: "Jordan Spieth",            wgr: 51,  earnings: 0 },
+  { id: 51,  name: "Nico Echavarria",          wgr: 52,  earnings: 0 },
+  { id: 52,  name: "Matt McCarty",             wgr: 53,  earnings: 0 },
+  { id: 53,  name: "Sam Stevens",              wgr: 54,  earnings: 0 },
+  { id: 54,  name: "Ryan Fox",                 wgr: 55,  earnings: 0 },
+  { id: 55,  name: "Corey Conners",            wgr: 56,  earnings: 0 },
+  { id: 56,  name: "David Puig",               wgr: 57,  earnings: 0 },
+  { id: 57,  name: "Pierceson Coody",          wgr: 58,  earnings: 0 },
+  { id: 58,  name: "Brian Harman",             wgr: 59,  earnings: 0 },
+  { id: 59,  name: "Michael Brennan",          wgr: 60,  earnings: 0 },
+  { id: 60,  name: "Andrew Novak",             wgr: 61,  earnings: 0 },
+  { id: 61,  name: "Ryo Hisatsune",            wgr: 62,  earnings: 0 },
+  { id: 62,  name: "Nick Taylor",              wgr: 63,  earnings: 0 },
+  { id: 63,  name: "Harry Hall",               wgr: 66,  earnings: 0 },
+  { id: 64,  name: "Max Greyserman",           wgr: 68,  earnings: 0 },
+  { id: 65,  name: "Alex Fitzpatrick",         wgr: 69,  earnings: 0 },
+  { id: 66,  name: "Jayden Schaper",           wgr: 70,  earnings: 0 },
+  { id: 67,  name: "Matti Schmid",             wgr: 71,  earnings: 0 },
+  { id: 68,  name: "Sungjae Im",               wgr: 74,  earnings: 0 },
+  { id: 69,  name: "Johnny Keefer",            wgr: 75,  earnings: 0 },
+  { id: 70,  name: "Joaquin Niemann",          wgr: 80,  earnings: 0 },
+  { id: 71,  name: "Patrick Rodgers",          wgr: 81,  earnings: 0 },
+  { id: 72,  name: "Sahith Theegala",          wgr: 83,  earnings: 0 },
+  { id: 73,  name: "Andrew Putnam",            wgr: 85,  earnings: 0 },
+  { id: 74,  name: "Lucas Herbert",            wgr: 88,  earnings: 0 },
+  { id: 75,  name: "Sudarshan Yellamaraju",    wgr: 96,  earnings: 0 },
+  { id: 76,  name: "Max McGreevy",             wgr: 99,  earnings: 0 },
+  { id: 77,  name: "Keith Mitchell",           wgr: 100, earnings: 0 },
+  { id: 78,  name: "John Parry",               wgr: 102, earnings: 0 },
+  { id: 79,  name: "Chris Kirk",               wgr: 106, earnings: 0 },
+  { id: 80,  name: "Brooks Koepka",            wgr: 110, earnings: 0 },
+  { id: 81,  name: "Adrien Saddier",           wgr: 115, earnings: 0 },
+  { id: 82,  name: "Emiliano Grillo",          wgr: 116, earnings: 0 },
+  { id: 83,  name: "Jackson Suber",            wgr: 128, earnings: 0 },
+  { id: 84,  name: "William Mouw",             wgr: 131, earnings: 0 },
+  { id: 85,  name: "Kevin Roy",                wgr: 133, earnings: 0 },
+  { id: 86,  name: "Billy Horschel",           wgr: 135, earnings: 0 },
+  { id: 87,  name: "Cameron Smith",            wgr: 136, earnings: 0 },
+  { id: 88,  name: "Davis Thompson",           wgr: 138, earnings: 0 },
+  { id: 89,  name: "Tom Kim",                  wgr: 141, earnings: 0 },
+  { id: 90,  name: "Laurie Canter",            wgr: 151, earnings: 0 },
+  { id: 91,  name: "Adrien Dumont de Chassart", wgr: 168, earnings: 0 },
+  { id: 92,  name: "Chandler Phillips",        wgr: 172, earnings: 0 },
+  { id: 93,  name: "Peter Uihlein",            wgr: 181, earnings: 0 },
+  { id: 94,  name: "Ben Kohles",               wgr: 184, earnings: 0 },
+  { id: 95,  name: "Hennie du Plessis",        wgr: 186, earnings: 0 },
+  { id: 96,  name: "Carlos Ortiz",             wgr: 188, earnings: 0 },
+  { id: 97,  name: "Neal Shipley",             wgr: 190, earnings: 0 },
+  { id: 98,  name: "Zac Blair",                wgr: 204, earnings: 0 },
+  { id: 99,  name: "Nathan Kimsey",            wgr: 214, earnings: 0 },
+  { id: 100, name: "Ugo Coussaud",             wgr: 217, earnings: 0 },
+  { id: 101, name: "Taylor Montgomery",        wgr: 227, earnings: 0 },
+  { id: 102, name: "Cooper Dossey",            wgr: 230, earnings: 0 },
+  { id: 103, name: "Dustin Johnson",           wgr: 245, earnings: 0 },
+  { id: 104, name: "Jackson Koivun",           wgr: 260, earnings: 0 },
+  { id: 105, name: "Ben Silverman",            wgr: 262, earnings: 0 },
+  { id: 106, name: "Niklas Norgaard",          wgr: 275, earnings: 0 },
+  { id: 107, name: "Matthew Jordan",           wgr: 281, earnings: 0 },
+  { id: 108, name: "James Nicholas",           wgr: 286, earnings: 0 },
+  { id: 109, name: "Caleb Surratt",            wgr: 287, earnings: 0 },
+  { id: 110, name: "Angel Hidalgo Portillo",   wgr: 325, earnings: 0 },
+  { id: 111, name: "Jimmy Stanger",            wgr: 338, earnings: 0 },
+  { id: 112, name: "Harry Higgs",              wgr: 356, earnings: 0 },
+  { id: 113, name: "Rocco Repetto Taylor",     wgr: 358, earnings: 0 },
+  { id: 114, name: "Cole Hammer",              wgr: 363, earnings: 0 },
+  { id: 115, name: "Alejandro Tosti",          wgr: 364, earnings: 0 },
+  { id: 116, name: "Dylan Wu",                 wgr: 386, earnings: 0 },
+  { id: 117, name: "Ryoichi Oiwa",             wgr: 389, earnings: 0 },
+  { id: 118, name: "Taihei Sato",              wgr: 403, earnings: 0 },
+  { id: 119, name: "Filippo Celli",            wgr: 438, earnings: 0 },
+  { id: 120, name: "Ben James",                wgr: null, earnings: 0 },
+  { id: 121, name: "Preston Stout",            wgr: null, earnings: 0, amateur: true },
+  { id: 122, name: "Miles Russell",            wgr: null, earnings: 0, amateur: true },
+  { id: 123, name: "Nick Hardy",               wgr: null, earnings: 0 },
+  { id: 124, name: "Carl Yuan",                wgr: null, earnings: 0 },
+  { id: 125, name: "Graeme McDowell",          wgr: null, earnings: 0 },
+  { id: 126, name: "Marcelo Rozo",             wgr: null, earnings: 0 },
+  { id: 127, name: "Padraig Harrington",       wgr: null, earnings: 0 },
+  { id: 128, name: "Ryder Cowan",              wgr: null, earnings: 0, amateur: true },
+  { id: 129, name: "Jackson Van Paris",        wgr: null, earnings: 0 },
+  { id: 130, name: "Giuseppe Puebla",          wgr: null, earnings: 0, amateur: true },
+  { id: 131, name: "Spencer Tibbits",          wgr: null, earnings: 0 },
+  { id: 132, name: "Vaughn Harber",            wgr: null, earnings: 0, amateur: true },
+  { id: 133, name: "Jackson Ormond",           wgr: null, earnings: 0, amateur: true },
+  { id: 134, name: "Brandon Wu",               wgr: null, earnings: 0 },
+  { id: 135, name: "Jake Peacock",             wgr: null, earnings: 0 },
+  { id: 136, name: "Robbie Higgins",           wgr: null, earnings: 0 },
+  { id: 137, name: "Raito Onishi",             wgr: null, earnings: 0 },
+  { id: 138, name: "Hamilton Coleman",         wgr: null, earnings: 0, amateur: true },
+  { id: 139, name: "Mateo Pulcini",            wgr: null, earnings: 0, amateur: true },
+  { id: 140, name: "Brandon Holtz",            wgr: null, earnings: 0, amateur: true },
+  { id: 141, name: "Jackson Herrington",       wgr: null, earnings: 0, amateur: true },
+  { id: 142, name: "Ethan Fang",               wgr: null, earnings: 0, amateur: true },
+  { id: 143, name: "Greyson Leach",            wgr: null, earnings: 0 },
+  { id: 144, name: "Jack Schoenberger",        wgr: null, earnings: 0, amateur: true },
+  { id: 145, name: "Manav Shah",               wgr: null, earnings: 0, amateur: true },
+  { id: 146, name: "J.B. Holmes",              wgr: null, earnings: 0 },
+  { id: 147, name: "Chase Kyes",               wgr: null, earnings: 0, amateur: true },
+  { id: 148, name: "Eric Lee",                 wgr: null, earnings: 0, amateur: true },
+  { id: 149, name: "Marck Fleming",            wgr: null, earnings: 0, amateur: true },
+  { id: 150, name: "Jake Sollon",              wgr: null, earnings: 0 },
+  { id: 151, name: "Gunnaulgur Arni Sveinsson", wgr: null, earnings: 0, amateur: true },
+  { id: 152, name: "T.K. Kim",                 wgr: null, earnings: 0 },
+  { id: 153, name: "Matt Robles",              wgr: null, earnings: 0, amateur: true },
+  { id: 154, name: "Bryan Lee",                wgr: null, earnings: 0, amateur: true },
+  { id: 155, name: "Aaron Howell",             wgr: null, earnings: 0, amateur: true },
+  { id: 156, name: "Logan Reilly",             wgr: null, earnings: 0, amateur: true },
 ];
 
 // ═══════════════════════════════════════════════════════
@@ -2719,7 +2686,7 @@ function parseESPNAPI(data) {
     }
 
     // Projected cut line — only used during round 2, not after cut is official
-    // US Open 2026 rule: top 60 + ties
+    // U.S. Open 2026 rule: top 60 + ties
     let cutScore = null;
     if (!isPostCut) {
       const startedPlayers = madecut.filter(p => p.roundsPlayed > 0 || (p.thru && p.thru !== '–' && p.thru !== '-'));
@@ -2892,8 +2859,6 @@ function normalizeName(s) {
 // ═══════════════════════════════════════════════════════
 
 function getTournamentTheme(tName) {
-  // Normalize name variants
-  const normalized = tName === 'PGA Championship' ? 'PGA Championship 2026' : tName;
   const themes = {
     'Arnold Palmer Invitational 2026': {
       bg: '#1a0a2e',
@@ -2951,50 +2916,8 @@ function getTournamentTheme(tName) {
       rankBg: '#1a4731',
       rankColor: '#DA1A31',
     },
-    'PGA Championship 2026': {
-      bg: '#f0f4fa',
-      border: 'rgba(0,32,91,0.15)',
-      title: '#00205B',
-      sub: '#1a3a80',
-      accent: '#00205B',
-      cardBg: 'rgba(0,32,91,0.04)',
-      hover: 'rgba(0,32,91,0.08)',
-      poolPayout: 550,
-      headerBg: '#00205B',
-      headerColor: '#DA1A31',
-      rankBg: '#00205B',
-      rankColor: '#DA1A31',
-    },
-    'PGA Championship': {
-      bg: '#f0f4fa',
-      border: 'rgba(0,32,91,0.15)',
-      title: '#00205B',
-      sub: '#1a3a80',
-      accent: '#00205B',
-      cardBg: 'rgba(0,32,91,0.04)',
-      hover: 'rgba(0,32,91,0.08)',
-      poolPayout: 550,
-      headerBg: '#00205B',
-      headerColor: '#DA1A31',
-      rankBg: '#00205B',
-      rankColor: '#DA1A31',
-    },
-    'U.S. Open 2026': {
-      bg: '#fdf0f0',
-      border: 'rgba(218,26,49,0.15)',
-      title: '#DA1A31',
-      sub: '#a01020',
-      accent: '#DA1A31',
-      cardBg: 'rgba(218,26,49,0.04)',
-      hover: 'rgba(218,26,49,0.08)',
-      poolPayout: null,
-      headerBg: '#00205B',
-      headerColor: '#DA1A31',
-      rankBg: '#DA1A31',
-      rankColor: '#ffffff',
-    },
   };
-  return themes[normalized] || themes[tName] || null;
+  return themes[tName] || null;
 }
 
 function renderHistoryPage() {
@@ -3092,7 +3015,7 @@ function showHistoryDetail(tName) {
       </div>`;
     }).join('');
 
-    return `<tr style="${isFirst ? 'background:rgba(218,26,49,0.06);' : ''}">
+    return `<tr style="${isFirst ? 'background:rgba(206,170,120,0.06);' : ''}">
       <td style="text-align:center;"><span class="rank-badge ${rankClass}">${rank}</span></td>
       <td>
         <div style="font-weight:700; font-size:0.9rem; color:var(--green); font-family:'Libre Baskerville',serif;">${t.name}</div>
@@ -3448,7 +3371,6 @@ async function login() {
   closeModal('auth-modal');
   updateNav();
   renderProfile();
-  showPage('home');
   showToast('Welcome back, ' + currentUser.name + '!', 'success');
   setTimeout(initPushNotifications, 1000);
 }
@@ -3473,7 +3395,6 @@ async function register() {
   closeModal('auth-modal');
   updateNav();
   renderProfile();
-  showPage('home');
   showToast('Account created! Welcome, ' + name + '!', 'success');
   setTimeout(initPushNotifications, 1000);
 }
@@ -3515,13 +3436,6 @@ async function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById('page-' + name);
   if (el) el.classList.add('active');
-  // Toggle guest vs member home view
-  if (name === 'home') {
-    const guest = document.getElementById('home-guest');
-    const member = document.getElementById('home-member');
-    if (guest) guest.style.display = currentUser ? 'none' : 'flex';
-    if (member) member.style.display = currentUser ? 'block' : 'none';
-  }
   // Highlight active nav button
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   const navMap = { home: 'nav-home', leaderboard: 'nav-leaderboard', history: 'nav-history', tournament: 'nav-tournament', builder: 'nav-enter', myteams: 'nav-myteams', profile: 'nav-myteams', admin: 'nav-admin' };
@@ -3574,14 +3488,12 @@ function updateNav() {
   document.getElementById('nav-login').style.display = loggedIn ? 'none' : '';
   document.getElementById('nav-logout').style.display = loggedIn ? '' : 'none';
   document.getElementById('nav-myteams').style.display = loggedIn ? '' : 'none';
-  document.getElementById('nav-leaderboard').style.display = loggedIn ? '' : 'none';
-  document.getElementById('nav-chat').style.display = loggedIn ? '' : 'none';
-  document.getElementById('nav-enter').style.display = (loggedIn && adminSettings.registrationOpen) ? '' : 'none';
+  document.getElementById('nav-enter').style.display = adminSettings.registrationOpen ? '' : 'none';
   const homeBtn = document.getElementById('home-team-btn');
   if (homeBtn) homeBtn.textContent = adminSettings.registrationOpen ? 'Build Your Team →' : 'View Your Team →';
-  document.getElementById('nav-tournament').style.display = (loggedIn && adminSettings.scoresLive) ? '' : 'none';
-  document.getElementById('nav-stats').style.display = (loggedIn && adminSettings.scoresLive && adminSettings.showPicks) ? '' : 'none';
-  document.getElementById('nav-history').style.display = (loggedIn && adminSettings.showHistory) ? '' : 'none';
+  document.getElementById('nav-tournament').style.display = adminSettings.scoresLive ? '' : 'none';
+  document.getElementById('nav-stats').style.display = (adminSettings.scoresLive && adminSettings.showPicks) ? '' : 'none';
+  document.getElementById('nav-history').style.display = adminSettings.showHistory ? '' : 'none';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4261,7 +4173,7 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = PARS; // use PARS from admin settings (Aronimink par 70)
+const HOLE_PARS = PARS; // use PARS from admin settings (Shinnecock Hills par 70)
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
   if (!expandRow) return;
@@ -5708,11 +5620,11 @@ function renderSwimmerBrowser() {
   const list = document.getElementById('swimmer-browser-list');
   if (!list) return;
 
-  // Get unique owners from ALL teams across ALL tournaments (not just current)
+  // Get unique owners from current tournament
   const owners = {};
-  allTeams.forEach(t => {
+  allTeams.filter(t => t.paid && (t.tournament||'') === TOURNAMENT_NAME).forEach(t => {
     if (!owners[t.owner]) owners[t.owner] = { name: t.owner_name || t.owner.split('@')[0], email: t.owner, count: 0 };
-    if (t.paid) owners[t.owner].count++;
+    owners[t.owner].count++;
   });
 
   let filtered = Object.values(owners).filter(o =>
@@ -5734,7 +5646,7 @@ function renderSwimmerBrowser() {
       <div style="width:28px; height:28px; border-radius:50%; background:${color}; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; color:white; flex-shrink:0;">${initials}</div>
       <div style="min-width:0;">
         <div style="font-family:'Libre Baskerville',serif; font-size:0.82rem; font-weight:600; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${o.name}${isMe ? ' <span style="color:var(--gold); font-size:0.6rem; font-family:DM Mono,monospace;">YOU</span>' : ''}</div>
-        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; color:#aaa;">${o.count} team${o.count!==1?'s':''} all-time</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; color:#aaa;">${o.count} team${o.count!==1?'s':''}</div>
       </div>
     </div>`;
   }).join('');
