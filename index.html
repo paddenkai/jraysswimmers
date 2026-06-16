@@ -915,7 +915,7 @@
 
           <div style="background:rgba(0,32,91,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
             <div style="font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:8px; letter-spacing:0.5px;">Pay via Venmo</div>
-            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $50 per team to <span style="color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.82rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
+            <div style="font-family:'EB Garamond',serif; font-size:0.95rem; color:rgba(250,246,238,0.75); line-height:1.7; flex:1; display:flex; align-items:center; justify-content:center;"><span>Send $25 per team to <span style="color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.82rem;">@JRaysPool</span>. Your team goes live once payment is confirmed.</span></div>
           </div>
 
           <div style="background:rgba(0,32,91,0.85); padding:28px 24px; text-align:center; display:flex; flex-direction:column;">
@@ -965,7 +965,7 @@
   <div id="page-builder" class="page">
     <div class="section-header">
       <div class="section-title">Build Your Team</div>
-      <div class="section-sub">Select 5 golfers · $50 per entry</div>
+      <div class="section-sub">Select 5 golfers · $25 per entry</div>
     </div>
     <!-- Mobile sticky team tracker -->
     <div id="mobile-team-tracker">
@@ -1084,9 +1084,9 @@
         </div>
 
         <h3 id="payment-team-name" style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--green); margin:0 0 4px;">Your Entry</h3>
-        <p style="font-size:0.85rem; color:#888; font-family:'Libre Baskerville',serif; margin:0 0 12px;">J.Ray's Swimmers Pool · $50 per team</p>
+        <p style="font-size:0.85rem; color:#888; font-family:'Libre Baskerville',serif; margin:0 0 12px;">J.Ray's Swimmers Pool · $25 per team</p>
         <div id="order-lines"></div>
-        <div class="order-total"><span>Total</span><span id="order-total-val">$50.00</span></div>
+        <div class="order-total"><span>Total</span><span id="order-total-val">$25.00</span></div>
 
         <div style="text-align:center; margin-top:20px;">
           <button style="background:none;border:none;color:#888;cursor:pointer;font-size:0.82rem;font-family:'Libre Baskerville',serif;" onclick="showPage('builder')">← Back to team builder</button>
@@ -1748,22 +1748,6 @@
   </div>
 </div>
 
-<!-- MASTERS THEME AUDIO PLAYER -->
-<div id="music-player" style="position:fixed; bottom:20px; left:8px; z-index:999; display:flex; align-items:center; gap:8px;">
-  <button id="music-btn" onclick="toggleMusic()" title="Toggle U.S. Open theme music"
-    style="background: #00205B; border:1.5px solid var(--gold); color:var(--gold); width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 12px rgba(0,0,0,0.3); transition:all 0.2s; -webkit-tap-highlight-color:transparent;">
-    🔇
-  </button>
-  <div id="music-label" style="background: #00205B; border:1px solid rgba(218,26,49,0.3); color:var(--gold-light); font-family:'DM Mono',monospace; font-size:0.68rem; padding:4px 10px; border-radius:20px; letter-spacing:1px; opacity:0; transition:opacity 0.5s; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-    ♪ PGA Theme
-  </div>
-</div>
-<div style="position:fixed; left:-9999px; top:-9999px; width:1px; height:1px;">
-  <audio id="bg-audio" loop>
-    <source src="./USOpen_Theme.mp3" type="audio/mpeg">
-  </audio>
-</div>
-
 <div class="modal-overlay" id="auth-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('auth-modal')">×</button>
@@ -1832,7 +1816,7 @@
     <h2 style="color:var(--green);">Team Submitted!</h2>
     <p style="color:#666; margin: 12px 0 6px; line-height:1.6;">Your team has been registered. Once I receive your payment, your entry will be marked as paid and appear on the leaderboard.</p>
     <div style="background:#f0f7f0; border:1.5px solid #c8e0c8; border-radius:6px; padding:12px 16px; margin:14px 0 16px; font-size:0.82rem; color:#555; line-height:1.6;">
-      📱 Send <strong style="color:var(--green);">$50</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
+      📱 Send <strong style="color:var(--green);">$25</strong> per team to <strong style="color:var(--green);">@JRaysPool</strong> on Venmo with your team name in the note.
     </div>
     <button class="btn btn-gold" onclick="closeModal('success-modal'); showPage('payment');" style="width:100%; margin-bottom:8px;">Continue to Payment →</button>
     <div>
@@ -1901,7 +1885,7 @@ const CONFIG = {
   STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/test_5kQ8wQcZB67v6Sg7YPe7m00',
   ORGANIZER_EMAIL: 'jray@example.com',
   POOL_NAME: "J.Ray's Swimmers Pool",
-  ENTRY_FEE: 50,
+  ENTRY_FEE: 25,
   TEAM_SIZE: 5,
 };
 
@@ -6553,62 +6537,6 @@ document.getElementById('nav-admin').style.display = 'inline-block';
 
 // ═══════════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════════
-// MUSIC PLAYER
-// ═══════════════════════════════════════════════════════
-let musicStarted = false;
-let musicPlaying = false;
-
-function startMusic() {
-  if (musicStarted) return;
-  musicStarted = true;
-  const audio = document.getElementById('bg-audio');
-  audio.volume = 0.6;
-  audio.load();
-  const playPromise = audio.play();
-  if (playPromise !== undefined) {
-    playPromise.then(() => {
-      musicPlaying = true;
-      updateMusicBtn();
-      const label = document.getElementById('music-label');
-      label.textContent = '♪ PGA Theme';
-      label.style.opacity = '1';
-      setTimeout(() => { label.style.opacity = '0'; }, 3500);
-    }).catch(err => {
-      console.error('Audio play failed:', err);
-      musicStarted = false;
-      musicPlaying = false;
-      updateMusicBtn();
-    });
-  } else {
-    musicPlaying = true;
-    updateMusicBtn();
-  }
-}
-
-function toggleMusic() {
-  if (!musicStarted) { startMusic(); return; }
-  const audio = document.getElementById('bg-audio');
-  musicPlaying = !musicPlaying;
-  musicPlaying ? audio.play() : audio.pause();
-  updateMusicBtn();
-}
-
-function updateMusicBtn() {
-  const btn = document.getElementById('music-btn');
-  btn.textContent = musicPlaying ? '🔊' : '🔇';
-  btn.style.borderColor = musicPlaying ? 'var(--gold)' : 'rgba(218,26,49,0.4)';
-}
-
-// Show hint on load
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const label = document.getElementById('music-label');
-    label.textContent = '♪ Click for PGA theme';
-    label.style.opacity = '1';
-    setTimeout(() => { label.style.opacity = '0'; }, 4000);
-  }, 1500);
-});
-
 // ═══════════════════════════════════════════════════════
 // MOBILE NAV
 // ═══════════════════════════════════════════════════════
