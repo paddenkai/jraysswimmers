@@ -1894,7 +1894,7 @@ const APP_VERSION = '2026-05-14-1115';
 let TOURNAMENT_NAME = 'U.S. Open 2026'; // must match tournament column in DB — overridden by admin_settings
 let TOURNAMENT_PAR  = 70;  // overridden by admin_settings
 let CUT_RULE        = 60;  // top N + ties — overridden by admin_settings
-let PARS            = [4,4,3,4,3,4,4,4,4, 4,3,4,4,3,5,4,3,4]; // Shinnecock Hills par 70 — overridden by admin_settings
+let PARS            = [4,3,4,4,5,4,3,4,4, 4,3,4,4,4,5,4,3,4]; // Shinnecock Hills par 70 (verified vs official scorecard) — overridden by admin_settings
 
 // Admin-controlled settings (persisted in Supabase)
 let adminSettings = {
@@ -4158,7 +4158,8 @@ function renderLeaderboard() {
 // SCORECARD INLINE EXPAND
 // ═══════════════════════════════════════════════════════
 // Standard PGA course pars for 18 holes (used as fallback)
-const HOLE_PARS = PARS; // use PARS from admin settings (Shinnecock Hills par 70)
+// NOTE: removed stale `const HOLE_PARS = PARS` snapshot — it captured PARS at load time
+// and never reflected later updates from admin_settings. Use PARS directly everywhere.
 function toggleScorecard(playerKey, clickedRow) {
   const expandRow = document.getElementById(`expand-${playerKey}`);
   if (!expandRow) return;
@@ -4180,7 +4181,7 @@ function toggleScorecard(playerKey, clickedRow) {
 
   // If no round data yet, show blank scorecard using TPC Sawgrass pars
   if (!hasHoleData) {
-    const blankHoles = Array.from({length: 18}, (_, i) => ({ hole: i+1, score: null, par: HOLE_PARS[i] }));
+    const blankHoles = Array.from({length: 18}, (_, i) => ({ hole: i+1, score: null, par: PARS[i] }));
     const front = blankHoles.slice(0, 9);
     const back  = blankHoles.slice(9, 18);
     const frontPars = front.map(h => h.par);
@@ -4247,7 +4248,7 @@ function toggleScorecard(playerKey, clickedRow) {
     });
     const front = allHoles.slice(0, 9);
     const back  = allHoles.slice(9, 18);
-    const getParForHole = (h) => h.par ?? HOLE_PARS[parseInt(h.hole) - 1] ?? 4;
+    const getParForHole = (h) => h.par ?? PARS[parseInt(h.hole) - 1] ?? 4;
     const frontPars = front.map(getParForHole);
     const backPars  = back.map(getParForHole);
     const frontTotal = front.reduce((s, h) => s + (parseInt(h.score) || 0), 0);

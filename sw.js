@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jrays-swimmers-v162';
+const CACHE_NAME = 'jrays-swimmers-v164';
 const SHELL_ASSETS = ['/', '/index.html', '/Azalea.otf'];
 
 self.addEventListener('install', event => {
