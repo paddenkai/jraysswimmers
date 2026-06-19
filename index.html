@@ -845,6 +845,17 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="page">
 
+    <!-- LOGGED OUT: simple private view -->
+    <div id="home-guest" style="min-height:calc(100vh - 120px); display:none; flex-direction:column; align-items:center; justify-content:center; padding:60px 24px; text-align:center;">
+      <div style="font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:8px; color:rgba(218,26,49,0.6); text-transform:uppercase; margin-bottom:14px;">Private Pool</div>
+      <div style="font-family:'Playfair Display',serif; font-size:clamp(2.2rem,6vw,3.5rem); font-weight:700; color:white; line-height:1.1; margin-bottom:8px;">J.Ray's Swimmers</div>
+      <div style="font-family:'EB Garamond',serif; font-size:1.1rem; color:rgba(250,246,238,0.5); margin-bottom:40px;">Members only.</div>
+      <button class="btn btn-gold" onclick="openAuthModal()" style="padding:14px 40px; font-size:1rem;">Sign In</button>
+    </div>
+
+    <!-- LOGGED IN: full homepage -->
+    <div id="home-member" style="display:none;">
+
     <!-- HERO + HOW IT WORKS as one unified block -->
     <div style="margin: -40px -24px 36px; position:relative; overflow:hidden; width:calc(100% + 48px); box-sizing:border-box;">
 
@@ -959,7 +970,8 @@
       }
     </style>
 
-  </div>
+  </div><!-- end home-member -->
+  </div><!-- end page-home -->
 
   <!-- TEAM BUILDER -->
   <div id="page-builder" class="page">
@@ -1158,7 +1170,7 @@
       </div>
     </div>
     <div style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-      <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 50 + ties</div>
+      <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">✂ cut rule: top 60 + ties</div>
       <div style="font-size:0.72rem; color:#aaa; font-family:'DM Mono',monospace; letter-spacing:0.5px;">↓ click any player to view their scorecard</div>
     </div>
     <div style="border:2px solid #00205B; border-radius:4px; overflow:hidden;">
@@ -2691,7 +2703,7 @@ function parseESPNAPI(data) {
     }
 
     window._isPostCut = isPostCut;
-    window._playHasStarted = maxRounds > 0; // false = field entered but no holes played yet
+    window._playHasStarted = players.length > 0; // true as soon as ESPN has any players for the event
 
     // Build liveScores
     [...madecut, ...missedCutPlayers].forEach(p => {
@@ -2836,7 +2848,9 @@ let allTeams = [];
 let allTeamNames = []; // lowercase names for duplicate checking
 
 // Normalize team names — converts iOS curly apostrophes to straight ones
-function normalizeName(s) {
+// (duplicate of normalizeName above - kept for reference)
+/*
+function normalizeName_unused(s) {
   return (s || '').trim().toLowerCase()
     .replace(/ø/g, 'o').replace(/Ø/g, 'o')
     .replace(/å/g, 'a').replace(/Å/g, 'a')
@@ -2845,6 +2859,7 @@ function normalizeName(s) {
     .replace(/[''‚‛′‵]/g, "'")
     .replace(/[""„‟″‶]/g, '"');
 }
+*/
 
 // Load session on startup
 
@@ -3431,6 +3446,13 @@ async function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById('page-' + name);
   if (el) el.classList.add('active');
+  // Toggle guest vs member home view
+  if (name === 'home') {
+    const guest = document.getElementById('home-guest');
+    const member = document.getElementById('home-member');
+    if (guest) guest.style.display = currentUser ? 'none' : 'flex';
+    if (member) member.style.display = currentUser ? 'block' : 'none';
+  }
   // Highlight active nav button
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   const navMap = { home: 'nav-home', leaderboard: 'nav-leaderboard', history: 'nav-history', tournament: 'nav-tournament', builder: 'nav-enter', myteams: 'nav-myteams', profile: 'nav-myteams', admin: 'nav-admin' };
