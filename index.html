@@ -2385,7 +2385,7 @@ const GOLFERS = [
   // 6:35am BST = 9:35pm PST prior night — shown as early AM for display
   { id: 1,   name: "Matthew Baldwin",          wgr: null, earnings: 0, teeTime: "9:35 PM" },
   { id: 2,   name: "Thomas Detry",             wgr: null, earnings: 0, teeTime: "9:35 PM" },
-  { id: 3,   name: "James Nicholas",           wgr: null, earnings: 0, teeTime: "9:35 PM" },
+  { id: 3,   name: "James Nicholas",           wgr: null, earnings: 0, teeTime: "9:35 PM", withdrawn: true },
   { id: 4,   name: "Michael Kim",              wgr: null, earnings: 0, teeTime: "9:46 PM" },
   { id: 5,   name: "Daniel Hillier",           wgr: null, earnings: 0, teeTime: "9:46 PM" },
   { id: 6,   name: "Andy Sullivan",            wgr: null, earnings: 0, teeTime: "9:46 PM" },
@@ -2411,7 +2411,7 @@ const GOLFERS = [
   { id: 26,  name: "Tom McKibbin",             wgr: null, earnings: 0, teeTime: "11:03 PM" },
   { id: 27,  name: "Lev Grinberg",             wgr: null, earnings: 0, teeTime: "11:03 PM", amateur: true },
   { id: 28,  name: "Hennie du Plessis",        wgr: null, earnings: 0, teeTime: "11:14 PM" },
-  { id: 29,  name: "Jose Luis Ballester Barrio", wgr: null, earnings: 0, teeTime: "11:14 PM" },
+  { id: 29,  name: "Josele Ballester",          wgr: null, earnings: 0, teeTime: "11:14 PM" },
   { id: 30,  name: "Dan Bradbury",             wgr: null, earnings: 0, teeTime: "11:14 PM" },
   { id: 31,  name: "Angel Ayora",              wgr: null, earnings: 0, teeTime: "11:25 PM" },
   { id: 32,  name: "Victor Perez",             wgr: null, earnings: 0, teeTime: "11:25 PM" },
@@ -2450,7 +2450,7 @@ const GOLFERS = [
   { id: 65,  name: "Maverick McNealy",         wgr: null, earnings: 0, teeTime: "1:31 AM" },
   { id: 66,  name: "David Puig",               wgr: null, earnings: 0, teeTime: "1:31 AM" },
   { id: 67,  name: "Kazuma Kobori",            wgr: null, earnings: 0, teeTime: "1:42 AM" },
-  { id: 68,  name: "Tom Sloman",               wgr: null, earnings: 0, teeTime: "1:42 AM" },
+  { id: 68,  name: "Tom Sloman",               wgr: null, earnings: 0, teeTime: "1:42 AM", withdrawn: true },
   { id: 69,  name: "David Howard",             wgr: null, earnings: 0, teeTime: "1:42 AM", amateur: true },
   { id: 70,  name: "Antoine Rozner",           wgr: null, earnings: 0, teeTime: "1:53 AM" },
   { id: 71,  name: "Ren Yonezawa",             wgr: null, earnings: 0, teeTime: "1:53 AM" },
@@ -2458,7 +2458,7 @@ const GOLFERS = [
   { id: 73,  name: "MJ Daffue",                wgr: null, earnings: 0, teeTime: "2:04 AM" },
   { id: 74,  name: "Frederic Lacroix",         wgr: null, earnings: 0, teeTime: "2:04 AM" },
   { id: 75,  name: "Jack McDonald",            wgr: null, earnings: 0, teeTime: "2:04 AM" },
-  { id: 76,  name: "Jeongwoo Ham",             wgr: null, earnings: 0, teeTime: "2:15 AM" },
+  { id: 76,  name: "Jeong-Woo Ham",             wgr: null, earnings: 0, teeTime: "2:15 AM", cutMissed: true },
   { id: 77,  name: "Ryutaro Nagano",           wgr: null, earnings: 0, teeTime: "2:15 AM" },
   { id: 78,  name: "Alejandro de Castro Piera", wgr: null, earnings: 0, teeTime: "2:15 AM", amateur: true },
   { id: 79,  name: "John Parry",               wgr: null, earnings: 0, teeTime: "2:41 AM" },
@@ -2535,7 +2535,7 @@ const GOLFERS = [
   { id: 150, name: "Sam Bairstow",             wgr: null, earnings: 0, teeTime: "6:59 AM" },
   { id: 151, name: "Naoyuki Kataoka",          wgr: null, earnings: 0, teeTime: "7:10 AM" },
   { id: 152, name: "Marcus Plunkett",          wgr: null, earnings: 0, teeTime: "7:10 AM" },
-  { id: 153, name: "Baard Skogen",             wgr: null, earnings: 0, teeTime: "7:10 AM" },
+  { id: 153, name: "Bard Bjornevik Skogen",     wgr: null, earnings: 0, teeTime: "7:10 AM", cutMissed: true },
   { id: 154, name: "Kazuki Higa",              wgr: null, earnings: 0, teeTime: "7:21 AM" },
   { id: 155, name: "Jiho Yang",                wgr: null, earnings: 0, teeTime: "7:21 AM" },
   { id: 156, name: "Nevill Ruiter",            wgr: null, earnings: 0, teeTime: "7:21 AM", amateur: true },
@@ -2570,7 +2570,12 @@ async function fetchESPNScores() {
 function parseESPNAPI(data) {
   liveScores = {};
   // Reset all golfer earnings first — anyone not found in ESPN data (e.g. withdrawn) stays $0
-  GOLFERS.forEach(g => { g.earnings = 0; g.liveData = null; g.cutMissed = false; });
+  // Reset all golfers, but preserve cutMissed/withdrawn if hardcoded in the GOLFERS definition
+  GOLFERS.forEach(g => {
+    g.earnings = 0;
+    g.liveData = null;
+    if (!g.cutMissed) g.cutMissed = false; // only reset if not hardcoded true
+  });
   window._watchList = new Set(JSON.parse(localStorage.getItem('watchList') || '[]'));
   try {
     const events = data.events || [];
